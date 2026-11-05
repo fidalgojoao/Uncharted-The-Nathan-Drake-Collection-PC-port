@@ -1,0 +1,225 @@
+stage 0 ss-igc-airport-opening: 
+   states: --all-- initial complete
+   uses npc-igc-eddie-1: ok
+   uses npc-igc-flynn-1: ok
+   uses npc-igc-lazarevic-1: ok
+stage 1 ss-coop-adv-airport-start: 
+   states: --all-- initial complete
+   wait get-boolean 0x5c7a48cb on self setter:closure
+   wait get-boolean 0x97bd886e on self setter:closure
+   wait get-boolean 0xa99145b1 on self setter:closure
+   wait get-boolean 0xb9d760ae on self setter:closure
+   wait get-boolean reg-intro-1 on self setter:closure
+   wait get-boolean reg-intro-2 on self setter:closure
+   wait get-boolean reg-start-generator-overlook-1 on self setter:closure
+   uses bm-initial-guards-1: ok
+   uses bm-initial-guards-14: ok
+   uses bm-initial-guards-15: ok
+   uses bm-initial-guards-17: ok
+   uses bm-initial-guards-18: ok
+   uses bm-initial-guards-2: ok
+   uses bm-initial-guards-20: ok
+   uses bm-initial-guards-22: ok
+   uses bm-initial-guards-26: ok
+   uses bm-initial-guards-27: ok
+   uses bm-initial-guards-3: ok
+   uses bm-initial-guards-30: ok
+   uses bm-initial-guards-31: ok
+   uses bm-initial-guards-4: ok
+   uses bm-initial-guards-5: ok
+   uses bm-initial-guards-6: ok
+   uses bm-initial-guards-7: ok
+   uses bm-initial-guards-8: ok
+   uses bm-initial-guards-grappler-1: ok
+   uses bm-initial-kickback-1: ok
+   uses bm-initial-kickback-2: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-grenadier-6: ok
+   uses npc-group-alive-count: not-region/spawner
+   uses npc-initial-guards-1: ok
+   uses npc-initial-guards-group: not-region/spawner
+   uses npc-initial-rushers-group: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-rooftop-group: not-region/spawner
+   uses npc-rooftop-group-shield: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-marker: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-intro-1: ok
+   uses reg-intro-2: ok
+   uses reg-intro-3: ok
+   uses reg-post-roof1-1: ok
+   uses reg-post-roof1-2: ok
+   uses reg-post-roof1-7: ok
+   uses reg-start-generator-overlook-1: ok
+stage 2 ss-coop-adv-airport-sniper-battle: 
+   states: --all-- initial complete
+   wait get-boolean 0x334e257b on ss-foreground-1 setter:closure
+   wait get-boolean 0x867eeeda on self setter:closure
+   wait get-boolean 0xa99145b1 on self setter:closure
+   wait get-boolean 0xb13a6580 on self setter:closure
+   uses bm-kickback-mega-bomb-1: ok
+   uses bm-roof-fal-1: ok
+   uses bm-roof-fal-2: ok
+   uses bm-roofsnipers-1: ok
+   uses bm-roofsnipers-2: ok
+   uses bm-roofsnipers-3: ok
+   uses bm-roofsnipers-4: ok
+   uses bm-sniper-battle-1: ok
+   uses bm-sniper-battle-6: ok
+   uses bm-sniper-battle-doorguys-1: ok
+   uses bm-sniper-battle-doorguys-3: ok
+   uses bm-sniper-battle-grappler-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-npc-roofsnipers: not-region/spawner
+   uses group-roof-fal-1: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-grenadier-6: ok
+   uses npc-group-alive-count: not-region/spawner
+   uses npc-initial-guards-group: not-region/spawner
+   uses npc-initial-rushers-group: not-region/spawner
+   uses npc-rooftop-group: not-region/spawner
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-post-roof1-1: ok
+stage 3 ss-coop-adv-airport-valve-into-overlook: 
+   states: --all-- initial complete
+   uses reg-valve-into-overlook-1: ok
+stage 4 ss-igc-valve-into-overlook: 
+   states: --all-- initial complete
+stage 5 ss-coop-adv-airport-turret-trap: 
+   states: --all-- initial complete
+   wait get-boolean 0x21c73a12 on self setter:closure
+   wait get-boolean 0x43ec4da6 on self setter:closure
+   wait get-boolean 0x4dd8d823 on self setter:closure
+   wait get-boolean 0x7db48d3b on self setter:closure
+   wait get-boolean 0xc466044b on self setter:closure
+   wait get-boolean 0xc9252292 on self setter:closure
+   uses bm-parkinglot-fodder-1: ok
+   uses bm-parkinglot-fodder-2: ok
+   uses bm-parkinglot-fodder-grappler-1: ok
+   uses bm-parkinglot-grenadier-1: ok
+   uses bm-parkinglot-grenadier-2: ok
+   uses bm-parkinglot-grenadier-3: ok
+   uses bm-parkinglot-windowguys-1: ok
+   uses bm-rearguard-turret-trap-1: ok
+   uses bm-roofsnipers-turret-trap-1: ok
+   uses bm-turret-middle-1: ok
+   uses bm-turret-middle-3: ok
+   uses bm-turret-middle-4: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-parkinglot-fodder: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-grenadier-4: ok
+   uses npc-grenadier-5: ok
+   uses npc-grenadier-9: ok
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-turret-middle-1: ok
+   uses npc-turret-middle-3: ok
+   uses npc-turret-middle-4: ok
+   uses reg-overlook-1: ok
+   uses reg-overlook-2: ok
+   uses reg-turret-trap-garage-1: ok
+stage 6 ss-coop-adv-airport-valve-into-truck-smash: 
+   states: --all-- initial complete
+   uses reg-valve-into-truck-smash-1: ok
+stage 7 ss-igc-valve-into-truck-smash: 
+   states: --all-- initial complete
+stage 8 ss-coop-adv-airport-truck-push: 
+   states: --all-- initial complete
+   wait get-boolean 0xb9d760ae on self setter:closure
+   wait get-boolean 0xcaea14e1 on self setter:closure
+   wait get-boolean 0xdf8e41f4 on self setter:closure
+   wait get-boolean 0xe81a8927 on self setter:closure
+   wait get-boolean 0xebdb6482 on self setter:closure
+   wait get-boolean reg-truck-push-expert-1 on self setter:closure
+   uses bm-truck-push-awning-guys-1: ok
+   uses bm-truck-push-awning-guys-2: ok
+   uses bm-truck-push-awning-guys-3: ok
+   uses bm-truck-push-awning-guys-4: ok
+   uses bm-truck-push-awning-guys-6: ok
+   uses bm-truck-push-rpg-1: ok
+   uses bm-truck-push-rpg-2: ok
+   uses bm-truck-push-rpg-3: ok
+   uses bm-truck-push-rusher-1: ok
+   uses bm-truckpush-shield-1: ok
+   uses bm-truckpush-shield-2: ok
+   uses group-add: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-fired-recently: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-truck-push-awning-guys-2: ok
+   uses npc-truck-push-awning-guys-4: ok
+   uses npc-truck-push-rpg-1: ok
+   uses npc-truck-push-rpg-2: ok
+   uses npc-truck-push-rpg-med-1: ok
+   uses npc-truck-push-rpg-med-2: ok
+   uses npc-truck-push-shield-1: ok
+   uses npc-truck-push-shield-hard-1: ok
+   uses reg-truck-push-expert-1: ok
+   uses reg-truckpush-1: ok
+   uses reg-truckpush-2: ok
+   uses spawner-group: not-region/spawner
+stage 9 ss-coop-adv-airport-valve-into-boss-fight: 
+   states: --all-- initial complete
+   uses reg-valve-into-boss-fight-1: ok
+stage 10 ss-igc-airport-boss-intro: 
+   states: --all-- initial complete
+stage 11 ss-coop-adv-airport-boss-fight: 
+   states: --all-- initial complete
+   wait get-boolean 0x4d430292 on self setter:closure
+   wait get-boolean 0xe11fb9f2 on self setter:closure
+   uses bm-bossbattle-fodder-1: ok
+   uses bm-bossbattle-wave2-1: ok
+   uses bm-bossbattle-wave2-grappler-1: ok
+   uses bm-planesnipers-1: ok
+   uses bm-planesnipers-2: ok
+   uses bm-roofsnipers-3: ok
+   uses bm-roofsnipers-4: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-activate-random-kickback: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-bossbattle-fodder: not-region/spawner
+   uses npc-bossbattle-wave2-2: ok
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-eddie-1: ok
+   uses npc-fired-recently: not-region/spawner
+   uses npc-flynn-1: ok
+   uses npc-lazarevic-1: ok
+   uses npc-lazarevic-guard-1: ok
+   uses npc-lazarevic-guard-2: ok
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-center-object: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-wave2: not-region/spawner
+   uses reg-boss-fight-1: ok
+stage 12 ss-igc-airport-lazarevic-death: 
+   states: --all-- initial complete
+   uses npc-holster-weapon: not-region/spawner
+   uses npc-igc-lazarevic-2: ok
+   uses npc-set-ai-mode-off: not-region/spawner
+stage 13 ss-coop-adv-airport-groupup-finale: 
+   states: --all-- initial complete
+   uses reg-valve-into-finale-1: ok
+stage 14 ss-igc-airport-finale: 
+   states: --all-- initial complete
+   uses npc-igc-lazarevic-2: ok
+   uses npc-set-ai-mode-off: not-region/spawner

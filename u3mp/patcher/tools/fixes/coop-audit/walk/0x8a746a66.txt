@@ -1,0 +1,248 @@
+stage 0 ss-igc-dig-opening: 
+   states: --all-- initial complete
+   uses npc-igc-intro-villain-a-1: ok
+   uses npc-igc-intro-villain-draza-1: ok
+stage 1 ss-coop-adv-dig-approach-start: 
+   states: --all-- initial complete
+   wait get-boolean 0x57b5b91e on self setter:closure
+   uses bm-approach-crate-guards-1: ok
+   uses npc-alive-count: not-region/spawner
+   uses npc-start-10: ok
+   uses reg-approach-1: ok
+   uses reg-near-crate-1: ok
+stage 2 ss-coop-adv-dig-groupup-crate: 
+   states: --all-- initial complete
+   uses reg-valve-approach-1: ok
+stage 3 ss-igc-crate-intro: 
+   states: --all-- initial complete
+stage 4 ss-coop-adv-dig-crate-fight: 
+   states: --all-- initial complete
+   wait get-boolean 0x19363b5c on self setter:closure
+   wait get-boolean 0xe8ed0ba3 on self setter:closure
+   uses bm-approach-rear-guard-1: ok
+   uses bm-approach-upperbridge-1: ok
+   uses bm-approach-upperbridge-hard-1: ok
+   uses npc-alive-count: not-region/spawner
+   uses obj-switch-crate-1: ok
+   uses reg-switch-crate-1: ok
+stage 5 ss-coop-adv-dig-groupup-artifact-intro: 
+   states: --all-- initial complete
+   uses reg-valve-approach-1: ok
+stage 6 ss-igc-valve-upper-tier: 
+   states: --all-- initial complete
+stage 7 ss-coop-adv-dig-approach-upper-tier: 
+   states: --all-- initial complete
+   wait get-boolean 0xaea8d00f on self setter:closure
+   wait get-boolean 0xe28c42c7 on self setter:closure
+   wait get-boolean 0xecb8d742 on self setter:closure
+   uses bm-approach-bridge-defender-1: ok
+   uses bm-approach-bridge-defender-armor-1: ok
+   uses bm-approach-mini-arena-1: ok
+   uses bm-approach-mini-arena-2: ok
+   uses bm-approach-mini-arena-armor-1: ok
+   uses bm-approach-mini-arena-grapple-1: ok
+   uses bm-approach-uppertier-1: ok
+   uses bm-approach-uppertier-3: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-clear: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-npc-mini-arena: not-region/spawner
+   uses group-npc-uppertier: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-approach-mini-arena-kickbackboss-1: ok
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-zone-marker: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-bridge-crossing-1: ok
+   uses reg-mini-arena-entrance-1: ok
+   uses reg-mini-arena-entrance-2: ok
+   uses reg-uppertier-1: ok
+   uses spawner-group: not-region/spawner
+stage 8 ss-coop-adv-dig-valve-into-big-arena: 
+   states: --all-- initial complete
+   uses reg-valve-mini-arena-1: ok
+stage 9 ss-igc-valve-into-big-arena: 
+   states: --all-- initial complete
+stage 10 ss-coop-adv-dig-big-arena: 
+   states: --all-- initial complete
+   uses bm-wave1-1: ok
+   uses bm-wave1-rush-1: ok
+   uses bm-wave1-shotgun-1: ok
+   uses bm-wave1-tau-perch-1: ok
+   uses npc-alive-count: not-region/spawner
+   uses reg-wave1trigger-1: ok
+   uses reg-wave2trigger-1: ok
+stage 11 ss-igc-kickback-intro: 
+   states: --all-- initial complete
+stage 12 ss-coop-adv-dig-big-arena-part-2: 
+   states: --all-- initial complete
+   wait get-boolean 0x36d8f341 on reg-switch-crate-2 setter:other-script ['arm-bomb', 'chain-pull', 'multi-player-region']
+   wait get-boolean 0xc22193cb on self setter:closure
+   wait get-boolean 0xca73ca54 on self setter:closure
+   uses bm-arena-rear-guard-1: ok
+   uses bm-kickback-boss-1: ok
+   uses bm-sniper1-perch-1: ok
+   uses bm-wave1-1: ok
+   uses bm-wave1-2: ok
+   uses bm-wave1-rush-1: ok
+   uses bm-wave1-shotgun-1: ok
+   uses bm-wave1-tau-perch-1: ok
+   uses bm-wave2-armor-1: ok
+   uses bm-wave2-armor-perch-1: ok
+   uses bm-wave2-grappler-1: ok
+   uses bm-wave2-light-1: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-big-arena-all: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-kickboss-1: ok
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses obj-switch-crate-2: ok
+   uses reg-switch-crate-2: ok
+   uses spawner-group: not-region/spawner
+stage 13 ss-coop-adv-dig-approach-valve-post-big-arena: 
+   states: --all-- initial complete
+   uses reg-valve-big-arena-1: ok
+stage 14 ss-igc-valve-into-upper-plateau: 
+   states: --all-- initial complete
+stage 15 ss-coop-adv-dig-post-trucks: 
+   states: --all-- initial complete
+   wait get-boolean 0x13776f7b on self setter:closure
+   wait get-boolean 0x4a7fad95 on self setter:closure
+   wait get-boolean 0x9e3de5f on self setter:closure
+   wait get-boolean reg-post-trucks-rush-1 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-2 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-3 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-4 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-5 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-6 on self setter:closure
+   wait get-boolean reg-post-trucks-rush-7 on self setter:closure
+   uses bm-post-trucks-boss-1: ok
+   uses bm-post-trucks-grappler-1: ok
+   uses bm-post-trucks-reinforcements-1: ok
+   uses bm-post-trucks-reinforcements-2: ok
+   uses bm-post-trucks-second-boss-1: ok
+   uses bm-post-trucks-side-grappler-1: ok
+   uses bm-post-trucks-side-grappler-3: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-post-trucks: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-fired-recently: not-region/spawner
+   uses npc-group-alive-count: not-region/spawner
+   uses npc-post-trucks-rpg-1: ok
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses obj-vines-1: ok
+   uses reg-post-trucks-rush-1: ok
+   uses reg-post-trucks-rush-2: ok
+   uses reg-post-trucks-rush-3: ok
+   uses reg-post-trucks-rush-4: ok
+   uses reg-post-trucks-rush-5: ok
+   uses reg-post-trucks-rush-6: ok
+   uses reg-post-trucks-rush-7: ok
+   uses reg-post-trucks-rush-8: ok
+   uses spawner-group: not-region/spawner
+stage 16 ss-coop-adv-dig-valve-into-ship-arena: 
+   states: --all-- initial complete
+   uses obj-vines-1: ok
+   uses reg-valve-ship-arena-1: ok
+stage 17 ss-igc-ship-intro: 
+   states: --all-- initial complete
+   uses obj-vines-1: ok
+stage 18 ss-coop-adv-dig-ship-crate3: 
+   states: --all-- initial wait-for-lull in-lull lulls-finished-wait-for-crate complete
+   wait get-boolean 0x19f4cd25 on self setter:closure
+   wait get-boolean 0x36d8f341 on reg-switch-crate-3 setter:other-script ['arm-bomb', 'chain-pull', 'multi-player-region']
+   wait get-boolean 0x5faeb237 on self setter:closure
+   wait get-boolean 0x8b2cf446 on self setter:closure
+   wait get-boolean 0xc8e16733 on self setter:closure
+   wait get-boolean 0xf7012996 on self setter:closure
+   wait get-boolean 0xfbf0fb7 on self setter:closure
+   uses bm-ship-crate3-defender-armor-1: ok
+   uses bm-ship-crate3-defender-fodder-1: ok
+   uses bm-ship-crate3-defender-pistole-1: ok
+   uses bm-ship-crate3-defender-shield-1: ok
+   uses bm-ship-sniper-guard-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses obj-switch-crate-3: ok
+   uses reg-ship-crate-defend-trigger-1: ok
+   uses reg-switch-crate-3: ok
+stage 19 ss-coop-adv-dig-ship-crate4: 
+   states: --all-- initial complete
+   wait get-boolean 0x36d8f341 on reg-switch-crate-4 setter:other-script ['arm-bomb', 'chain-pull', 'multi-player-region']
+   wait get-boolean 0x70cfdf52 on self setter:closure
+   wait get-boolean 0xe6235314 on self setter:closure
+   wait get-boolean 0xed617183 on self setter:closure
+   uses bm-crate4-tent-sniper-1: ok
+   uses bm-ship-crate4-defender-fodder-rear-1: ok
+   uses bm-ship-crate4-defender-grappler-1: ok
+   uses bm-ship-crate4-defender-rpg-2: ok
+   uses bm-ship-crate4-defender-rpg-3: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-crate4-all: not-region/spawner
+   uses group-crate4-defender-rpg-2: not-region/spawner
+   uses group-crate4-defender-rpg-3: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-group-alive-count: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses obj-switch-crate-4: ok
+   uses reg-switch-crate-4: ok
+   uses spawner-group: not-region/spawner
+stage 20 ss-coop-adv-dig-ship-groupup-boss: 
+   states: --all-- initial complete
+   uses reg-valve-ship-boss-fight-1: ok
+stage 21 ss-igc-draza-intro: 
+   states: --all-- initial complete
+stage 22 ss-coop-adv-dig-ship-boss-fight: 
+   states: --all-- initial complete
+   wait get-boolean 0x25e1de1e on self setter:closure
+   wait get-boolean 0x31d71825 on self setter:closure
+   wait get-boolean 0x4a4537dc on self setter:closure
+   wait get-boolean 0x4d430292 on self setter:closure
+   uses bm-bossfight-cliff-sniper-1: ok
+   uses bm-bossfight-cliff-sniper-2: ok
+   uses bm-bossfight-draza-guards-1: ok
+   uses bm-crate4-tent-sniper-1: ok
+   uses bm-ship-bossfight-fodder-1: ok
+   uses bm-ship-bossfight-grappler-1: ok
+   uses group-at: not-region/spawner
+   uses group-bossfight: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-draza-guards: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-approach-upper-9: ok
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-draza-1: ok
+   uses npc-draza-guard-1: ok
+   uses npc-draza-guard-2: ok
+   uses npc-draza-guard-2-med-1: ok
+   uses npc-draza-guard-boss-1: ok
+   uses npc-fired-recently: not-region/spawner
+   uses npc-group-alive-count: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-center-object: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 23 ss-coop-adv-dig-groupup-finale: 
+   states: --all-- initial complete
+   uses reg-valve-ship-arena-5: ok
+stage 24 ss-igc-finale: 
+   states: --all-- initial complete

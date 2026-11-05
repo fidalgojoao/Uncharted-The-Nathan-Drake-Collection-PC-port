@@ -1,0 +1,3 @@
+32009 41430 crane False False heli-roles False False
+checked 3566
+ss-heli-roles 2 undefined-on-ps3-too [('coop-syria-pak', 'sp:ss-heli-roles-coop-0', False), ('coop-syria-pak', 'sp:ss-heli-roles-coop-1', False)]

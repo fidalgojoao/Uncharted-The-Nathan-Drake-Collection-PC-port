@@ -1,0 +1,185 @@
+### NET_GAME_YEMEN_SURVIVAL_1 level=0xe4e6147 kind=0x8cf8e1cc stages=10 paks=['yemen-multi-hunter-pak', 'yemen-multi', 'yemen-multi-wide', 'yemen-multi-npc', 'sky-yemen-mp', 'yemen-multi-wide-matte', 'multi-all', 'coop-all', 'world-multiplayer', 'yemen-multi-stage']
+  regions 120/120 spawners 590/590 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_AIRPORT_SURVIVAL_1 level=0x1ce733f4 kind=0x8cf8e1cc stages=10 paks=['yemen-airport-multi-hunter-pak', 'air-multi-wide', 'air-multi', 'sky-air-multi', 'air-multi-npc', 'multi-all', 'air-multi-sound', 'coop-all', 'world-multiplayer', 'air-multi-stage']
+  regions 158/158 spawners 644/652 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_CHA_SURVIVAL_1 level=0xf56c0528 kind=0x8cf8e1cc stages=10 paks=['cha-multi-hunter-pak', 'cha-multi', 'sky-chateau-multi', 'cha-multi-wide', 'cha-multi-npc', 'multi-all', 'coop-all', 'world-multiplayer', 'cha-multi-stage']
+  regions 88/88 spawners 585/585 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_SYRIA_SURVIVAL_1 level=0x31b0a47 kind=0x8cf8e1cc stages=10 paks=['syria-multi-hunter-pak', 'syria-multi-pak', 'syria-multi-pak', 'syria-multi', 'syria-comp-wide', 'multi-all', 'syria-multi-npc', 'sky-syria', 'coop-all', 'world-multiplayer', 'coop-syria-stage']
+  regions 100/100 spawners 641/641 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_DESERT_SURVIVAL_1 level=0xf045d7fd kind=0x8cf8e1cc stages=10 paks=['desert-multi-hunter-pak', 'desert-multi-pak', 'desert-multi', 'multi-all', 'desert-multi-wide', 'desert-multi-pak', 'desert-multi-npc', 'sky-des-multi', 'coop-all', 'world-multiplayer', 'desert-multi-stage']
+  regions 96/96 spawners 551/551 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_RUINS_SURVIVAL_1 level=0x37be4d69 kind=0x8cf8e1cc stages=10 paks=['ruins-multi-hunter-pak', 'ruins-multi-pak', 'ruins-multi-pak', 'ruins-multi-wide', 'ruins-multi-pak', 'sky-ruins-multi', 'ruins-multi', 'ruins-multi-npc', 'coop-all', 'multi-all', 'world-multiplayer', 'ruins-multi-stage']
+  regions 104/104 spawners 881/881 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_FACILITY_SURVIVAL_1 level=0x7069f592 kind=0x8cf8e1cc stages=10 paks=['facility-multi-hunter-pak', 'facility-multi-pak', 'facility-multi-pak', 'facility-multi', 'facility-multi-npc', 'facility-multi-wide', 'coop-all', 'multi-all', 'world-multiplayer', 'facility-multi-stage']
+  regions 145/145 spawners 697/697 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  PAK23-SYMBOLS-LOST [('facility-multi-pak', ['ss-crane-region']), ('facility-multi-pak', ['ss-crane-region'])]
+### NET_GAME_HIGHRISE_SURVIVAL_1 level=0xb89e363e kind=0x8cf8e1cc stages=10 paks=['highrise-multi-hunter-pak', 'highrise-multi-pak', 'highrise-multi-pak', 'highrise-multi', 'highrise-multi-npc', 'highrise-multi-wide', 'sky-highrise-multi', 'multi-all', 'coop-all', 'world-multiplayer', 'highrise-multi-stage']
+  regions 173/173 spawners 758/758 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_MUSEUM_SURVIVAL_1 level=0xee1d78ce kind=0x8cf8e1cc stages=10 paks=['museum-multi-hunter-pak', 'museum-multi-pak', 'museum-multi-pak', 'sky-village-pre', 'museum-multi', 'museum-multi-wide', 'museum-multi-npc', 'coop-all', 'multi-all', 'world-multiplayer', 'museum-multi-stage']
+  regions 118/118 spawners 751/751 closure scripts 46
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_WARZONE_SURVIVAL_1 level=0x467db0f2 kind=0x8cf8e1cc stages=10 paks=['warzone-multi-hunter-pak', 'warzone-multi-killvis', 'warzone-multi-pak', 'warzone-multi', 'warzone-multi-pak', 'sky-warzone-multi', 'warzone-multi-pak', 'multi-all', 'coop-all', 'warzone-multi-npc', 'world-multiplayer', 'warzone-multi-stage']
+  regions 105/105 spawners 605/605 closure scripts 46
+  PAK-MISSING ['warzone-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_VILLAGE_SURVIVAL_1 level=0x9c1890e4 kind=0x8cf8e1cc stages=10 paks=['village-multi-hunter-pak', 'village-multi-killvis', 'village-multi-pak', 'village-multi', 'village-multi-pak', 'sky-village-multi', 'village-multi-wide', 'multi-all', 'coop-all', 'village-multi-npc', 'world-multiplayer', 'village-multi-stage']
+  regions 114/114 spawners 507/507 closure scripts 46
+  PAK-MISSING ['village-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_GOMPA_SURVIVAL_1 level=0x67fc1396 kind=0x8cf8e1cc stages=10 paks=['gompa-multi-hunter-pak', 'gompa-multi-killvis', 'gompa-multi-pak', 'gompa-multi-pak', 'gompa-multi', 'multi-all', 'coop-all', 'gompa-multi-npc', 'gompa-multi-wide', 'sky-gompa-mp', 'world-multiplayer', 'gompa-multi-stage']
+  regions 167/167 spawners 751/751 closure scripts 46
+  PAK-MISSING ['gompa-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_FORT_SURVIVAL_1 level=0x36ceb66b kind=0x8cf8e1cc stages=10 paks=['fort-multi-hunter-pak', 'fort-multi-killvis', 'fort-multi-pak', 'fort-multi', 'fort-multi-pak', 'fort-multi-wide', 'fort-multi-wide-water', 'sky-fort-multi', 'coop-all', 'fort-multi-npc', 'multi-all', 'world-multiplayer', 'fort-multi-stage']
+  regions 132/132 spawners 519/519 closure scripts 46
+  PAK-MISSING ['fort-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_SHAM_SURVIVAL_1 level=0xc4139f78 kind=0x8cf8e1cc stages=10 paks=['shambhala-multi-hunter-pak', 'shambhala-multi-killvis', 'shambhala-multi-pak', 'shambhala-multi', 'shambhala-multi-pak', 'multi-all', 'coop-all', 'shambhala-multi-npc', 'sky-sham-multi', 'sham-multi-wide', 'world-multiplayer', 'shambhala-multi-stage']
+  regions 109/109 spawners 647/647 closure scripts 46
+  PAK-MISSING ['shambhala-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_OASIS_SURVIVAL_1 level=0x82fb8e9e kind=0x8cf8e1cc stages=10 paks=['oasis-multi-hunter-pak', 'oasis-multi-killvis', 'oasis-multi-pak', 'multi-all', 'oasis-multi', 'oasis-multi-pak', 'sky-oasis-multi', 'oasis-multi-npc', 'coop-all', 'oasis-multi-wide', 'world-multiplayer', 'oasis-multi-stage']
+  regions 90/90 spawners 438/438 closure scripts 46
+  PAK-MISSING ['oasis-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_OLD_SURVIVAL_1 level=0x2f92fe0a kind=0x8cf8e1cc stages=10 paks=['streets-multi-hunter-pak', 'old-quarter-multi-killvis', 'streets-multi-pak', 'old-quarter-multi', 'streets-multi-pak', 'streets-multi-pak', 'sky-old-quarter', 'multi-all', 'old-quarter-multi-wide', 'streets-multi-npc', 'coop-all', 'world-multiplayer', 'old-quarter-multi-stage']
+  regions 82/82 spawners 443/443 closure scripts 46
+  PAK-MISSING ['old-quarter-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_STREETS_SURVIVAL_1 level=0xdcd88efb kind=0x8cf8e1cc stages=10 paks=['ldn-streets-multi-hunter-pak', 'ldn-streets-multi-killvis', 'ldn-streets-multi-pak', 'multi-all', 'ldn-streets-multi-pak', 'ldn-streets-multi', 'sky-ldn-streets-multi', 'ldn-streets-multi-wide', 'ldn-streets-multi-npc', 'coop-all', 'world-multiplayer', 'ldn-streets-multi-stage']
+  regions 78/78 spawners 453/453 closure scripts 46
+  PAK-MISSING ['ldn-streets-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_YEMEN_HUNTER_1 level=0xe4e6147 kind=0x9dbd7b9d stages=3 paks=['yemen-multi-hunter-pak', 'yemen-multi', 'yemen-multi-wide', 'yemen-multi-npc', 'sky-yemen-mp', 'yemen-multi-wide-matte', 'multi-all', 'coop-all', 'world-multiplayer', 'yemen-multi-stage']
+  regions 120/120 spawners 590/590 closure scripts 6
+### NET_GAME_AIRPORT_HUNTER_1 level=0x1ce733f4 kind=0x9dbd7b9d stages=3 paks=['yemen-airport-multi-hunter-pak', 'air-multi-wide', 'air-multi', 'sky-air-multi', 'air-multi-npc', 'multi-all', 'air-multi-sound', 'coop-all', 'world-multiplayer', 'air-multi-stage']
+  regions 158/158 spawners 644/652 closure scripts 6
+### NET_GAME_CHA_HUNTER_1 level=0xf56c0528 kind=0x9dbd7b9d stages=3 paks=['cha-multi-hunter-pak', 'cha-multi', 'sky-chateau-multi', 'cha-multi-wide', 'cha-multi-npc', 'multi-all', 'coop-all', 'world-multiplayer', 'cha-multi-stage']
+  regions 88/88 spawners 585/585 closure scripts 6
+### NET_GAME_SYRIA_HUNTER_1 level=0x31b0a47 kind=0x9dbd7b9d stages=3 paks=['syria-multi-hunter-pak', 'syria-multi-pak', 'syria-multi-pak', 'syria-multi', 'syria-comp-wide', 'multi-all', 'syria-multi-npc', 'sky-syria', 'coop-all', 'world-multiplayer', 'coop-syria-stage']
+  regions 100/100 spawners 641/641 closure scripts 6
+### NET_GAME_DESERT_HUNTER_1 level=0xf045d7fd kind=0x9dbd7b9d stages=3 paks=['desert-multi-hunter-pak', 'desert-multi-pak', 'desert-multi', 'multi-all', 'desert-multi-wide', 'desert-multi-pak', 'desert-multi-npc', 'sky-des-multi', 'coop-all', 'world-multiplayer', 'desert-multi-stage']
+  regions 96/96 spawners 551/551 closure scripts 6
+### NET_GAME_RUINS_HUNTER_1 level=0x37be4d69 kind=0x9dbd7b9d stages=3 paks=['ruins-multi-hunter-pak', 'ruins-multi-pak', 'ruins-multi-pak', 'ruins-multi-wide', 'ruins-multi-pak', 'sky-ruins-multi', 'ruins-multi', 'ruins-multi-npc', 'coop-all', 'multi-all', 'world-multiplayer', 'ruins-multi-stage']
+  regions 104/104 spawners 881/881 closure scripts 6
+### NET_GAME_FACILITY_HUNTER_1 level=0x7069f592 kind=0x9dbd7b9d stages=3 paks=['facility-multi-hunter-pak', 'facility-multi-pak', 'facility-multi-pak', 'facility-multi', 'facility-multi-npc', 'facility-multi-wide', 'coop-all', 'multi-all', 'world-multiplayer', 'facility-multi-stage']
+  regions 145/145 spawners 697/697 closure scripts 6
+  PAK23-SYMBOLS-LOST [('facility-multi-pak', ['ss-crane-region']), ('facility-multi-pak', ['ss-crane-region'])]
+### NET_GAME_HIGHRISE_HUNTER_1 level=0xb89e363e kind=0x9dbd7b9d stages=3 paks=['highrise-multi-hunter-pak', 'highrise-multi-pak', 'highrise-multi-pak', 'highrise-multi', 'highrise-multi-npc', 'highrise-multi-wide', 'sky-highrise-multi', 'multi-all', 'coop-all', 'world-multiplayer', 'highrise-multi-stage']
+  regions 173/173 spawners 758/758 closure scripts 6
+### NET_GAME_MUSEUM_HUNTER_1 level=0xee1d78ce kind=0x9dbd7b9d stages=3 paks=['museum-multi-hunter-pak', 'museum-multi-pak', 'museum-multi-pak', 'sky-village-pre', 'museum-multi', 'museum-multi-wide', 'museum-multi-npc', 'coop-all', 'multi-all', 'world-multiplayer', 'museum-multi-stage']
+  regions 118/118 spawners 751/751 closure scripts 6
+### NET_GAME_WARZONE_HUNTER_1 level=0x467db0f2 kind=0x9dbd7b9d stages=3 paks=['warzone-multi-hunter-pak', 'warzone-multi-killvis', 'warzone-multi-pak', 'warzone-multi', 'warzone-multi-pak', 'sky-warzone-multi', 'warzone-multi-pak', 'multi-all', 'coop-all', 'warzone-multi-npc', 'world-multiplayer', 'warzone-multi-stage']
+  regions 105/105 spawners 605/605 closure scripts 6
+  PAK-MISSING ['warzone-multi-killvis(no ps4+no ps3 ingame)']
+### NET_GAME_VILLAGE_HUNTER_1 level=0x9c1890e4 kind=0x9dbd7b9d stages=3 paks=['village-multi-hunter-pak', 'village-multi-killvis', 'village-multi-pak', 'village-multi', 'village-multi-pak', 'sky-village-multi', 'village-multi-wide', 'multi-all', 'coop-all', 'village-multi-npc', 'world-multiplayer', 'village-multi-stage']
+  regions 114/114 spawners 507/507 closure scripts 6
+  PAK-MISSING ['village-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?online-spawner-coop-1']
+### NET_GAME_GOMPA_HUNTER_1 level=0x67fc1396 kind=0x9dbd7b9d stages=3 paks=['gompa-multi-hunter-pak', 'gompa-multi-killvis', 'gompa-multi-pak', 'gompa-multi-pak', 'gompa-multi', 'multi-all', 'coop-all', 'gompa-multi-npc', 'gompa-multi-wide', 'sky-gompa-mp', 'world-multiplayer', 'gompa-multi-stage']
+  regions 167/167 spawners 751/751 closure scripts 6
+  PAK-MISSING ['gompa-multi-killvis(no ps4+no ps3 ingame)']
+### NET_GAME_FORT_HUNTER_1 level=0x36ceb66b kind=0x9dbd7b9d stages=3 paks=['fort-multi-hunter-pak', 'fort-multi-killvis', 'fort-multi-pak', 'fort-multi', 'fort-multi-pak', 'fort-multi-wide', 'fort-multi-wide-water', 'sky-fort-multi', 'coop-all', 'fort-multi-npc', 'multi-all', 'world-multiplayer', 'fort-multi-stage']
+  regions 132/132 spawners 519/519 closure scripts 6
+  PAK-MISSING ['fort-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?online-spawner-coop-1']
+### NET_GAME_SHAM_HUNTER_1 level=0xc4139f78 kind=0x9dbd7b9d stages=3 paks=['shambhala-multi-hunter-pak', 'shambhala-multi-killvis', 'shambhala-multi-pak', 'shambhala-multi', 'shambhala-multi-pak', 'multi-all', 'coop-all', 'shambhala-multi-npc', 'sky-sham-multi', 'sham-multi-wide', 'world-multiplayer', 'shambhala-multi-stage']
+  regions 109/109 spawners 647/647 closure scripts 6
+  PAK-MISSING ['shambhala-multi-killvis(no ps4+no ps3 ingame)']
+### NET_GAME_OLD_HUNTER_1 level=0x2f92fe0a kind=0x9dbd7b9d stages=3 paks=['streets-multi-hunter-pak', 'old-quarter-multi-killvis', 'streets-multi-pak', 'old-quarter-multi', 'streets-multi-pak', 'streets-multi-pak', 'sky-old-quarter', 'multi-all', 'old-quarter-multi-wide', 'streets-multi-npc', 'coop-all', 'world-multiplayer', 'old-quarter-multi-stage']
+  regions 82/82 spawners 443/443 closure scripts 6
+  PAK-MISSING ['old-quarter-multi-killvis(no ps4+no ps3 ingame)']
+### NET_GAME_OASIS_HUNTER_1 level=0x82fb8e9e kind=0x9dbd7b9d stages=3 paks=['oasis-multi-hunter-pak', 'oasis-multi-killvis', 'oasis-multi-pak', 'multi-all', 'oasis-multi', 'oasis-multi-pak', 'sky-oasis-multi', 'oasis-multi-npc', 'coop-all', 'oasis-multi-wide', 'world-multiplayer', 'oasis-multi-stage']
+  regions 90/90 spawners 438/438 closure scripts 6
+  PAK-MISSING ['oasis-multi-killvis(no ps4+no ps3 ingame)']
+### NET_GAME_STREETS_HUNTER_1 level=0xdcd88efb kind=0x9dbd7b9d stages=3 paks=['ldn-streets-multi-hunter-pak', 'ldn-streets-multi-killvis', 'ldn-streets-multi-pak', 'multi-all', 'ldn-streets-multi-pak', 'ldn-streets-multi', 'sky-ldn-streets-multi', 'ldn-streets-multi-wide', 'ldn-streets-multi-npc', 'coop-all', 'world-multiplayer', 'ldn-streets-multi-stage']
+  regions 78/78 spawners 453/453 closure scripts 6
+  PAK-MISSING ['ldn-streets-multi-killvis(no ps4+no ps3 ingame)']
+### 0x8a746a66 level=dig-adv kind=0x5915ddac stages=25 paks=['dig-adv', 'dig-coop-approach', 'dig-coop-dropdown', 'sky-dig-coop', 'coop-borneo-sound', 'dig-coop-approach', 'dig-coop-dropdown', 'sky-dig-coop', 'coop-borneo-sound', 'dig-adv', 'multi-all', 'dig-coop-ship', 'world-coop-adv-dig', 'dig-coop-stage']
+  regions 117/117 spawners 1339/1339 closure scripts 61
+### 0x9cb9a5b3 level=0x1548154e kind=0x5915ddac stages=25 paks=['coop-ldn-pak', 'coop-ldn-victorian-station', 'coop-ldn-tunnel-a', 'coop-ldn-persist', 'multi-all', 'coop-ldn-victorian-station', 'coop-ldn-tunnel-a', 'coop-ldn-persist', 'multi-all', 'coop-ldn-pak', 'coop-ldn-library-inner', 'coop-ldn-atwood-station', 'coop-ldn-station-entrance', 'coop-ldn-station-entrance-outside', 'sky-london', 'world-coop-adv-ldn-1', 'ldn-train-stage-coop']
+  regions 53/53 spawners 852/852 closure scripts 44
+### 0x6bb2b65f level=0xae270117 kind=0x5915ddac stages=25 paks=['mon-adv-pak', 'mon-coop-church', 'mon-coop-cloister', 'mon-coop-front', 'multi-all', 'mon-coop-church', 'mon-coop-cloister', 'mon-coop-front', 'mon-coop-courtyard', 'multi-all', 'mon-adv-pak', 'mon-coop-church-exterior', 'sky-mon-coop-b', 'world-coop-adv-mon-1', 'mon-coop-stage']
+  regions 45/45 spawners 993/993 closure scripts 52
+### 0xcd368052 level=0xab8d7bad kind=0x5915ddac stages=28 paks=['coop-syria-pak', 'multi-all', 'coop-syria-pak', 'coop-syria-persistent', 'sky-syria', 'coop-syria-sound', 'coop-syria-connection', 'coop-syria-area2', 'coop-syria-walls', 'coop-syria-entrance', 'coop-syria-entrance-int', 'multi-all', 'coop-syria-area1', 'coop-syria-area1-hallway', 'coop-syria-area2', 'coop-syria-area2-low', 'coop-syria-connection', 'coop-syria-entrance-low', 'coop-syria-hub-low', 'coop-syria-persistent', 'coop-syria-sound', 'coop-syria-turret1', 'coop-syria-turret1-low', 'coop-syria-turret2', 'coop-syria-turret2-interior', 'coop-syria-turret2-low', 'coop-syria-walls', 'coop-syria-walls-back-low', 'coop-syria-walls-low', 'coop-syria-wide', 'sky-syria', 'coop-syria-pak', 'coop-syria-sound', 'world-coop-adv-syria', 'coop-syria-stage']
+  regions 154/154 spawners 1360/1360 closure scripts 54
+  STAGE-SPAWNER-LOST ['?0xe4af1492']
+  PAK23-SYMBOLS-LOST [('coop-syria-pak', ['ss-heli-roles']), ('coop-syria-pak', ['ss-heli-roles']), ('coop-syria-pak', ['ss-heli-roles'])]
+### 0x1c37ceb7 level=0xd3925240 kind=0x5915ddac stages=15 paks=['coop-airport-pak', 'coop-airport-1', 'coop-airport-2', 'coop-airport-3a', 'sky-coop-airport', 'coop-airport-const', 'coop-airport-wide', 'coop-airport-sound', 'coop-airport-pak', 'coop-airport-bosses', 'coop-airport-igc-intro', 'coop-airport-1', 'coop-airport-2', 'coop-airport-3a', 'coop-airport-3b', 'airport-3b-low', 'sky-coop-airport', 'coop-airport-const', 'coop-airport-wide', 'coop-airport-sound', 'coop-airport-pak', 'world-coop-adv-airport', 'coop-airport-stage']
+  regions 67/67 spawners 1245/1245 closure scripts 55
+  STAGE-SPAWNER-LOST ['?0xe4af1492']
+### NET_GAME_YEMEN_SHADE_1 level=0x19ff3832 kind=0x8cf8e1cc stages=8 paks=['yemen-multi-hunter-pak', 'yemen-multi', 'yemen-multi-wide', 'yemen-multi-shade-npc', 'sky-yemen-mp', 'yemen-multi-wide-matte', 'multi-all', 'coop-shade-all', 'world-multiplayer', 'yemen-multi-stage']
+  regions 121/121 spawners 557/557 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_AIRPORT_SHADE_1 level=0xcc583c27 kind=0x8cf8e1cc stages=8 paks=['yemen-airport-multi-hunter-pak', 'air-multi-wide', 'air-multi-shade', 'sky-air-multi', 'air-multi-shade-npc', 'multi-all', 'air-multi-sound', 'coop-shade-all', 'world-multiplayer', 'air-multi-stage']
+  regions 146/146 spawners 608/608 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_CHA_SHADE_1 level=0xef0e0884 kind=0x8cf8e1cc stages=8 paks=['cha-multi-hunter-pak', 'cha-multi-shade', 'sky-chateau-multi', 'cha-multi-wide', 'cha-multi-shade-npc', 'multi-all', 'coop-shade-all', 'world-multiplayer', 'cha-multi-stage']
+  regions 90/90 spawners 547/547 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_SYRIA_SHADE_1 level=0x6a17d8c1 kind=0x8cf8e1cc stages=8 paks=['syria-multi-hunter-pak', 'syria-multi-pak', 'syria-multi-pak', 'syria-multi', 'syria-comp-wide', 'multi-all', 'syria-multi-shade-npc', 'sky-syria', 'coop-shade-all', 'world-multiplayer', 'coop-syria-stage']
+  regions 101/101 spawners 608/608 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_DESERT_SHADE_1 level=0x142d62e0 kind=0x8cf8e1cc stages=8 paks=['desert-multi-hunter-pak', 'desert-multi-pak', 'desert-multi', 'multi-all', 'desert-multi-wide', 'desert-multi-pak', 'desert-multi-shade-npc', 'sky-des-multi', 'coop-shade-all', 'world-multiplayer', 'desert-multi-stage']
+  regions 97/97 spawners 518/518 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_RUINS_SHADE_1 level=0xf54547e3 kind=0x8cf8e1cc stages=8 paks=['ruins-multi-hunter-pak', 'ruins-multi-pak', 'ruins-multi-pak', 'ruins-multi-wide', 'ruins-multi-pak', 'sky-ruins-multi', 'ruins-multi', 'ruins-multi-shade-npc', 'coop-shade-all', 'multi-all', 'world-multiplayer', 'ruins-multi-stage']
+  regions 105/105 spawners 848/848 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_FACILITY_SHADE_1 level=0xb484b873 kind=0x8cf8e1cc stages=8 paks=['facility-multi-hunter-pak', 'facility-multi-pak', 'facility-multi-pak', 'facility-multi', 'facility-multi-shade-npc', 'facility-multi-wide', 'coop-shade-all', 'multi-all', 'world-multiplayer', 'facility-multi-stage']
+  regions 146/146 spawners 664/664 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  PAK23-SYMBOLS-LOST [('facility-multi-pak', ['ss-crane-region']), ('facility-multi-pak', ['ss-crane-region'])]
+### NET_GAME_HIGHRISE_SHADE_1 level=0xb78be640 kind=0x8cf8e1cc stages=8 paks=['highrise-multi-hunter-pak', 'highrise-multi-pak', 'highrise-multi-pak', 'highrise-multi', 'highrise-multi-shade-npc', 'highrise-multi-wide', 'sky-highrise-multi', 'multi-all', 'coop-shade-all', 'world-multiplayer', 'highrise-multi-stage']
+  regions 174/174 spawners 725/725 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_MUSEUM_SHADE_1 level=0xd253b571 kind=0x8cf8e1cc stages=8 paks=['museum-multi-hunter-pak', 'museum-multi-pak', 'museum-multi-pak', 'sky-village-pre', 'museum-multi', 'museum-multi-wide', 'museum-multi-shade-npc', 'coop-shade-all', 'multi-all', 'world-multiplayer', 'museum-multi-stage']
+  regions 119/119 spawners 721/721 closure scripts 62
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### NET_GAME_GOMPA_SHADE_1 level=0x6130fc35 kind=0x8cf8e1cc stages=8 paks=['gompa-multi-hunter-pak', 'gompa-multi-killvis', 'gompa-multi-pak', 'gompa-multi-pak', 'gompa-multi', 'multi-all', 'coop-shade-all', 'gompa-multi-shade-npc', 'gompa-multi-wide', 'sky-gompa-mp', 'world-multiplayer', 'gompa-multi-stage']
+  regions 168/168 spawners 718/692 closure scripts 62
+  PAK-MISSING ['gompa-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  spawners only in ps3 map (27): ['npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-kickback-mark-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1', 'npc-shade-mark-uzi-1']
+### NET_GAME_FORT_SHADE_1 level=0x168dfa84 kind=0x8cf8e1cc stages=8 paks=['fort-multi-hunter-pak', 'fort-multi-killvis', 'fort-multi-pak', 'fort-multi', 'fort-multi-pak', 'fort-multi-wide', 'fort-multi-wide-water', 'sky-fort-multi', 'coop-shade-all', 'fort-multi-shade-npc', 'multi-all', 'world-multiplayer', 'fort-multi-stage']
+  regions 133/133 spawners 486/460 closure scripts 62
+  PAK-MISSING ['fort-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  spawners only in ps3 map (27): ['npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-kickback-mark-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1', 'npc-shade-mark-uzi-1']
+### NET_GAME_SHAM_SHADE_1 level=0xfe78412b kind=0x8cf8e1cc stages=8 paks=['shambhala-multi-hunter-pak', 'shambhala-multi-killvis', 'shambhala-multi-pak', 'shambhala-multi', 'shambhala-multi-pak', 'multi-all', 'coop-shade-all', 'shambhala-multi-shade-npc', 'sky-sham-multi', 'sham-multi-wide', 'world-multiplayer', 'shambhala-multi-stage']
+  regions 110/110 spawners 614/588 closure scripts 62
+  PAK-MISSING ['shambhala-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  spawners only in ps3 map (27): ['npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-kickback-mark-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1', 'npc-shade-mark-uzi-1']
+### NET_GAME_WARZONE_SHADE_1 level=0x97298817 kind=0x8cf8e1cc stages=8 paks=['warzone-multi-hunter-pak', 'warzone-multi-killvis', 'warzone-multi-pak', 'warzone-multi', 'warzone-multi-pak', 'sky-warzone-multi', 'multi-all', 'coop-shade-all', 'warzone-multi-shade-npc', 'world-multiplayer', 'warzone-multi-stage']
+  regions 106/106 spawners 572/550 closure scripts 62
+  PAK-MISSING ['warzone-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  spawners only in ps3 map (23): ['npc-kickback-mark-armor-grappler-1', 'npc-kickback-mark-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1', 'npc-shade-mark-uzi-1']
+### 0xc80dc107 level=0x283b89b8 kind=0x8cf8e1cc stages=8 paks=['village-multi-hunter-pak', 'village-multi-killvis', 'village-multi-pak', 'village-multi', 'village-multi-pak', 'sky-village-multi', 'multi-all', 'village-multi-wide', 'coop-shade-all', 'village-multi-shade-npc', 'world-multiplayer', 'village-multi-stage']
+  regions 115/115 spawners 474/452 closure scripts 62
+  PAK-MISSING ['village-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+  spawners only in ps3 map (23): ['npc-kickback-mark-armor-grappler-1', 'npc-kickback-mark-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1', 'npc-shade-mark-uzi-1']
+### 0x69d6f6f1 level=0x421d5e2c kind=0x8cf8e1cc stages=8 paks=['oasis-multi-hunter-pak', 'oasis-multi-killvis', 'oasis-multi-pak', 'multi-all', 'oasis-multi', 'oasis-multi-pak', 'sky-oasis-multi', 'oasis-multi-shade-npc', 'oasis-multi-wide', 'coop-shade-all', 'world-multiplayer', 'oasis-multi-stage']
+  regions 91/91 spawners 405/405 closure scripts 62
+  PAK-MISSING ['oasis-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### 0x7248286c level=0x8ff6f0c5 kind=0x8cf8e1cc stages=8 paks=['streets-multi-hunter-pak', 'old-quarter-multi-killvis', 'streets-multi-pak', 'old-quarter-multi', 'streets-multi-pak', 'streets-multi-pak', 'sky-old-quarter', 'multi-all', 'old-quarter-multi-wide', 'streets-multi-shade-npc', 'coop-shade-all', 'world-multiplayer', 'old-quarter-multi-stage']
+  regions 83/83 spawners 410/410 closure scripts 62
+  PAK-MISSING ['old-quarter-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### 0xb9205add level=0xa87a80a5 kind=0x8cf8e1cc stages=8 paks=['ldn-streets-multi-hunter-pak', 'ldn-streets-multi-killvis', 'ldn-streets-multi-pak', 'multi-all', 'ldn-streets-multi-pak', 'ldn-streets-multi', 'sky-ldn-streets-multi', 'ldn-streets-multi-shade-npc', 'coop-shade-all', 'ldn-streets-multi-wide', 'world-multiplayer', 'ldn-streets-multi-stage']
+  regions 78/78 spawners 420/420 closure scripts 62
+  PAK-MISSING ['ldn-streets-multi-killvis(no ps4+no ps3 ingame)']
+  STAGE-SPAWNER-LOST ['?0x44433030']
+### 0xf04f4c84 level=0x44b4af22 kind=0x5915ddac stages=23 paks=['fort-coop-pak', 'sky-fort-coop-b', 'fort-coop-cistern', 'fort-coop-courtyard', 'fort-coop-tower', 'fort-coop-tower-wide', 'multi-all', 'fort-coop-pak', 'fort-coop-tower-turret', 'sky-fort-coop-b', 'fort-coop-cistern', 'fort-coop-courtyard', 'fort-coop-tower', 'fort-coop-tower-wide', 'multi-all', 'fort-coop-pak', 'fort-coop-tower-turret', 'fort-coop-sound', 'world-coop-adv-fort', 'fort-coop-stage']
+  regions 130/130 spawners 1171/1171 closure scripts 56

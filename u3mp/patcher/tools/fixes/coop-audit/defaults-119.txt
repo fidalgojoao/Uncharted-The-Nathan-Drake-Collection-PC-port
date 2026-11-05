@@ -1,0 +1,11 @@
+overlay-r3 dc1/ss-coop-adv-fort.bin [dlc-patch18.psarc] @56958 idol-placed int32 ps4=87f13bc2(main) ps3=00000000()
+retail dc1/ss-lost-desert.bin [bin.psarc] @d028 0x28564211 int32 ps4=000007d0() ps3=000003e8()
+overlay-r3 dc1/ss-multiplayer/ss-coop-arena-npcs.bin [dlc-patch18.psarc] @2ee0 0x11d3371 int32 ps4=87f13bc2(main) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-facility-crane.bin [goty-patch.psarc] @d0 start-delay float ps4=87f13bc2(main) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-grave-events.bin [dlc-patch18.psarc] @46c8 0x74188a62 int32 ps4=c9d0aab2(grave-multi-pak) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-ldn-streets-events.bin [dlc-patch18.psarc] @5b8 0xffe68374 int32 ps4=87f13bc2(main) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-net-breakable-car-fort.bin [dlc-patch18.psarc] @610 0xdcde1e21 float ps4=cde4b742(player) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-oasis-events.bin [dlc-patch18.psarc] @170 0xbe00ea93 int32 ps4=87f13bc2(main) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-old-quater-events.bin [dlc-patch18.psarc] @f10 0xdcde1e21 float ps4=87f13bc2(main) ps3=00000000()
+overlay-r3 dc1/ss-multiplayer/ss-sweeping-building.bin [dlc-patch18.psarc] @140 0xe2c35779 float ps4=87f13bc2(main) ps3=00000000()
+files 749 compared 5218 unmatched 198 bad 10

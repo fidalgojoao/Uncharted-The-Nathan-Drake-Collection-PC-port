@@ -1,0 +1,16 @@
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @3f1a8 opt=0x57af0546 int32 target@3f490 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @40130 opt=team int32 target@40308 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @4e008 opt=0x2c066e77 int32 target@4e140 value=00000000() shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @56958 opt=idol-placed int32 target@56b90 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @58c88 opt=team int32 target@58df0 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @5aeb0 opt=0xad536552 int32 target@5b0c8 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @5cf30 opt=idol-placed int32 target@5d2e0 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-coop-adv-fort.bin @67658 opt=idol-placed int32 target@676e0 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-coop-arena-npcs.bin @2ee0 opt=0x11d3371 int32 target@3018 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-facility-crane.bin @d0 opt=start-delay float target@168 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-grave-events.bin @46c8 opt=0x74188a62 int32 target@49d8 value=c9d0aab2(grave-multi-pak) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-ldn-streets-events.bin @5b8 opt=0xffe68374 int32 target@ad8 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-net-breakable-car-fort.bin @610 opt=0xdcde1e21 float target@a04 value=cde4b742(player) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-oasis-events.bin @170 opt=0xbe00ea93 int32 target@450 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-old-quater-events.bin @f10 opt=0xdcde1e21 float target@f90 value=87f13bc2(main) shared=True
+overlay-r3 dc1/ps4/ss-multiplayer/ss-sweeping-building.bin @140 opt=0xe2c35779 float target@320 value=87f13bc2(main) shared=True

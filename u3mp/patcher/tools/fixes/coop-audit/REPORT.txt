@@ -1,0 +1,62 @@
+Co-op audit, static only. Nothing launched; no overlay, output or launcher changed; both apply scripts were dry-run only.
+
+ANSWER: yes, it can happen elsewhere, and it does. Same lost slot in 15 more entries (7 in the Fort adventure), which q14 missed.
+Separate data fault: Shade Arena NPC spawners on 5 maps.
+
+WHY q14 MISSED THEM
+q14 compared against base bin.psarc. PS3 1.19 data is dlc-patch18 > dlc-patch13 > goty-patch > goty-dlc > bin.psarc.
+So: patch-only files were skipped, retail ss-coop-adv-* files were not compared at all, and options whose (sid,type) did not
+line up in the older file were skipped silently. overlay-port/r2/mp hold no ss-* scripts (only medals/modules/net, shadowed by r3).
+New comparison: q14b.py (749 files, PS3 1.19 reference), q15.py (PS3-independent scan, 2798 options), pwalk.py (full pointer-graph
+walk, 678 files). All three agree on the same 15 entries. Retail scripts have none.
+
+FAULTS AND FIXES
+1. apply_option_defaults_2.py - 15 lost slots, same repoint-to-0xc fix as the first batch, sizes unchanged, .dci unaffected. PS3 default 0 checked for each.
+   Fort adventure, ss-coop-adv-fort.bin (7):
+     courtyard-idols idol-placed (stage 15), tower-idols idol-placed (stage 16): the counter starts at 0x87f13bc2 and is incremented; stage waits on it. Expected stall.
+     blow-door-region team, blow-door-cleanup-region team (stage 6 area): team region check, as Syria.
+     truck-battle 0xad536552 (stage 12), cistern-boss idol-placed (stage 20), shade-teleporter 0x57af0546: wrong starting value.
+   ss-coop-arena-npcs ss-shade-medal counter (all Shade maps; medal only).
+   Map event scripts, low impact: ss-facility-crane start-delay (value is about 0), ss-net-breakable-car-fort shader param (-4.8e8; visual),
+   ss-old-quater-events shader param, ss-sweeping-building animate speed, ss-grave-container counter (not a co-op map),
+   ss-ldn-streets-drive and ss-oasis cargo-plane options (no reads found by name).
+2. apply_shade_npc_paks.py - <map>-multi-shade-npc-ingame12.pak on Fort, Gompa, Shambhala, Village, Warzone has 17 or 21 spawners; PS3 has 43.
+   coop-shade-all's battle managers name the missing ones (npc-shade-armor-1, npc-shade-light-ak-1, npc-shade-mark-armor-1 ...).
+   Fix: copy the 43-spawner pak the other shade maps already share byte for byte (md5 b397ee3b). Dry run: 0 spawner field/tag differences vs each map's PS3 pak.
+   Runtime effect of a missing spawner is not established (short waves or a stall).
+
+PER MAP (net.bin table 0x3b9a067d: 57 co-op entries, same 57 as PS3; stage fields identical to PS3 1.19)
+Adventure
+  Fort               FAULT, fix 1
+  Syria, Borneo      clean with the first batch applied
+  London             clean
+  Monastery          clean; retail script is base version, lacks 1.19's ss-coop-mon-hostage early exit
+  Airport            clean; retail script is base version, lacks 1.19's boss-tracker 20 s logic in ss-coop-adv-airport-boss-tracker
+Arena Survival (17)  clean. Facility, Fort, Old Quarter, Streets, Oasis carry the low-impact entries of fix 1
+Arena Shade (17)     Fort, Gompa, Shambhala, Warzone, Village: FAULT, fix 2. All 17: medal counter, fix 1. Others clean
+Hunter (17)          clean
+No net.bin entry, so not walked: ss-coop-adv-shambhala, fort-b, temple-a, vault-a (retail, match PS3).
+
+OTHER CHECKS: CLEAN
+Non-trailing slots, boolean/float/symbol defaults, pointer loss and structure differences: pwalk.py finds nothing else in co-op scripts.
+Field offsets (op 0x3b) are consistent with retail; opcode remaps 3f>44, 0d>4f hold.
+Region names, tags with type, region scripts, grids, spawner positions and tags: pak-summary.txt, pak-report.tsv. Only added tags (0x5d4729de stubs) on co-op map paks.
+State-script tags on regions/spawners: 3566 checked, all resolve except ss-heli-roles, undefined on PS3 too (state-script-tags.txt). Same for ss-crane-region.
+Stage scripts, stage spawners and names used by script closures: none missing (map-audit.txt).
+
+VERSION GAPS, NOT FIXED (need the p18 file re-converted; converter dcmod4 is not in this tree; not conversion defects)
+r3 ss-survivitory (Shade wave script: count read from the battle manager, 1.19 reads self), ss-sweeping-building (fly vs fall), ss-ldn-streets-drive are goty-patch versions.
+Retail airport boss-tracker, mon hostage, dig boss-tracker are base versions. r3 ss-grave-events ss-fish also differs. None shows a stage wait that changes, except as noted unverified.
+
+WALK: walk/<map>.txt, walk-summary.txt. Per stage: states, go targets, get-boolean waits and setters, names used.
+Results: no boolean without a setter anywhere. go() to undefined state in ss-find-idols (round-3), ss-open-church-door (complete), courtyard-center (fail): these scripts match PS3, so not port faults.
+NOT COVERED
+- No runtime test. Fort stall and Shade effect are inferred from data.
+- dcdis pseudo-code is approximate: comparison operands are often not decoded, so waits were matched by name, not evaluated. Boolean setters are matched syntactically, and a setter outside the closure may not run on that map.
+- Native behaviour, guest/host sync, net events, battle manager internals beyond names, and animation/IGC completion were not walked.
+- Whether each wait can be satisfied in play (reachability, nav, kills) was not established; only that its objects exist as on PS3.
+- Other object tables (splines, zones, IGC anims) were only compared where a name appeared in a region, spawner or script.
+- pak23 package lists: symbol lines compared per pack; load order and streaming not checked.
+Unreferenced PS3 paks missing on PS4 (cha-multi-shade-pak, warzone-multi-car*-pak, fort-coop-seawall, san-multi-hunter-pak, ldn-streets-multi-shade-npcs): no co-op entry loads them.
+
+TOOLS (this folder): common.py pwalk.py filt.py best.py pakcmp.py mapaudit.py a14.py (map paks) a21.py (npc refs) a26.py (state-script tags) walk.py q14b.py q15.py

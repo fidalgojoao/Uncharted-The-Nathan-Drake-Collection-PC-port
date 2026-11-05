@@ -1,0 +1,3 @@
+stage 0 ss-survival-wave: 
+   states: start wave1-update failing done fail complete
+   uses group-at: not-region/spawner

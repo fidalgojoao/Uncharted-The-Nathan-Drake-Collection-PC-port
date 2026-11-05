@@ -1,0 +1,26 @@
+import pickle,sys,bisect,re
+P="{{PROJECT}}/"
+L=pickle.load(open(P+'scratch/coop-voice/all.pkl','rb'));L.sort()
+A=[x[0] for x in L];T=dict(L)
+def rng(a,b):return L[bisect.bisect_left(A,a):bisect.bisect_left(A,b)]
+def fn(a):
+    i=bisect.bisect_left(A,a)
+    while i>0 and not T[A[i]].startswith('push rbp'): i-=1
+    return A[i]
+def callers(t):
+    return [(v,fn(v)) for v,s in L if s=='call 0x%x'%t or s=='jmp 0x%x'%t]
+if __name__=='__main__':
+    a=sys.argv[1:]
+    if a[0]=='c':
+        for t in a[1:]:print(t,[hex(v)+'<'+hex(f) for v,f in callers(int(t,16))])
+    elif a[0]=='f':
+        for t in a[1:]:print(t,hex(fn(int(t,16))))
+    elif a[0]=='g':
+        p=re.compile(a[1]);lo=int(a[2],16);hi=int(a[3],16)
+        for v,t in rng(lo,hi):
+            if p.search(t):print('%x: %s <%x'%(v,t,fn(v)))
+    else:
+        for s in a:
+            x,y=[int(v,16) for v in s.split('-')]
+            print('==',s)
+            for v,t in rng(x,y):print('%x: %s'%(v,t[:120]))

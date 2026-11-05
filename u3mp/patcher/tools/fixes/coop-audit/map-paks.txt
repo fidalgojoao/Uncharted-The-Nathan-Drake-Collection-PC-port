@@ -1,0 +1,114 @@
+NET_GAME_YEMEN_SURVIVAL_1 lvl=0xe4e6147 kind=0x8cf8e1cc
+   net-levels/yemen yemen-multi-hunter-pak [yemen-multi] [yemen-multi-wide] [yemen-multi-npc] [sky-yemen-mp] [yemen-multi-wide-matte] [multi-all] [coop-all] world-multiplayer yemen-multi-stage
+NET_GAME_AIRPORT_SURVIVAL_1 lvl=0x1ce733f4 kind=0x8cf8e1cc
+   net-levels/airport yemen-airport-multi-hunter-pak [air-multi-wide] [air-multi] [sky-air-multi] [air-multi-npc] [multi-all] [air-multi-sound] [coop-all] world-multiplayer air-multi-stage
+NET_GAME_CHA_SURVIVAL_1 lvl=0xf56c0528 kind=0x8cf8e1cc
+   net-levels/cha cha-multi-hunter-pak [cha-multi] [sky-chateau-multi] [cha-multi-wide] [cha-multi-npc] [multi-all] [coop-all] world-multiplayer cha-multi-stage
+NET_GAME_SYRIA_SURVIVAL_1 lvl=0x31b0a47 kind=0x8cf8e1cc
+   net-levels/syria fort.dds syria-multi-hunter-pak syria-multi-pak [syria-multi-pak] [syria-multi] [syria-comp-wide] [multi-all] [syria-multi-npc] [sky-syria] [coop-all] world-multiplayer coop-syria-stage
+NET_GAME_DESERT_SURVIVAL_1 lvl=0xf045d7fd kind=0x8cf8e1cc
+   net-levels/desert fort.dds desert-multi-hunter-pak desert-multi-pak [desert-multi] [multi-all] [desert-multi-wide] [desert-multi-pak] [desert-multi-npc] [sky-des-multi] [coop-all] world-multiplayer desert-multi-stage
+NET_GAME_RUINS_SURVIVAL_1 lvl=0x37be4d69 kind=0x8cf8e1cc
+   net-levels/ruins ruins-multi-hunter-pak ruins-multi-pak [ruins-multi-pak] [ruins-multi-wide] [ruins-multi-pak] [sky-ruins-multi] [ruins-multi] [ruins-multi-npc] [coop-all] [multi-all] world-multiplayer ruins-multi-stage
+NET_GAME_FACILITY_SURVIVAL_1 lvl=0x7069f592 kind=0x8cf8e1cc
+   net-levels/facility facility-multi-hunter-pak facility-multi-pak [facility-multi-pak] [facility-multi] [facility-multi-npc] [facility-multi-wide] [coop-all] [multi-all] world-multiplayer facility-multi-stage
+NET_GAME_HIGHRISE_SURVIVAL_1 lvl=0xb89e363e kind=0x8cf8e1cc
+   net-levels/highrise highrise-multi-hunter-pak highrise-multi-pak [highrise-multi-pak] [highrise-multi] [highrise-multi-npc] [highrise-multi-wide] [sky-highrise-multi] [multi-all] [coop-all] world-multiplayer highrise-multi-stage
+NET_GAME_MUSEUM_SURVIVAL_1 lvl=0xee1d78ce kind=0x8cf8e1cc
+   net-levels/museum museum-multi-hunter-pak museum-multi-pak [museum-multi-pak] [sky-village-pre] [museum-multi] [museum-multi-wide] [museum-multi-npc] [coop-all] [multi-all] world-multiplayer museum-multi-stage
+NET_GAME_WARZONE_SURVIVAL_1 lvl=0x467db0f2 kind=0x8cf8e1cc
+   net-levels/warzone warzone-multi-hunter-pak warzone-multi-killvis warzone-multi-pak [warzone-multi] [warzone-multi-pak] [sky-warzone-multi] [warzone-multi-pak] [multi-all] [coop-all] [warzone-multi-npc] world-multiplayer warzone-multi-stage
+NET_GAME_VILLAGE_SURVIVAL_1 lvl=0x9c1890e4 kind=0x8cf8e1cc
+   net-levels/village village-multi-hunter-pak village-multi-killvis village-multi-pak [village-multi] [village-multi-pak] [sky-village-multi] [village-multi-wide] [multi-all] [coop-all] [village-multi-npc] world-multiplayer village-multi-stage
+NET_GAME_GOMPA_SURVIVAL_1 lvl=0x67fc1396 kind=0x8cf8e1cc
+   net-levels/gompa gompa-multi-hunter-pak gompa-multi-killvis gompa-multi-pak [gompa-multi-pak] [gompa-multi] [multi-all] [coop-all] [gompa-multi-npc] [gompa-multi-wide] [sky-gompa-mp] world-multiplayer gompa-multi-stage
+NET_GAME_FORT_SURVIVAL_1 lvl=0x36ceb66b kind=0x8cf8e1cc
+   net-levels/fort fort-multi-hunter-pak fort-multi-killvis fort-multi-pak [fort-multi] [fort-multi-pak] [fort-multi-wide] [fort-multi-wide-water] [sky-fort-multi] [coop-all] [fort-multi-npc] [multi-all] world-multiplayer fort-multi-stage
+NET_GAME_SHAM_SURVIVAL_1 lvl=0xc4139f78 kind=0x8cf8e1cc
+   net-levels/shambhala shambhala-multi-hunter-pak shambhala-multi-killvis shambhala-multi-pak [shambhala-multi] [shambhala-multi-pak] [multi-all] [coop-all] [shambhala-multi-npc] [sky-sham-multi] [sham-multi-wide] world-multiplayer shambhala-multi-stage
+NET_GAME_OASIS_SURVIVAL_1 lvl=0x82fb8e9e kind=0x8cf8e1cc
+   net-levels/oasis fort.dds oasis-multi-hunter-pak oasis-multi-killvis oasis-multi-pak [multi-all] [oasis-multi] [oasis-multi-pak] [sky-oasis-multi] [oasis-multi-npc] [coop-all] [oasis-multi-wide] world-multiplayer oasis-multi-stage
+NET_GAME_OLD_SURVIVAL_1 lvl=0x2f92fe0a kind=0x8cf8e1cc
+   net-levels/oldquarter fort.dds streets-multi-hunter-pak old-quarter-multi-killvis streets-multi-pak [old-quarter-multi] [streets-multi-pak] [streets-multi-pak] [sky-old-quarter] [multi-all] [old-quarter-multi-wide] [streets-multi-npc] [coop-all] world-multiplayer old-quarter-multi-stage
+NET_GAME_STREETS_SURVIVAL_1 lvl=0xdcd88efb kind=0x8cf8e1cc
+   net-levels/streets fort.dds ldn-streets-multi-hunter-pak ldn-streets-multi-killvis ldn-streets-multi-pak [multi-all] [ldn-streets-multi-pak] [ldn-streets-multi] [sky-ldn-streets-multi] [ldn-streets-multi-wide] [ldn-streets-multi-npc] [coop-all] world-multiplayer ldn-streets-multi-stage
+NET_GAME_YEMEN_HUNTER_1 lvl=0xe4e6147 kind=0x9dbd7b9d
+   net-levels/yemen yemen-multi-hunter-pak [yemen-multi] [yemen-multi-wide] [yemen-multi-npc] [sky-yemen-mp] [yemen-multi-wide-matte] [multi-all] [coop-all] world-multiplayer yemen-multi-stage
+NET_GAME_AIRPORT_HUNTER_1 lvl=0x1ce733f4 kind=0x9dbd7b9d
+   net-levels/airport yemen-airport-multi-hunter-pak [air-multi-wide] [air-multi] [sky-air-multi] [air-multi-npc] [multi-all] [air-multi-sound] [coop-all] world-multiplayer air-multi-stage
+NET_GAME_CHA_HUNTER_1 lvl=0xf56c0528 kind=0x9dbd7b9d
+   net-levels/cha cha-multi-hunter-pak [cha-multi] [sky-chateau-multi] [cha-multi-wide] [cha-multi-npc] [multi-all] [coop-all] world-multiplayer cha-multi-stage
+NET_GAME_SYRIA_HUNTER_1 lvl=0x31b0a47 kind=0x9dbd7b9d
+   net-levels/syria fort.dds syria-multi-hunter-pak syria-multi-pak [syria-multi-pak] [syria-multi] [syria-comp-wide] [multi-all] [syria-multi-npc] [sky-syria] [coop-all] world-multiplayer coop-syria-stage
+NET_GAME_DESERT_HUNTER_1 lvl=0xf045d7fd kind=0x9dbd7b9d
+   net-levels/desert fort.dds desert-multi-hunter-pak desert-multi-pak [desert-multi] [multi-all] [desert-multi-wide] [desert-multi-pak] [desert-multi-npc] [sky-des-multi] [coop-all] world-multiplayer desert-multi-stage
+NET_GAME_RUINS_HUNTER_1 lvl=0x37be4d69 kind=0x9dbd7b9d
+   net-levels/ruins ruins-multi-hunter-pak ruins-multi-pak [ruins-multi-pak] [ruins-multi-wide] [ruins-multi-pak] [sky-ruins-multi] [ruins-multi] [ruins-multi-npc] [coop-all] [multi-all] world-multiplayer ruins-multi-stage
+NET_GAME_FACILITY_HUNTER_1 lvl=0x7069f592 kind=0x9dbd7b9d
+   net-levels/facility facility-multi-hunter-pak facility-multi-pak [facility-multi-pak] [facility-multi] [facility-multi-npc] [facility-multi-wide] [coop-all] [multi-all] world-multiplayer facility-multi-stage
+NET_GAME_HIGHRISE_HUNTER_1 lvl=0xb89e363e kind=0x9dbd7b9d
+   net-levels/highrise highrise-multi-hunter-pak highrise-multi-pak [highrise-multi-pak] [highrise-multi] [highrise-multi-npc] [highrise-multi-wide] [sky-highrise-multi] [multi-all] [coop-all] world-multiplayer highrise-multi-stage
+NET_GAME_MUSEUM_HUNTER_1 lvl=0xee1d78ce kind=0x9dbd7b9d
+   net-levels/museum museum-multi-hunter-pak museum-multi-pak [museum-multi-pak] [sky-village-pre] [museum-multi] [museum-multi-wide] [museum-multi-npc] [coop-all] [multi-all] world-multiplayer museum-multi-stage
+NET_GAME_WARZONE_HUNTER_1 lvl=0x467db0f2 kind=0x9dbd7b9d
+   net-levels/warzone warzone-multi-hunter-pak warzone-multi-killvis warzone-multi-pak [warzone-multi] [warzone-multi-pak] [sky-warzone-multi] [warzone-multi-pak] [multi-all] [coop-all] [warzone-multi-npc] world-multiplayer warzone-multi-stage
+NET_GAME_VILLAGE_HUNTER_1 lvl=0x9c1890e4 kind=0x9dbd7b9d
+   net-levels/village village-multi-hunter-pak village-multi-killvis village-multi-pak [village-multi] [village-multi-pak] [sky-village-multi] [village-multi-wide] [multi-all] [coop-all] [village-multi-npc] world-multiplayer village-multi-stage
+NET_GAME_GOMPA_HUNTER_1 lvl=0x67fc1396 kind=0x9dbd7b9d
+   net-levels/gompa gompa-multi-hunter-pak gompa-multi-killvis gompa-multi-pak [gompa-multi-pak] [gompa-multi] [multi-all] [coop-all] [gompa-multi-npc] [gompa-multi-wide] [sky-gompa-mp] world-multiplayer gompa-multi-stage
+NET_GAME_FORT_HUNTER_1 lvl=0x36ceb66b kind=0x9dbd7b9d
+   net-levels/fort fort-multi-hunter-pak fort-multi-killvis fort-multi-pak [fort-multi] [fort-multi-pak] [fort-multi-wide] [fort-multi-wide-water] [sky-fort-multi] [coop-all] [fort-multi-npc] [multi-all] world-multiplayer fort-multi-stage
+NET_GAME_SHAM_HUNTER_1 lvl=0xc4139f78 kind=0x9dbd7b9d
+   net-levels/shambhala shambhala-multi-hunter-pak shambhala-multi-killvis shambhala-multi-pak [shambhala-multi] [shambhala-multi-pak] [multi-all] [coop-all] [shambhala-multi-npc] [sky-sham-multi] [sham-multi-wide] world-multiplayer shambhala-multi-stage
+NET_GAME_OLD_HUNTER_1 lvl=0x2f92fe0a kind=0x9dbd7b9d
+   net-levels/oldquarter fort.dds streets-multi-hunter-pak old-quarter-multi-killvis streets-multi-pak [old-quarter-multi] [streets-multi-pak] [streets-multi-pak] [sky-old-quarter] [multi-all] [old-quarter-multi-wide] [streets-multi-npc] [coop-all] world-multiplayer old-quarter-multi-stage
+NET_GAME_OASIS_HUNTER_1 lvl=0x82fb8e9e kind=0x9dbd7b9d
+   net-levels/oasis fort.dds oasis-multi-hunter-pak oasis-multi-killvis oasis-multi-pak [multi-all] [oasis-multi] [oasis-multi-pak] [sky-oasis-multi] [oasis-multi-npc] [coop-all] [oasis-multi-wide] world-multiplayer oasis-multi-stage
+NET_GAME_STREETS_HUNTER_1 lvl=0xdcd88efb kind=0x9dbd7b9d
+   net-levels/streets fort.dds ldn-streets-multi-hunter-pak ldn-streets-multi-killvis ldn-streets-multi-pak [multi-all] [ldn-streets-multi-pak] [ldn-streets-multi] [sky-ldn-streets-multi] [ldn-streets-multi-wide] [ldn-streets-multi-npc] [coop-all] world-multiplayer ldn-streets-multi-stage
+0x8a746a66 lvl=dig-adv kind=0x5915ddac
+   net-levels/coop-dig fort.dds dig-adv [dig-coop-approach] [dig-coop-dropdown] [sky-dig-coop] [coop-borneo-sound] [dig-coop-approach] [dig-coop-dropdown] [sky-dig-coop] [coop-borneo-sound] [dig-adv] [multi-all] [dig-coop-ship] world-coop-adv-dig dig-coop-stage
+0x9cb9a5b3 lvl=0x1548154e kind=0x5915ddac
+   net-levels/coop-ldn fort.dds coop-ldn-pak [coop-ldn-victorian-station] [coop-ldn-tunnel-a] [coop-ldn-persist] [multi-all] [coop-ldn-victorian-station] [coop-ldn-tunnel-a] [coop-ldn-persist] [multi-all] [coop-ldn-pak] [coop-ldn-library-inner] [coop-ldn-atwood-station] [coop-ldn-station-entrance] [coop-ldn-station-entrance-outside] [sky-london] world-coop-adv-ldn-1 ldn-train-stage-coop
+0x6bb2b65f lvl=0xae270117 kind=0x5915ddac
+   net-levels/coop-mon fort.dds mon-adv-pak [mon-coop-church] [mon-coop-cloister] [mon-coop-front] [multi-all] [mon-coop-church] [mon-coop-cloister] [mon-coop-front] [mon-coop-courtyard] [multi-all] [mon-adv-pak] [mon-coop-church-exterior] [sky-mon-coop-b] world-coop-adv-mon-1 mon-coop-stage
+0xcd368052 lvl=0xab8d7bad kind=0x5915ddac
+   net-levels/coop-syria fort.dds coop-syria-pak [multi-all] [coop-syria-pak] [coop-syria-persistent] [sky-syria] [coop-syria-sound] [coop-syria-connection] [coop-syria-area2] [coop-syria-walls] [coop-syria-entrance] [coop-syria-entrance-int] [multi-all] [coop-syria-area1] [coop-syria-area1-hallway] [coop-syria-area2] [coop-syria-area2-low] [coop-syria-connection] [coop-syria-entrance-low] [coop-syria-hub-low] [coop-syria-persistent] [coop-syria-sound] [coop-syria-turret1] [coop-syria-turret1-low] [coop-syria-turret2] [coop-syria-turret2-interior] [coop-syria-turret2-low] [coop-syria-walls] [coop-syria-walls-back-low] [coop-syria-walls-low] [coop-syria-wide] [sky-syria] [coop-syria-pak] [coop-syria-sound] world-coop-adv-syria coop-syria-stage
+0x1c37ceb7 lvl=0xd3925240 kind=0x5915ddac
+   net-levels/coop-air fort.dds coop-airport-pak [coop-airport-1] [coop-airport-2] [coop-airport-3a] [sky-coop-airport] [coop-airport-const] [coop-airport-wide] [coop-airport-sound] [coop-airport-pak] [coop-airport-bosses] [coop-airport-igc-intro] [coop-airport-1] [coop-airport-2] [coop-airport-3a] [coop-airport-3b] [airport-3b-low] [sky-coop-airport] [coop-airport-const] [coop-airport-wide] [coop-airport-sound] [coop-airport-pak] world-coop-adv-airport coop-airport-stage
+NET_GAME_YEMEN_SHADE_1 lvl=0x19ff3832 kind=0x8cf8e1cc
+   net-levels/yemen yemen-multi-hunter-pak [yemen-multi] [yemen-multi-wide] [yemen-multi-shade-npc] [sky-yemen-mp] [yemen-multi-wide-matte] [multi-all] [coop-shade-all] world-multiplayer yemen-multi-stage
+NET_GAME_AIRPORT_SHADE_1 lvl=0xcc583c27 kind=0x8cf8e1cc
+   net-levels/airport yemen-airport-multi-hunter-pak [air-multi-wide] [air-multi-shade] [sky-air-multi] [air-multi-shade-npc] [multi-all] [air-multi-sound] [coop-shade-all] world-multiplayer air-multi-stage
+NET_GAME_CHA_SHADE_1 lvl=0xef0e0884 kind=0x8cf8e1cc
+   net-levels/cha cha-multi-hunter-pak [cha-multi-shade] [sky-chateau-multi] [cha-multi-wide] [cha-multi-shade-npc] [multi-all] [coop-shade-all] world-multiplayer cha-multi-stage
+NET_GAME_SYRIA_SHADE_1 lvl=0x6a17d8c1 kind=0x8cf8e1cc
+   net-levels/syria fort.dds syria-multi-hunter-pak syria-multi-pak [syria-multi-pak] [syria-multi] [syria-comp-wide] [multi-all] [syria-multi-shade-npc] [sky-syria] [coop-shade-all] world-multiplayer coop-syria-stage
+NET_GAME_DESERT_SHADE_1 lvl=0x142d62e0 kind=0x8cf8e1cc
+   net-levels/desert fort.dds desert-multi-hunter-pak desert-multi-pak [desert-multi] [multi-all] [desert-multi-wide] [desert-multi-pak] [desert-multi-shade-npc] [sky-des-multi] [coop-shade-all] world-multiplayer desert-multi-stage
+NET_GAME_RUINS_SHADE_1 lvl=0xf54547e3 kind=0x8cf8e1cc
+   net-levels/ruins ruins-multi-hunter-pak ruins-multi-pak [ruins-multi-pak] [ruins-multi-wide] [ruins-multi-pak] [sky-ruins-multi] [ruins-multi] [ruins-multi-shade-npc] [coop-shade-all] [multi-all] world-multiplayer ruins-multi-stage
+NET_GAME_FACILITY_SHADE_1 lvl=0xb484b873 kind=0x8cf8e1cc
+   net-levels/facility facility-multi-hunter-pak facility-multi-pak [facility-multi-pak] [facility-multi] [facility-multi-shade-npc] [facility-multi-wide] [coop-shade-all] [multi-all] world-multiplayer facility-multi-stage
+NET_GAME_HIGHRISE_SHADE_1 lvl=0xb78be640 kind=0x8cf8e1cc
+   net-levels/highrise highrise-multi-hunter-pak highrise-multi-pak [highrise-multi-pak] [highrise-multi] [highrise-multi-shade-npc] [highrise-multi-wide] [sky-highrise-multi] [multi-all] [coop-shade-all] world-multiplayer highrise-multi-stage
+NET_GAME_MUSEUM_SHADE_1 lvl=0xd253b571 kind=0x8cf8e1cc
+   net-levels/museum museum-multi-hunter-pak museum-multi-pak [museum-multi-pak] [sky-village-pre] [museum-multi] [museum-multi-wide] [museum-multi-shade-npc] [coop-shade-all] [multi-all] world-multiplayer museum-multi-stage
+NET_GAME_GOMPA_SHADE_1 lvl=0x6130fc35 kind=0x8cf8e1cc
+   net-levels/gompa gompa-multi-hunter-pak gompa-multi-killvis gompa-multi-pak [gompa-multi-pak] [gompa-multi] [multi-all] [coop-shade-all] [gompa-multi-shade-npc] [gompa-multi-wide] [sky-gompa-mp] world-multiplayer gompa-multi-stage
+NET_GAME_FORT_SHADE_1 lvl=0x168dfa84 kind=0x8cf8e1cc
+   net-levels/fort fort-multi-hunter-pak fort-multi-killvis fort-multi-pak [fort-multi] [fort-multi-pak] [fort-multi-wide] [fort-multi-wide-water] [sky-fort-multi] [coop-shade-all] [fort-multi-shade-npc] [multi-all] world-multiplayer fort-multi-stage
+NET_GAME_SHAM_SHADE_1 lvl=0xfe78412b kind=0x8cf8e1cc
+   net-levels/shambhala shambhala-multi-hunter-pak shambhala-multi-killvis shambhala-multi-pak [shambhala-multi] [shambhala-multi-pak] [multi-all] [coop-shade-all] [shambhala-multi-shade-npc] [sky-sham-multi] [sham-multi-wide] world-multiplayer shambhala-multi-stage
+NET_GAME_WARZONE_SHADE_1 lvl=0x97298817 kind=0x8cf8e1cc
+   net-levels/warzone warzone-multi-hunter-pak warzone-multi-killvis warzone-multi-pak [warzone-multi] [warzone-multi-pak] [sky-warzone-multi] [multi-all] [coop-shade-all] [warzone-multi-shade-npc] world-multiplayer warzone-multi-stage
+0xc80dc107 lvl=0x283b89b8 kind=0x8cf8e1cc
+   net-levels/village village-multi-hunter-pak village-multi-killvis village-multi-pak [village-multi] [village-multi-pak] [sky-village-multi] [multi-all] [village-multi-wide] [coop-shade-all] [village-multi-shade-npc] world-multiplayer village-multi-stage
+0x69d6f6f1 lvl=0x421d5e2c kind=0x8cf8e1cc
+   net-levels/oasis fort.dds oasis-multi-hunter-pak oasis-multi-killvis oasis-multi-pak [multi-all] [oasis-multi] [oasis-multi-pak] [sky-oasis-multi] [oasis-multi-shade-npc] [oasis-multi-wide] [coop-shade-all] world-multiplayer oasis-multi-stage
+0x7248286c lvl=0x8ff6f0c5 kind=0x8cf8e1cc
+   net-levels/oldquarter fort.dds streets-multi-hunter-pak old-quarter-multi-killvis streets-multi-pak [old-quarter-multi] [streets-multi-pak] [streets-multi-pak] [sky-old-quarter] [multi-all] [old-quarter-multi-wide] [streets-multi-shade-npc] [coop-shade-all] world-multiplayer old-quarter-multi-stage
+0xb9205add lvl=0xa87a80a5 kind=0x8cf8e1cc
+   net-levels/streets fort.dds ldn-streets-multi-hunter-pak ldn-streets-multi-killvis ldn-streets-multi-pak [multi-all] [ldn-streets-multi-pak] [ldn-streets-multi] [sky-ldn-streets-multi] [ldn-streets-multi-shade-npc] [coop-shade-all] [ldn-streets-multi-wide] world-multiplayer ldn-streets-multi-stage
+0xf04f4c84 lvl=0x44b4af22 kind=0x5915ddac
+   net-levels/coop-fort fort.dds fort-coop-pak [sky-fort-coop-b] [fort-coop-cistern] [fort-coop-courtyard] [fort-coop-tower] [fort-coop-tower-wide] [multi-all] [fort-coop-pak] [fort-coop-tower-turret] [sky-fort-coop-b] [fort-coop-cistern] [fort-coop-courtyard] [fort-coop-tower] [fort-coop-tower-wide] [multi-all] [fort-coop-pak] [fort-coop-tower-turret] [fort-coop-sound] world-coop-adv-fort fort-coop-stage

@@ -1,0 +1,6 @@
+stage 0 ss-hunter-plunder-wave-1: 
+   states: --all-- initial wave-1 fail complete
+stage 1 ss-hunter-plunder-wave-2: 
+   states: --all-- initial wave-2 fail complete
+stage 2 ss-hunter-plunder-wave-3: 
+   states: --all-- initial wave-3 fail complete

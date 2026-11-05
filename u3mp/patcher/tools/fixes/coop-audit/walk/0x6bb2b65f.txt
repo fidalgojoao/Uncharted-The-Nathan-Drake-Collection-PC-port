@@ -1,0 +1,86 @@
+stage 0 ss-igc-hostage: 
+   states: initial complete
+stage 1 ss-coop-adv-mon-start: 
+   states: initial escaped complete fail
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-ai-mode-default: not-region/spawner
+stage 2 ss-coop-adv-mon-cloister-2: 
+   states: patrol objective-assault cleared-cloister complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 3 ss-coop-adv-mon-cloister-boss-igc: 
+   states: initial complete
+stage 4 ss-coop-adv-mon-cloister-boss-fight: 
+   states: initial complete
+stage 5 ss-coop-adv-mon-gate: 
+   states: --all-- initial complete
+stage 6 ss-coop-adv-mon-igc-gate: 
+   states: initial complete
+stage 7 ss-coop-adv-mon-vine-ambush: 
+   states: initial complete
+   uses npc-alive-count: not-region/spawner
+stage 8 ss-coop-adv-mon-vine: 
+   states: initial complete
+stage 9 ss-coop-adv-mon-church-igc-1: 
+   states: initial complete
+stage 10 ss-coop-adv-mon-church-1: 
+   states: initial wave-2 key-solved complete
+stage 11 ss-secure-chuch-floor: 
+   states: initial complete
+stage 12 ss-open-altar: 
+   states: initial complete
+stage 13 ss-igc-free-archeologist: 
+   states: initial complete
+   uses npc-set-ai-mode-off: not-region/spawner
+   uses spawner-locator: not-region/spawner
+stage 14 ss-escape-with-archeologist: 
+   states: --all-- initial window-entrance siege-2 siege-3 church-cleared complete
+   uses npc-move-to-spawner: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-zone-marker: not-region/spawner
+stage 15 ss-open-church-door: 
+   states: initial
+   go() target not a state: ['complete']
+   uses npc-move-to-spawner: not-region/spawner
+   uses npc-set-ai-mode-off: not-region/spawner
+   uses npc-teleport-to: not-region/spawner
+   uses spawner-locator: not-region/spawner
+stage 16 igc-archeologist-shot-1: 
+   states: initial complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-set-ai-mode-off: not-region/spawner
+   uses npc-use-closest-cover: not-region/spawner
+   uses spawner-locator: not-region/spawner
+stage 17 ss-coop-adv-mon-courtyard-cross: 
+   states: --all-- initial courtyard-cross-start fail complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-ai-mode-default: not-region/spawner
+   uses spawner-locator: not-region/spawner
+stage 18 ss-coop-adv-mon-courtyard-center: 
+   states: --all-- initial nw-far complete
+   go() target not a state: ['fail']
+stage 19 ss-hold-center-rpgs: 
+   states: --all-- initial armor-1 converge complete fail
+   uses npc-attach-to-battle-manager: not-region/spawner
+   uses npc-courtyard-rpg-1: ok
+stage 20 ss-valve-artifact-found: 
+   states: initial complete
+stage 21 igc-artifact-found: 
+   states: initial complete
+   uses npc-courtyard-boss-1: ok
+   uses npc-set-ai-mode-off: not-region/spawner
+stage 22 courtyard-boss: 
+   states: initial complete
+   uses npc-move-to: not-region/spawner
+   uses spawner-locator: not-region/spawner
+stage 23 ss-valve-helicopter-escape: 
+   states: initial complete
+stage 24 igc-helicopter-escape: 
+   states: initial complete

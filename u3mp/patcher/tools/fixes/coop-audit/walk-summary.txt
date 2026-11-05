@@ -1,0 +1,100 @@
+### NET_GAME_YEMEN_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_AIRPORT_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_CHA_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_SYRIA_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_DESERT_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_RUINS_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_FACILITY_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_HIGHRISE_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_MUSEUM_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_WARZONE_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_VILLAGE_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_GOMPA_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_FORT_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_SHAM_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_OASIS_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_OLD_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_STREETS_SURVIVAL_1: stages 11, scripts in closure 46, dumped 1
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_YEMEN_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_AIRPORT_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_CHA_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_SYRIA_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_DESERT_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_RUINS_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_FACILITY_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_HIGHRISE_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_MUSEUM_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_WARZONE_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_VILLAGE_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_GOMPA_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_FORT_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_SHAM_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_OLD_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_OASIS_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### NET_GAME_STREETS_HUNTER_1: stages 3, scripts in closure 6, dumped 3
+### 0x8a746a66: stages 25, scripts in closure 61, dumped 25
+   other-entity names (objects/not in region+spawner tables) 24: ['group-add', 'group-at', 'group-big-arena-all', 'group-bossfight', 'group-clear', 'group-count', 'group-crate4-all', 'group-crate4-defender-rpg-2', 'group-crate4-defender-rpg-3', 'group-draza-guards', 'group-npc-mini-arena', 'group-npc-uppertier', 'group-post-trucks', 'npc-alive', 'npc-alive-count', 'npc-confirm-coop-players-contact', 'npc-fired-recently', 'npc-group-alive-count', 'npc-remove-skill', 'npc-set-combat-behavior', 'npc-set-zone-center-object', 'npc-set-zone-marker', 'npc-set-zone-update-method', 'spawner-group']
+   boolean-outside-closure 3: [('ss-coop-adv-dig-big-arena-part-2', '0x36d8f341', 'reg-switch-crate-2', ['arm-bomb', 'chain-pull']), ('ss-coop-adv-dig-ship-crate3', '0x36d8f341', 'reg-switch-crate-3', ['arm-bomb', 'chain-pull']), ('ss-coop-adv-dig-ship-crate4', '0x36d8f341', 'reg-switch-crate-4', ['arm-bomb', 'chain-pull'])]
+### 0x9cb9a5b3: stages 25, scripts in closure 44, dumped 25
+   other-entity names (objects/not in region+spawner tables) 11: ['group-at', 'group-count', 'npc-alive-count', 'npc-confirm-coop-players-contact', 'npc-killed', 'npc-remove-skill', 'npc-set-accuracy-multiplier', 'npc-set-ai-mode-off', 'npc-set-combat-behavior', 'npc-set-zone-marker', 'npc-set-zone-update-method']
+### 0x6bb2b65f: stages 25, scripts in closure 52, dumped 25
+   other-entity names (objects/not in region+spawner tables) 16: ['group-at', 'group-count', 'npc-alive-count', 'npc-attach-to-battle-manager', 'npc-confirm-coop-players-contact', 'npc-move-to', 'npc-move-to-spawner', 'npc-remove-skill', 'npc-set-ai-mode-default', 'npc-set-ai-mode-off', 'npc-set-combat-behavior', 'npc-set-zone-marker', 'npc-set-zone-update-method', 'npc-teleport-to', 'npc-use-closest-cover', 'spawner-locator']
+   badgo 2: [('ss-open-church-door', ['complete']), ('ss-coop-adv-mon-courtyard-center', ['fail'])]
+### 0xcd368052: stages 28, scripts in closure 54, dumped 28
+   other-entity names (objects/not in region+spawner tables) 15: ['group-at', 'group-count', 'npc-alive', 'npc-alive-count', 'npc-confirm-coop-players-contact', 'npc-killed', 'npc-remove-skill', 'npc-set-accuracy-multiplier', 'npc-set-ai-mode-default', 'npc-set-ai-mode-off', 'npc-set-combat-behavior', 'npc-set-targeting-params', 'npc-set-zone-radius', 'npc-set-zone-update-method', 'npc-set-zone-y-threshold']
+   badgo 1: [('ss-find-idols', ['round-3'])]
+### 0x1c37ceb7: stages 15, scripts in closure 55, dumped 15
+   other-entity names (objects/not in region+spawner tables) 28: ['group-add', 'group-at', 'group-count', 'group-npc-roofsnipers', 'group-parkinglot-fodder', 'group-roof-fal-1', 'npc-activate-random-kickback', 'npc-alive', 'npc-alive-count', 'npc-bossbattle-fodder', 'npc-confirm-coop-players-contact', 'npc-fired-recently', 'npc-group-alive-count', 'npc-holster-weapon', 'npc-initial-guards-group', 'npc-initial-rushers-group', 'npc-remove-skill', 'npc-rooftop-group', 'npc-rooftop-group-shield', 'npc-set-accuracy-multiplier', 'npc-set-ai-mode-off', 'npc-set-combat-behavior', 'npc-set-zone-center-object', 'npc-set-zone-marker', 'npc-set-zone-radius', 'npc-set-zone-update-method', 'npc-wave2', 'spawner-group']
+### NET_GAME_YEMEN_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_AIRPORT_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_CHA_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_SYRIA_SHADE_1: stages 8, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_DESERT_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_RUINS_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_FACILITY_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_HIGHRISE_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_MUSEUM_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_GOMPA_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_FORT_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_SHAM_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### NET_GAME_WARZONE_SHADE_1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### 0xc80dc107: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### 0x69d6f6f1: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### 0x7248286c: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### 0xb9205add: stages 9, scripts in closure 62, dumped 3
+   other-entity names (objects/not in region+spawner tables) 1: ['group-at']
+### 0xf04f4c84: stages 23, scripts in closure 56, dumped 23
+   other-entity names (objects/not in region+spawner tables) 31: ['group-add', 'group-at', 'group-clear', 'group-count', 'group-hallway-battle-immobile', 'group-idol-courtyard-all', 'group-idol-courtyard-immobile', 'group-idol-tower-all', 'group-idol-tower-immobile', 'group-npc-blow-door', 'group-npc-teleport', 'group-npc-truck-battle', 'group-npc-truck-battle-immobile', 'group-upper-tier', 'group-uppertier-courtyard-bossfight', 'npc-alive', 'npc-alive-count', 'npc-confirm-coop-players-contact', 'npc-enable-abandon-cover-when-shot-while-hiding', 'npc-enable-blind-fire', 'npc-enable-hit-reactions', 'npc-kill', 'npc-move-to-spawner', 'npc-set-accuracy-multiplier', 'npc-set-combat-behavior', 'npc-set-skill-dda-settings', 'npc-set-zone-marker', 'npc-set-zone-radius', 'npc-set-zone-update-method', 'npc-set-zone-y-threshold']

@@ -1,0 +1,553 @@
+pak	kind	name	detail
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-board-0-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-board-1-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-corr-blue-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-corr-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-diamond-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-ground-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-stucco-spawner	
+air-multi-ingame12.pak	spawner-extra-ps4	air-multi-emblem-tower-spawner	
+cha-cave-ingame12.pak	script-code	regionshape-14136	
+cha-grounds-north-ingame12.pak	script-code	regionshape-15314	
+cha-multi-ingame12.pak	sptag-extra	cha-wall-burn-doorway-a-1	('0x5d4729de', (1, 4, 1))
+cha-multi-ingame12.pak	sptag-extra	cha-wall-burn-doorway-b-1	('0x5d4729de', (1, 4, 1))
+cha-multi-shade-ingame12.pak	sptag-extra	cha-wall-burn-doorway-a-1	('0x5d4729de', (1, 4, 1))
+cha-multi-shade-ingame12.pak	sptag-extra	cha-wall-burn-doorway-b-1	('0x5d4729de', (1, 4, 1))
+cha-multi-shade-pak-ingame12.pak	missing-pak		63 regions 166 spawners
+cha-stair-fire-ingame12.pak	script-code	reg-vox-stair-fire-2	
+city-multi-2-stream-ingame12.pak	missing-pak		35 regions 58 spawners
+city-multi-5-stream-ingame12.pak	missing-pak		17 regions 17 spawners
+city-multi-stream-master-ingame12.pak	missing-pak		0 regions 170 spawners
+coop-ldn-station-entrance-outside-ingame12.pak	sptag-extra	ldn-cone-80	('0x5d4729de', (1, 4, 1))
+coop-ldn-station-entrance-outside-ingame12.pak	sptag-extra	ldn-cone-81	('0x5d4729de', (1, 4, 1))
+coop-ldn-station-entrance-outside-ingame12.pak	sptag-extra	ldn-cone-82	('0x5d4729de', (1, 4, 1))
+coop-syria-connection-ingame12.pak	sptag-extra	simple-actor-14454	('0x5d4729de', (1, 4, 1))
+cruise-ship-90-cabins-ingame12.pak	script-code	bathroom-cam-rgn-1	
+cruise-ship-90-cabins-ingame12.pak	script-code	regionshape-15844	
+facility-multi-pak-ingame12.pak	sptag-extra	simple-actor-9540	('0x5d4729de', (1, 4, 1))
+fort-coop-cistern--ingame12.pak	missing-pak		0 regions 1 spawners
+fort-coop-cistern-debug-ingame12.pak	missing-pak		0 regions 1 spawners
+fort-coop-courtyard--ingame12.pak	missing-pak		0 regions 1 spawners
+fort-coop-seawall-ingame12.pak	missing-pak		1 regions 129 spawners
+fort-coop-seawall-wide-ingame12.pak	missing-pak		0 regions 1 spawners
+fort-coop-tower--ingame12.pak	missing-pak		0 regions 1 spawners
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-armor-grappler-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-armor-grappler-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-grappler-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-sniper-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-ak-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-m9-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-para-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-ak-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-sniper-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-carpet-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-hammer-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-m9-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-militia-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-shotgun-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-burst-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-carpet-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-kal-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-ak-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-m9-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-m9-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-para9-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shield-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-basic-1	
+fort-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-uzi-1	
+fort-multi-shade-npc-ingame12.pak	spawner-extra-ps4	npc-shade-shotgun-pistole-1	
+fort-multi-shade-npc-ingame12.pak	spawner-pos	npc-kickback-grappler-1	((11.408160209655762, -5.902709007263184, -61.08565139770508, 1.0), (10.193470001220703, -5.922786235809326, -61.0738410949707, 0.0))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x629a913e', (5, 7, ('str', b'partial')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x6e7519c8', (4, 4, 1065353216))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xaa9e2ed2', (4, 4, 0))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xe26f6627', (4, 4, 0))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0x45c51f9f', (5, 20), (5, 14))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0xe3db0e62', (5, 29), (5, 23))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-ak-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0xfd77d45d', (5, 21), (5, 15))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-hammer-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0xfd77d45d', (5, 21), (5, 15))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0xfd77d45d', (5, 22), (5, 16))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0xfd77d45d', (5, 21), (5, 15))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0x7a095698', (1, 4, 0))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0xfd77d45d', (5, 22), (5, 16))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-burst-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0x55efbfa7', (5, 14, ('str', b'cb-close-range')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-kal-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-para9-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-rocket-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0x45c51f9f', (5, 14), (5, 37))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-rocket-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shield-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shield-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0x7a095698', (1, 4, 0))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0xfd77d45d', (5, 17), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0x7a095698', (1, 4, 0))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0xfd77d45d', (5, 16), (5, 10))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+fort-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0xac43d55d', (4, 4, 1176256512))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x45c51f9f', (5, 14), (5, 30))
+fort-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-uzi-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+fort-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0xfd77d45d', (5, 16), (5, 10))
+gompa-multi-ingame12.pak	sptag-value	gompa-banner-c-2	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-banner-c-8	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-banner-c-9	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-lantern-b-18	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-lantern-c-15	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-14	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-15	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-16	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-17	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-19	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-20	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-21	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-22	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-50	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-51	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-52	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-53	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-54	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-a-55	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-value	gompa-prayerbanner-b-22	('0x66c6d3fe', (1, 4, 1), (1, 4, 0))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-19	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-20	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-23	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-24	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-29	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-30	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-31	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-32	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-83	('0x5d4729de', (1, 4, 1))
+gompa-multi-ingame12.pak	sptag-extra	ob-gt01-destruct-rail-2x1-84	('0x5d4729de', (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-armor-grappler-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-armor-grappler-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-grappler-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-sniper-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-ak-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-m9-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-para-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-ak-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-sniper-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-carpet-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-hammer-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-m9-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-militia-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-shotgun-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-burst-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-carpet-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-kal-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-ak-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-m9-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-m9-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-para9-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shield-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-basic-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-uzi-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-extra-ps4	npc-shade-shotgun-pistole-1	
+gompa-multi-shade-npc-ingame12.pak	spawner-pos	npc-kickback-grappler-1	((11.408160209655762, -5.902709007263184, -61.08565139770508, 1.0), (10.193470001220703, -5.922786235809326, -61.0738410949707, 0.0))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x629a913e', (5, 7, ('str', b'partial')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x6e7519c8', (4, 4, 1065353216))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xaa9e2ed2', (4, 4, 0))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xe26f6627', (4, 4, 0))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0x45c51f9f', (5, 20), (5, 14))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0xe3db0e62', (5, 29), (5, 23))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-ak-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0xfd77d45d', (5, 21), (5, 15))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-hammer-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0xfd77d45d', (5, 21), (5, 15))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0xfd77d45d', (5, 22), (5, 16))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0xfd77d45d', (5, 21), (5, 15))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0x7a095698', (1, 4, 0))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0xfd77d45d', (5, 22), (5, 16))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-burst-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0x55efbfa7', (5, 14, ('str', b'cb-close-range')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-kal-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-para9-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-rocket-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0x45c51f9f', (5, 14), (5, 37))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-rocket-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shield-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shield-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0x7a095698', (1, 4, 0))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0xfd77d45d', (5, 17), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0x7a095698', (1, 4, 0))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0xfd77d45d', (5, 16), (5, 10))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+gompa-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0xac43d55d', (4, 4, 1176256512))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x45c51f9f', (5, 14), (5, 30))
+gompa-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-uzi-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+gompa-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0xfd77d45d', (5, 16), (5, 10))
+grave-multi-01-ingame12.pak	missing-pak		1 regions 14 spawners
+grave-multi-1-ingame12.pak	missing-pak		0 regions 2 spawners
+grave-multi-1-water-ingame12.pak	missing-pak		1 regions 1 spawners
+grave-multi-comp-pak-ingame12.pak	missing-pak		11 regions 1 spawners
+grave-multi-verify-ingame12.pak	missing-pak		5 regions 0 spawners
+ldn-streets-multi-shade-npcs-ingame12.pak	missing-pak		0 regions 43 spawners
+ldn-victorian-station-ingame12.pak	script-code	regionshape-12850	
+oasis-multi-test-ingame12.pak	missing-pak		0 regions 8 spawners
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-27	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-28	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-29	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-30	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-31	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-32	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-33	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-34	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-35	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-36	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-37	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-38	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-39	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-40	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-41	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-42	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-43	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-44	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-45	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-46	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-47	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-48	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-49	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-50	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-51	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-52	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-53	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-54	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-55	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-56	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-57	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-58	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-59	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-60	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-61	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-62	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-63	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-64	('0x5d4729de', (1, 4, 1))
+old-quarter-multi-ingame12.pak	sptag-extra	old-quarter-multi-AUTOACTOR-STUB-65	('0x5d4729de', (1, 4, 1))
+san-cistern-plaza-center-ingame12.pak	script-code	regionshape-17251	
+san-cistern-plaza-center-ingame12.pak	script-code	regionshape-17252	
+san-cistern-plaza-center-ingame12.pak	script-code	regionshape-17253	
+san-cistern-plaza-falls-ingame12.pak	script-code	regionshape-17259	
+san-cistern-upper-ingame12.pak	script-code	regionshape-17247	
+san-cistern-upper-ingame12.pak	script-code	regionshape-17248	
+san-gate-puzzle-ingame12.pak	script-code	regionshape-15695	
+san-gate-puzzle-ingame12.pak	script-code	regionshape-15696	
+san-multi-hunter-pak-ingame12.pak	missing-pak		10 regions 114 spawners
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-armor-grappler-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-armor-grappler-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-grappler-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-sniper-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-ak-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-m9-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-light-para-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-ak-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-sniper-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-carpet-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-hammer-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-m9-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-militia-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-shotgun-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-burst-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-carpet-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-kal-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-ak-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-m9-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-m9-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-para9-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shield-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-basic-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-uzi-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-extra-ps4	npc-shade-shotgun-pistole-1	
+shambhala-multi-shade-npc-ingame12.pak	spawner-pos	npc-kickback-grappler-1	((11.408160209655762, -5.902709007263184, -61.08565139770508, 1.0), (10.193470001220703, -5.922786235809326, -61.0738410949707, 0.0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x629a913e', (5, 7, ('str', b'partial')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0x6e7519c8', (4, 4, 1065353216))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xaa9e2ed2', (4, 4, 0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-kickback-grappler-1	('0xe26f6627', (4, 4, 0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0x45c51f9f', (5, 20), (5, 14))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-kickback-grappler-1	('0xe3db0e62', (5, 29), (5, 23))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-ak-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-ak-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-carpet-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0xfd77d45d', (5, 21), (5, 15))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-hammer-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-hammer-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0xfd77d45d', (5, 21), (5, 15))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-m9-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0xfd77d45d', (5, 22), (5, 16))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-militia-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0xfd77d45d', (5, 21), (5, 15))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0x7a095698', (1, 4, 0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0xfd77d45d', (5, 22), (5, 16))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-burst-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-burst-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0x55efbfa7', (5, 14, ('str', b'cb-close-range')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-kal-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-kal-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0x55efbfa7', (5, 18, ('str', b'cb-mid-range-arena')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-m9-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-para9-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-para9-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-rocket-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0x45c51f9f', (5, 14), (5, 37))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-rocket-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shield-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shield-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0x7a095698', (1, 4, 0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0xfd77d45d', (5, 17), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0x7a095698', (1, 4, 0))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0xfd77d45d', (5, 16), (5, 10))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0x55efbfa7', (5, 12, ('str', b'cb-mid-range')))
+shambhala-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-uzi-1	('0xac43d55d', (4, 4, 1176256512))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x45c51f9f', (5, 14), (5, 30))
+shambhala-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-uzi-1	('0x54511cc6', (1, 4, 0), (1, 4, 1))
+shambhala-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0xfd77d45d', (5, 16), (5, 10))
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-armor-grappler-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-grappler-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-sniper-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-ak-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-sniper-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-carpet-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-hammer-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-m9-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-militia-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-shotgun-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-burst-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-carpet-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-kal-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-ak-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-m9-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-m9-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-para9-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shield-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-basic-1	
+village-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-uzi-1	
+village-multi-shade-npc-ingame12.pak	spawner-extra-ps4	npc-shade-shotgun-pistole-1	
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-hammer-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0x7a095698', (1, 4, 0))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-para-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-para-1	('0x55efbfa7', (5, 12), (5, 14))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x55efbfa7', (5, 12), (5, 14))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0x45c51f9f', (5, 14), (5, 37))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shield-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0x7a095698', (1, 4, 0))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+village-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0x7a095698', (1, 4, 0))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x45c51f9f', (5, 14), (5, 30))
+village-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x55efbfa7', (5, 12), (5, 14))
+warzone-multi-car-coop-pak-ingame12.pak	missing-pak		1 regions 0 spawners
+warzone-multi-car-pak-ingame12.pak	missing-pak		1 regions 4 spawners
+warzone-multi-ingame12.pak	sptag-extra	breakable-585	('0x5d4729de', (1, 4, 1))
+warzone-multi-ingame12.pak	sptag-extra	breakable-587	('0x5d4729de', (1, 4, 1))
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-armor-grappler-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-kickback-mark-grappler-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-armor-sniper-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-ak-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-armor-sniper-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-carpet-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-hammer-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-m9-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-militia-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-boss-shotgun-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-burst-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-carpet-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-kal-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-ak-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-light-m9-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-m9-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-para9-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shield-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-shotgun-basic-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-missing-ps4	npc-shade-mark-uzi-1	
+warzone-multi-shade-npc-ingame12.pak	spawner-extra-ps4	npc-shade-shotgun-pistole-1	
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-carpet-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-hammer-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-hammer-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-militia-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-boss-shotgun-1	('0x7a095698', (1, 4, 0))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-boss-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-boss-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-burst-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-kal-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-ak-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-para-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-light-para-1	('0x55efbfa7', (5, 12), (5, 14))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-m9-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-para9-1	('0x55efbfa7', (5, 12), (5, 14))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-rocket-1	('0x45c51f9f', (5, 14), (5, 37))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shield-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-1	('0x7a095698', (1, 4, 0))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+warzone-multi-shade-npc-ingame12.pak	sptag-missing	npc-shade-shotgun-basic-1	('0x7a095698', (1, 4, 0))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-shotgun-basic-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-value	npc-shade-shotgun-basic-1	('0xa126bc5f', (1, 4, 2), (1, 4, 4294967295))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x45c51f9f', (5, 14), (5, 30))
+warzone-multi-shade-npc-ingame12.pak	sptag-type	npc-shade-uzi-1	('0x55efbfa7', (5, 12), (5, 14))
+world-chat-mp-ingame12.pak	missing-pak		2 regions 0 spawners
+world-city-mp-ingame12.pak	missing-pak		4 regions 0 spawners
+world-grave-mp-ingame12.pak	script-code	regionshape-10152	
+world-london-mp-ingame12.pak	missing-pak		1 regions 0 spawners
+world-yemen-mp-ingame12.pak	missing-pak		1 regions 0 spawners
+yem-intro-hotel-ingame12.pak	script-code	regionshape-close-task-37	
+yem-streets-multi-ingame12.pak	missing-pak		33 regions 21 spawners
+yem-streets-multi-test-ingame12.pak	missing-pak		1 regions 2 spawners
+yemen-multi-ingame12.pak	sptag-extra	lamp-1	('0x5d4729de', (1, 4, 1))
+yemen-multi-ingame12.pak	sptag-extra	lamp-2	('0x5d4729de', (1, 4, 1))
+yemen-multi-ingame12.pak	sptag-extra	lamp-3	('0x5d4729de', (1, 4, 1))
+yemen-multi-ingame12.pak	sptag-extra	lamp-4	('0x5d4729de', (1, 4, 1))
+yemen-multi-ingame12.pak	sptag-extra	lamp-5	('0x5d4729de', (1, 4, 1))
+yemen-multi-ingame12.pak	sptag-extra	lamp-6	('0x5d4729de', (1, 4, 1))

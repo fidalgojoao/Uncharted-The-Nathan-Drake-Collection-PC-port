@@ -1,0 +1,162 @@
+stage 0 ss-igc-tower-intro: 
+   states: initial complete
+stage 1 ss-tower-descent: 
+   states: initial first-floor complete
+   uses bm-tower1-patrol-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-tower1-sg-7: ok
+   uses npc-tower1-sg-8: ok
+   uses reg-turret1-door-guards-1: ok
+stage 2 ss-valve-tower-1: 
+   states: initial complete
+   uses reg-valve-tower1-1: ok
+stage 3 ss-igc-valve-tower-1: 
+   states: initial complete
+stage 4 ss-area-1: 
+   states: initial complete
+   uses bm-area1-patrol-1: ok
+   uses bm-area1-turret-balcony-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-set-zone-y-threshold: not-region/spawner
+   uses reg-area1-on-ground-1: ok
+stage 5 ss-valve-stuck-door: 
+   states: initial complete
+   uses reg-valve-area1-2: ok
+stage 6 ss-igc-stuck-door: 
+   states: initial complete
+stage 7 ss-area-1-ground-fight: 
+   states: initial complete
+   uses bm-area1-e-holes-1: ok
+   uses bm-area1-under-1: ok
+   uses bm-area1-under-2: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 8 ss-igc-boss-area-1: 
+   states: initial complete
+stage 9 ss-boss-area-1: 
+   states: initial complete
+   uses bm-area1-boss-support-1: ok
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-area1-kickback-boss-1: ok
+   uses npc-area1-kickback-boss-hard-1: ok
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 10 ss-valve-area-1: 
+   states: initial complete
+   uses reg-valve-area1-1: ok
+stage 11 ss-igc-valve-area-1: 
+   states: initial complete
+stage 12 ss-out-of-well: 
+   states: initial complete
+   uses bm-oow-patrol-1: ok
+   uses npc-oow-sg-1: ok
+   uses npc-oow-sg-2: ok
+   uses npc-oow-sg-3: ok
+   uses npc-oow-sg-armor-1: ok
+   uses npc-oow-sg-armor-2: ok
+   uses npc-oow-sg-armor-3: ok
+stage 13 ss-valve-place-artifact: 
+   states: initial complete
+   uses reg-valve-place-ankh-1: ok
+stage 14 ss-igc-place-artifact: 
+   states: initial complete
+   uses obj-area2-well-cover-low-1: ok
+stage 15 ss-find-idols: 
+   states: --all-- initial round-1 round-2 round-2-place-idol complete
+   go() target not a state: ['round-3']
+   wait get-boolean 0xc8a6efe0 on self setter:closure
+   uses bm-area2-idol5-1: ok
+   uses bm-area2-idol6-1: ok
+   uses bm-area2-idol6-2: ok
+   uses bm-area2-idol6-3: ok
+   uses reg-area2-two-man-idol-5: ok
+   uses reg-area2-two-man-idol-6: ok
+stage 16 ss-find-idols-part2: 
+   states: --all-- initial round-3 round-3-place-idol complete
+   wait get-boolean 0xb144f9a4 on self setter:closure
+   wait get-boolean 0xdafb516f on self setter:closure
+   uses bm-area2-idol3-1: ok
+   uses bm-area2-idol3-2: ok
+   uses bm-area2-idol3-3: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-area2-idol3-approach-1: ok
+   uses reg-area2-two-man-idol-3: ok
+stage 17 ss-igc-idol-boss: 
+   states: initial complete
+   uses bm-area2-boss-1: ok
+   uses npc-area2-brute-1: ok
+   uses player-spawner-tower2-1: ok
+stage 18 ss-idol-boss-fight: 
+   states: initial complete
+   wait get-boolean 0x9e07bef8 on self setter:closure
+   uses bm-area2-boss-1: ok
+   uses bm-area2-boss-2: ok
+   uses bm-area2-boss-3: ok
+   uses bm-area2-boss-4: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-area2-boss-1: ok
+   uses npc-area2-boss-2: ok
+   uses npc-area2-boss-crushing-1: ok
+   uses npc-area2-boss-crushing-2: ok
+   uses npc-area2-brute-1: ok
+   uses npc-killed: not-region/spawner
+   uses npc-set-ai-mode-default: not-region/spawner
+   uses npc-set-ai-mode-off: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 19 ss-place-last-idol: 
+   states: initial complete
+stage 20 ss-valve-tower-2: 
+   states: initial complete
+   uses reg-valve-tower2-1: ok
+stage 21 ss-igc-valve-tower-2: 
+   states: initial complete
+stage 22 ss-tower-wall: 
+   states: initial complete
+   wait get-boolean 0xd5a9944a on self setter:closure
+   wait get-boolean 0xd8eab293 on self setter:closure
+   wait get-boolean 0xdc2baf24 on self setter:closure
+   uses bm-wall-top-1: ok
+   uses bm-wall-top-2: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses npc-set-targeting-params: not-region/spawner
+   uses obj-statue-idol-1: ok
+   uses obj-statue-idol-3: ok
+   uses obj-statue-idol-5: ok
+   uses obj-statue-idol-6: ok
+   uses reg-wall-tracker-1: ok
+   uses reg-wall-tracker-2: ok
+   uses reg-wall-tracker-3: ok
+stage 23 ss-valve-tower-2-top: 
+   states: initial complete
+   uses reg-valve-tower2-top-1: ok
+stage 24 ss-igc-valve-tower-2-top: 
+   states: initial complete
+stage 25 ss-boss-helicopters: 
+   states: --all-- initial helicopters-destroyed complete
+   uses bm-tower2-wave-1: ok
+   uses bm-tower2-wave-2: ok
+   uses npc-alive-count: not-region/spawner
+stage 26 ss-valve-tower-treasure: 
+   states: initial complete
+   uses reg-valve-tower2-top-2: ok
+stage 27 ss-igc-syria-finale: 
+   states: initial complete

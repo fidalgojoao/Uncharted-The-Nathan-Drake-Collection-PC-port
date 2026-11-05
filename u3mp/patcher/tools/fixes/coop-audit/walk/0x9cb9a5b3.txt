@@ -1,0 +1,137 @@
+stage 0 ss-igc-london-intro: 
+   states: initial start-fight complete
+   uses bm-vs-greeters-1: ok
+stage 1 ss-station-start: 
+   states: --all-- initial vs-ground complete
+   uses bm-vs-greeters-1: ok
+   uses bm-vs-greeters-2: ok
+   uses bm-vs-greeters-3: ok
+   uses bm-vs-greeters-4: ok
+   uses bm-vs-ground-1: ok
+   uses bm-vs-wall-train-2: ok
+   uses reg-vs-clock-1: ok
+   uses reg-vs-greeters2-1: ok
+   uses reg-vs-middle-1: ok
+stage 2 ss-valve-inspect-wall: 
+   states: initial complete
+   uses reg-valve-c4-1: ok
+stage 3 ss-igc-sealed-off: 
+   states: initial complete
+stage 4 ss-destroy-wall: 
+   states: initial wall-destroyed complete
+   uses bm-vs-wall-far-1: ok
+   uses bm-vs-wall-far-2: ok
+   uses bm-vs-wall-train-1: ok
+   uses npc-vs-rpg-wall-far-1: ok
+   uses obj-c4-1: ok
+stage 5 ss-valve-to-library: 
+   states: initial complete
+   uses npc-alive-count: not-region/spawner
+   uses reg-valve-library-1: ok
+stage 6 ss-igc-to-library: 
+   states: initial complete
+stage 7 ss-get-to-library: 
+   states: initial complete
+   uses npc-alive-count: not-region/spawner
+   uses npc-lib-hall-gl-crushing-1: ok
+   uses npc-lib-hall-pistol-1: ok
+   uses npc-lib-hall-shield-hard-1: ok
+stage 8 ss-retrieve-treasure: 
+   states: initial complete
+   uses reg-valve-treasure-1: ok
+stage 9 ss-igc-retrieve-treasure: 
+   states: initial complete
+stage 10 ss-smoke-fight: 
+   states: initial complete
+   uses bm-lib-balcony-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+stage 11 ss-igc-smoke-boss: 
+   states: initial complete
+stage 12 ss-smoke-boss: 
+   states: initial clear complete
+   uses bm-lib-balcony-3: ok
+   uses bm-lib-balcony-4: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-killed: not-region/spawner
+   uses npc-lib-door-1: ok
+   uses npc-library-kickback-boss-1: ok
+   uses npc-remove-skill: not-region/spawner
+   uses npc-set-ai-mode-off: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-marker: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 13 ss-victorian-station-detour: 
+   states: initial complete
+   uses reg-valve-detour-1: ok
+stage 14 ss-igc-victorian-station-detour: 
+   states: initial complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+stage 15 ss-atwood-push-cart: 
+   states: --all-- initial cart-checkpoint-1 cart-checkpoint-2 cart-checkpoint-3 cart-checkpoint-4 complete
+   uses bm-at-tunnel-def-burst-1: ok
+   uses bm-at-tunnel-fence-1: ok
+   uses bm-tunnel-attack-1: ok
+   uses bm-tunnel-attack-2: ok
+   uses npc-atwood-pkm-2: ok
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses reg-atwood-cart-1: ok
+   uses reg-atwood-cart-2: ok
+   uses reg-atwood-cart-3: ok
+   uses reg-atwood-cart-4: ok
+   uses reg-atwood-platform-1: ok
+   uses reg-cart-push-1: ok
+stage 16 ss-atwood-platform: 
+   states: initial complete
+   uses bm-at-platform-1: ok
+   uses bm-at-platform-2: ok
+   uses npc-alive-count: not-region/spawner
+   uses reg-atwood-eop-1: ok
+   uses reg-atwood-train-1: ok
+   uses reg-atwood-train-3: ok
+stage 17 ss-atwood-valve: 
+   states: initial complete
+   uses reg-valve-atwood-1: ok
+stage 18 ss-igc-atwood-valve: 
+   states: initial complete
+stage 19 ss-atwood-escape: 
+   states: initial complete
+   uses bm-first-stairs-bottom-1: ok
+   uses bm-first-stairs-bottom-2: ok
+   uses bm-first-stairs-top-1: ok
+   uses bm-first-stairs-top-2: ok
+   uses bm-first-stairs-top-3: ok
+   uses bm-first-stairs-top-4: ok
+   uses bm-second-stairs-top-1: ok
+   uses bm-second-stairs-top-2: ok
+   uses bm-second-stairs-top-3: ok
+   uses reg-station-stairs-1-1: ok
+   uses reg-station-stairs-1-2: ok
+   uses reg-station-stairs-1-3: ok
+   uses reg-station-stairs-1-4: ok
+   uses reg-station-stairs-2-1: ok
+   uses reg-station-stairs-2-2: ok
+   uses reg-station-stairs-2-3: ok
+stage 20 ss-exit-to-street-valve: 
+   states: initial complete
+   uses reg-valve-street-1: ok
+stage 21 ss-igc-exit-to-street-valve: 
+   states: initial complete
+stage 22 ss-street-fight: 
+   states: --all-- initial wave-2 complete
+   wait get-boolean 0xf0d3e50d on self setter:closure
+   uses bm-street-building-wave-2: ok
+   uses bm-street-sg-wall-1: ok
+   uses bm-street-turret-1: ok
+   uses npc-alive-count: not-region/spawner
+stage 23 ss-ending-valve: 
+   states: initial complete
+   uses reg-valve-ending-1: ok
+stage 24 ss-igc-getaway: 
+   states: initial complete
+   uses npc-ldn-adv-chloe-1: ok
+   uses npc-set-ai-mode-off: not-region/spawner

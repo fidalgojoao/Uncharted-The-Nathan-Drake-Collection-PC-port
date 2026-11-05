@@ -1,0 +1,549 @@
+
+===  ss-marked-wave @4c08
+ state start blocks 1
+  on type=0 0x0 tracks=1
+   lambda @5228 t=9.262582849187041e-43
+        1: r0 = net-current-net-task()
+        2: op3b 0 0 24
+        3: op0d 0 0 0
+        6: ifnot(bool(net-current-net-task())) goto 11
+       10: r0 = wait(2.000)
+       11: ret wait(2.000)
+   lambda @5250 t=9.318634787760034e-43
+        5: r4 = net-current-net-task()
+        6: op3b 4 4 24
+        7: op0d 4 4 0
+        9: op02 4 4 5
+       12: r2 = group-at(0x9c88ba1f, net-current-net-task())
+       17: r0 = set-symbol(0xf50e9351, group-at(0x9c88ba1f, net-current-net-task()), self)
+       18: ret set-symbol(0xf50e9351, group-at(0x9c88ba1f, net-current-net-task()), self)
+   lambda @5278 t=9.34666075704653e-43
+        7: r0 = 0x6ec0b4ed(0xd9d7468f, ss-survival-display-1, 0)
+        8: ret 0x6ec0b4ed(0xd9d7468f, ss-survival-display-1, 0)
+   lambda @52a0 t=9.360673741689778e-43
+        9: r4 = get-int32(0x9f690e7a, self)
+       10: op02 3 3 4
+       14: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 5)
+       15: ret 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 5)
+   lambda @52c8 t=9.374686726333026e-43
+        1: r0 = net-current-net-task()
+        2: op3b 0 0 24
+        3: op0d 0 0 0
+        5: op1e 0 0 1
+        6: ifnot(net-current-net-task()) goto 11
+       10: r0 = wait(3.000)
+       11: ret wait(3.000)
+   lambda @52f0 t=9.41672568026277e-43
+        3: r0 = wait(5.000)
+        4: ret wait(5.000)
+   lambda @5318 t=9.444751649549267e-43
+        3: r0 = go(wave1-update)
+        4: ret go(wave1-update)
+ state wave1-update blocks 4
+  on type=0 0x0 tracks=1
+   lambda @5340 t=9.528829557408756e-43
+        8: r3 = get-symbol(0xf50e9351, self)
+       14: r4 = get-int32(0x9f690e7a, self)
+       17: r2 = group-at(get-symbol(0xf50e9351, self), get-int32(0x9f690e7a, self))
+       22: r0 = set-symbol(0x5caf3fb4, group-at(get-symbol(0xf50e9351, self), get-int32(0x9f690e7a, self)), self)
+       23: ret [@22]
+   lambda @5368 t=9.542842542052004e-43
+        6: r1 = get-symbol(0x5caf3fb4, self)
+        8: r0 = spawn-entity(get-symbol(0x5caf3fb4, self))
+        9: ret spawn-entity(get-symbol(0x5caf3fb4, self))
+   lambda @5390 t=9.556855526695252e-43
+        1: r0 = 0x42e5065b()
+        2: ret 0x42e5065b()
+   lambda @53b8 t=9.5708685113385e-43
+        5: r0 = random-integer(1, 3)
+        9: ifnot(bool(random-integer(1, 3))) goto 13
+       11: r1 = 0x42e5065b()
+       12: goto 19
+       16: ifnot(bool(random-integer(1, 3))) goto 19
+       18: r1 = 0x4fa62082()
+       19: ret random-integer(1, 3)
+   lambda @53e0 t=9.710998357770982e-43
+        3: r0 = wait(5.000)
+        4: ret wait(5.000)
+   lambda @5408 t=9.72501134241423e-43
+        8: r3 = get-symbol(0x5caf3fb4, self)
+       12: r0 = set-float(0xeaba9ba, 0.250, get-symbol(0x5caf3fb4, self))
+       13: ret set-float(0xeaba9ba, 0.250, get-symbol(0x5caf3fb4, self))
+   lambda @5430 t=9.739024327057479e-43
+        8: r3 = get-symbol(0x5caf3fb4, self)
+       12: r0 = set-float(0x379f7efb, 0.500, get-symbol(0x5caf3fb4, self))
+       13: ret set-float(0x379f7efb, 0.500, get-symbol(0x5caf3fb4, self))
+  on type=2 0x89d850a7 tracks=1
+   lambda @5458 t=9.837115219560216e-43
+        5: r0 = ++(0x9f690e7a, self)
+        6: ret ++(0x9f690e7a, self)
+   lambda @5480 t=9.851128204203464e-43
+        9: r4 = get-int32(0x9f690e7a, self)
+       10: op02 3 3 4
+       14: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 5)
+       15: ret 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 5)
+   lambda @54a8 t=9.865141188846712e-43
+        5: r0 = get-int32(0x9f690e7a, self)
+        7: op1f 0 0 1
+        8: ifnot(get-int32(0x9f690e7a, self)) goto 13
+       12: r0 = go(done)
+       13: ret go(done)
+   lambda @54d0 t=9.907180142776457e-43
+        5: r0 = get-int32(0x9f690e7a, self)
+        7: op1f 0 0 1
+        8: return?
+        9: ifnot(get-int32(0x9f690e7a, self)) goto 14
+       13: r0 = go(next-round)
+       14: ret go(next-round)
+  on type=3 0x0 tracks=1
+   lambda @54f8 t=9.991258050635946e-43
+        1: r0 = net-all-players-dead?()
+        2: ifnot(net-all-players-dead?()) goto 7
+        6: r0 = go(failing)
+        7: ret go(failing)
+  on type=1 0x0 tracks=1
+   lambda @5520 t=1.0075335958495435e-42
+        7: r2 = get-symbol(0x5caf3fb4, self)
+       10: r0 = send-event(terminate, get-symbol(0x5caf3fb4, self))
+       11: ret send-event(terminate, get-symbol(0x5caf3fb4, self))
+ state failing blocks 1
+  on type=0 0x0 tracks=1
+   lambda @5548 t=1.0159413866354924e-42
+        3: r0 = wait(4.000)
+        4: ret wait(4.000)
+   lambda @5570 t=1.0173426850998172e-42
+        3: r0 = go(fail)
+        4: ret go(fail)
+ state next-round blocks 1
+  on type=0 0x0 tracks=1
+   lambda @5598 t=1.0243491774214413e-42
+        5: r0 = send-event(0x3f48c9eb, ss-survival-display-1)
+        6: ret send-event(0x3f48c9eb, ss-survival-display-1)
+   lambda @55c0 t=1.0257504758857661e-42
+        6: r1 = get-symbol(0x5caf3fb4, self)
+        8: r0 = kill-entity(get-symbol(0x5caf3fb4, self))
+        9: ret kill-entity(get-symbol(0x5caf3fb4, self))
+   lambda @55e8 t=1.0271517743500909e-42
+        3: r0 = go(wave1-update)
+        4: ret go(wave1-update)
+ state done blocks 1
+  on type=0 0x0 tracks=1
+   lambda @5610 t=1.0355595651360398e-42
+        3: r2 = net-current-net-task()
+        4: op3b 2 2 24
+        5: op0d 2 2 0
+       10: r0 = set-int32(0xb388cbe8, net-current-net-task(), self)
+       11: ret set-int32(0xb388cbe8, net-current-net-task(), self)
+   lambda @5638 t=1.0383621620646894e-42
+        5: r0 = send-event(0x3f48c9eb, ss-survival-display-1)
+        6: ret send-event(0x3f48c9eb, ss-survival-display-1)
+   lambda @5660 t=1.0397634605290143e-42
+        9: r4 = get-int32(0xb388cbe8, self)
+       14: r0 = net-send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+       15: ret net-send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+   lambda @5688 t=1.0411647589933391e-42
+        9: r4 = get-int32(0xb388cbe8, self)
+       14: r0 = send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+       15: ret send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+   lambda @56b0 t=1.0425660574576639e-42
+        3: r0 = wait(4.000)
+        4: ret wait(4.000)
+   lambda @56d8 t=1.0439673559219887e-42
+        3: r0 = go(complete)
+        4: ret go(complete)
+ state fail blocks 0
+ state complete blocks 0
+
+===  ss-survival-wave @6020
+ state start blocks 1
+  on type=0 0x0 tracks=1
+   lambda @6588 t=5.74532370373175e-43
+        1: r0 = net-current-net-task()
+        2: op3b 0 0 24
+        3: op0d 0 0 0
+        6: ifnot(bool(net-current-net-task())) goto 11
+       10: r0 = wait(2.000)
+       11: ret wait(2.000)
+   lambda @65b0 t=5.7873626576614945e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 109
+       95: r4 = net-current-net-task()
+       96: op3b 4 4 24
+       97: op0d 4 4 0
+       99: op02 4 4 5
+      102: r2 = group-at(0x823ef744, net-current-net-task())
+      107: r0 = set-symbol(0x5caf3fb4, group-at(0x823ef744, net-current-net-task()), self)
+      108: goto 127
+      114: r4 = net-current-net-task()
+      115: op3b 4 4 24
+      116: op0d 4 4 0
+      118: op02 4 4 5
+      121: r2 = group-at(0x505c8ba9, net-current-net-task())
+      126: r0 = set-symbol(0x5caf3fb4, group-at(0x505c8ba9, net-current-net-task()), self)
+      127: ret set-symbol(0x5caf3fb4, group-at(0x505c8ba9, net-current-net-task()), self)
+   lambda @65d8 t=6.179726227672443e-43
+        7: r0 = 0x6ec0b4ed(objective, ss-survival-display-1, 0)
+        8: ret 0x6ec0b4ed(objective, ss-survival-display-1, 0)
+   lambda @6600 t=6.1937392123156915e-43
+        1: r0 = net-current-net-task()
+        2: op3b 0 0 24
+        3: op0d 0 0 0
+        5: op1e 0 0 1
+        6: ifnot(net-current-net-task()) goto 11
+       10: r0 = wait(3.000)
+       11: ret wait(3.000)
+   lambda @6628 t=6.235778166245436e-43
+        3: r0 = wait(5.000)
+        4: ret wait(5.000)
+   lambda @6650 t=6.263804135531932e-43
+        3: r0 = go(wave1-update)
+        4: ret go(wave1-update)
+ state wave1-update blocks 4
+  on type=0 0x0 tracks=1
+   lambda @6678 t=6.347882043391421e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 122
+      101: r6 = get-symbol(0x5caf3fb4, self)
+      104: r4 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      105: op02 3 3 4
+      109: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 12)
+      116: r1 = get-symbol(0x5caf3fb4, self)
+      118: r0 = spawn-entity(get-symbol(0x5caf3fb4, self))
+      120: r0 = 0x42e5065b()
+      121: goto 153
+      133: r6 = get-symbol(0x5caf3fb4, self)
+      136: r4 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      137: op02 3 3 4
+      141: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 25)
+      148: r1 = get-symbol(0x5caf3fb4, self)
+      150: r0 = spawn-entity(get-symbol(0x5caf3fb4, self))
+      152: r0 = 0x2540d915()
+      153: ret 0x2540d915()
+   lambda @66a0 t=6.782284567332115e-43
+        3: r0 = wait(5.000)
+        4: ret wait(5.000)
+   lambda @66c8 t=6.796297551975363e-43
+        8: r3 = get-symbol(0x5caf3fb4, self)
+       12: r0 = set-float(0xeaba9ba, 0.250, get-symbol(0x5caf3fb4, self))
+       13: ret set-float(0xeaba9ba, 0.250, get-symbol(0x5caf3fb4, self))
+   lambda @66f0 t=6.810310536618611e-43
+        8: r3 = get-symbol(0x5caf3fb4, self)
+       12: r0 = set-float(0x379f7efb, 0.500, get-symbol(0x5caf3fb4, self))
+       13: ret set-float(0x379f7efb, 0.500, get-symbol(0x5caf3fb4, self))
+   lambda @6718 t=6.838336505905107e-43
+        5: r0 = net-send-event(start, ss-survival-display-1)
+        6: ret net-send-event(start, ss-survival-display-1)
+   lambda @6740 t=6.8523494905483555e-43
+        5: r0 = send-event(start, ss-survival-display-1)
+        6: ret send-event(start, ss-survival-display-1)
+   lambda @6768 t=6.866362475191604e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 109
+       97: r2 = get-symbol(0x5caf3fb4, self)
+      100: r0 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      102: op1f 0 0 1
+      103: return?
+      104: ifnot(get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))) goto 108
+      106: r0 = wait-one-frame()
+      107: goto 90
+      108: goto 127
+      116: r2 = get-symbol(0x5caf3fb4, self)
+      119: r0 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      121: op1f 0 0 1
+      122: return?
+      123: ifnot(get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))) goto 127
+      125: r0 = wait-one-frame()
+      126: goto 109
+      127: ret wait-one-frame()
+   lambda @6790 t=7.286752014489049e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 93
+       91: r0 = 0x4fa62082()
+       92: goto 95
+       94: r0 = 0x2803ffcc()
+       95: ret 0x2803ffcc()
+  on type=2 0x80618d78 tracks=1
+   lambda @67b8 t=7.707141553786494e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 111
+      101: r6 = get-symbol(0x5caf3fb4, self)
+      104: r4 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      105: op02 3 3 4
+      109: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 11)
+      110: goto 131
+      122: r6 = get-symbol(0x5caf3fb4, self)
+      125: r4 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      126: op02 3 3 4
+      130: r0 = 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 24)
+      131: ret 0x6ec0b4ed(0x884311ce, ss-survival-display-1, 24)
+  on type=3 0x0 tracks=1
+   lambda @67e0 t=8.141544077727187e-43
+        1: r0 = net-get-gametype()
+        4: if(bool(net-get-gametype())) goto 89
+        6: r0 = net-get-gametype()
+        9: if(bool(net-get-gametype())) goto 89
+       11: r0 = net-get-gametype()
+       14: if(bool(net-get-gametype())) goto 89
+       16: r0 = net-get-gametype()
+       19: if(bool(net-get-gametype())) goto 89
+       21: r0 = net-get-gametype()
+       24: if(bool(net-get-gametype())) goto 89
+       26: r0 = net-get-gametype()
+       29: if(bool(net-get-gametype())) goto 89
+       31: r0 = net-get-gametype()
+       34: if(bool(net-get-gametype())) goto 89
+       36: r0 = net-get-gametype()
+       39: if(bool(net-get-gametype())) goto 89
+       41: r0 = net-get-gametype()
+       44: if(bool(net-get-gametype())) goto 89
+       46: r0 = net-get-gametype()
+       49: if(bool(net-get-gametype())) goto 89
+       51: r0 = net-get-gametype()
+       54: if(bool(net-get-gametype())) goto 89
+       56: r0 = net-get-gametype()
+       59: if(bool(net-get-gametype())) goto 89
+       61: r0 = net-get-gametype()
+       64: if(bool(net-get-gametype())) goto 89
+       66: r0 = net-get-gametype()
+       69: if(bool(net-get-gametype())) goto 89
+       71: r0 = net-get-gametype()
+       74: if(bool(net-get-gametype())) goto 89
+       76: r0 = net-get-gametype()
+       79: if(bool(net-get-gametype())) goto 89
+       81: r0 = net-get-gametype()
+       84: if(bool(net-get-gametype())) goto 89
+       86: r0 = net-get-gametype()
+       89: ifnot(bool(net-get-gametype())) goto 127
+       99: r4 = get-symbol(0x5caf3fb4, self)
+      102: r2 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      107: r0 = set-int32(0x3ff14471, get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self)), self)
+      115: r2 = get-symbol(0x5caf3fb4, self)
+      118: r0 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      120: op1f 0 0 1
+      121: ifnot(get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))) goto 126
+      125: r0 = go(done)
+      126: goto 145
+      134: r2 = get-symbol(0x5caf3fb4, self)
+      137: r0 = get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))
+      139: op1f 0 0 1
+      140: ifnot(get-int32(0x7915e38a, get-symbol(0x5caf3fb4, self))) goto 145
+      144: r0 = go(done)
+      145: ret go(done)
+   lambda @6808 t=8.589959586311129e-43
+        1: r0 = net-all-players-dead?()
+        2: ifnot(net-all-players-dead?()) goto 7
+        6: r0 = go(failing)
+        7: ret go(failing)
+  on type=1 0x0 tracks=1
+   lambda @6830 t=8.674037494170618e-43
+        7: r2 = get-symbol(0x5caf3fb4, self)
+       10: r0 = send-event(terminate, get-symbol(0x5caf3fb4, self))
+       11: ret send-event(terminate, get-symbol(0x5caf3fb4, self))
+ state failing blocks 1
+  on type=0 0x0 tracks=1
+   lambda @6858 t=8.758115402030107e-43
+        3: r0 = wait(4.000)
+        4: ret wait(4.000)
+   lambda @6880 t=8.772128386673355e-43
+        3: r0 = go(fail)
+        4: ret go(fail)
+ state done blocks 1
+  on type=0 0x0 tracks=1
+   lambda @68a8 t=8.828180325246348e-43
+        7: r0 = set-int32(0x3ff14471, 0, self)
+        8: ret set-int32(0x3ff14471, 0, self)
+   lambda @68d0 t=8.842193309889596e-43
+        3: r2 = net-current-net-task()
+        4: op3b 2 2 24
+        5: op0d 2 2 0
+       10: r0 = set-int32(0xb388cbe8, net-current-net-task(), self)
+       11: ret set-int32(0xb388cbe8, net-current-net-task(), self)
+   lambda @68f8 t=8.870219279176092e-43
+        5: r0 = send-event(0x3f48c9eb, ss-survival-display-1)
+        6: ret send-event(0x3f48c9eb, ss-survival-display-1)
+   lambda @6920 t=8.88423226381934e-43
+        9: r4 = get-int32(0xb388cbe8, self)
+       14: r0 = net-send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+       15: ret net-send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+   lambda @6948 t=8.898245248462588e-43
+        9: r4 = get-int32(0xb388cbe8, self)
+       14: r0 = send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+       15: ret send-event(results, ss-survival-display-1, 1, get-int32(0xb388cbe8, self))
+   lambda @6970 t=8.912258233105837e-43
+        3: r0 = wait(4.000)
+        4: ret wait(4.000)
+   lambda @6998 t=8.926271217749085e-43
+        3: r0 = go(complete)
+        4: ret go(complete)
+ state fail blocks 0
+ state complete blocks 0

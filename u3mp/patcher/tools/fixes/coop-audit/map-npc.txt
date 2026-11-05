@@ -1,0 +1,171 @@
+NET_GAME_YEMEN_SURVIVAL_1 paks=10 npcrefs3=87 npcrefs4=86 have3=590 have4=590 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_AIRPORT_SURVIVAL_1 paks=10 npcrefs3=87 npcrefs4=86 have3=644 have4=652 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_CHA_SURVIVAL_1 paks=9 npcrefs3=86 npcrefs4=85 have3=585 have4=585 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_SYRIA_SURVIVAL_1 paks=10 npcrefs3=86 npcrefs4=85 have3=641 have4=641 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_DESERT_SURVIVAL_1 paks=10 npcrefs3=86 npcrefs4=85 have3=551 have4=551 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_RUINS_SURVIVAL_1 paks=10 npcrefs3=100 npcrefs4=99 have3=881 have4=881 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_FACILITY_SURVIVAL_1 paks=9 npcrefs3=92 npcrefs4=91 have3=697 have4=697 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_HIGHRISE_SURVIVAL_1 paks=10 npcrefs3=100 npcrefs4=99 have3=758 have4=758 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_MUSEUM_SURVIVAL_1 paks=10 npcrefs3=102 npcrefs4=101 have3=751 have4=751 miss3=9 miss4=8
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_WARZONE_SURVIVAL_1 paks=10 npcrefs3=86 npcrefs4=85 have3=605 have4=605 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_VILLAGE_SURVIVAL_1 paks=11 npcrefs3=97 npcrefs4=96 have3=507 have4=507 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_GOMPA_SURVIVAL_1 paks=11 npcrefs3=87 npcrefs4=86 have3=751 have4=751 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_FORT_SURVIVAL_1 paks=12 npcrefs3=96 npcrefs4=95 have3=519 have4=519 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_SHAM_SURVIVAL_1 paks=11 npcrefs3=86 npcrefs4=85 have3=647 have4=647 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_OASIS_SURVIVAL_1 paks=11 npcrefs3=86 npcrefs4=85 have3=438 have4=438 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_OLD_SURVIVAL_1 paks=11 npcrefs3=99 npcrefs4=98 have3=443 have4=443 miss3=19 miss4=18
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_STREETS_SURVIVAL_1 paks=11 npcrefs3=86 npcrefs4=85 have3=453 have4=453 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_YEMEN_HUNTER_1 paks=10 npcrefs3=87 npcrefs4=86 have3=590 have4=590 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_AIRPORT_HUNTER_1 paks=10 npcrefs3=87 npcrefs4=86 have3=644 have4=652 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_CHA_HUNTER_1 paks=9 npcrefs3=86 npcrefs4=85 have3=585 have4=585 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_SYRIA_HUNTER_1 paks=10 npcrefs3=86 npcrefs4=85 have3=641 have4=641 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_DESERT_HUNTER_1 paks=10 npcrefs3=86 npcrefs4=85 have3=551 have4=551 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_RUINS_HUNTER_1 paks=10 npcrefs3=100 npcrefs4=99 have3=881 have4=881 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_FACILITY_HUNTER_1 paks=9 npcrefs3=92 npcrefs4=91 have3=697 have4=697 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_HIGHRISE_HUNTER_1 paks=10 npcrefs3=100 npcrefs4=99 have3=758 have4=758 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_MUSEUM_HUNTER_1 paks=10 npcrefs3=102 npcrefs4=101 have3=751 have4=751 miss3=9 miss4=8
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_WARZONE_HUNTER_1 paks=10 npcrefs3=86 npcrefs4=85 have3=605 have4=605 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_VILLAGE_HUNTER_1 paks=11 npcrefs3=97 npcrefs4=96 have3=507 have4=507 miss3=7 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_GOMPA_HUNTER_1 paks=11 npcrefs3=87 npcrefs4=86 have3=751 have4=751 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_FORT_HUNTER_1 paks=12 npcrefs3=96 npcrefs4=95 have3=519 have4=519 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_SHAM_HUNTER_1 paks=11 npcrefs3=86 npcrefs4=85 have3=647 have4=647 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_OLD_HUNTER_1 paks=11 npcrefs3=99 npcrefs4=98 have3=443 have4=443 miss3=19 miss4=18
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_OASIS_HUNTER_1 paks=11 npcrefs3=86 npcrefs4=85 have3=438 have4=438 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_STREETS_HUNTER_1 paks=11 npcrefs3=86 npcrefs4=85 have3=453 have4=453 miss3=6 miss4=5
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+0x8a746a66 paks=9 npcrefs3=176 npcrefs4=176 have3=1339 have4=1339 miss3=11 miss4=11
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []
+0x9cb9a5b3 paks=12 npcrefs3=133 npcrefs4=133 have3=852 have4=852 miss3=6 miss4=6
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []
+0x6bb2b65f paks=10 npcrefs3=144 npcrefs4=144 have3=993 have4=993 miss3=11 miss4=11
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []
+0xcd368052 paks=25 npcrefs3=199 npcrefs4=199 have3=1360 have4=1360 miss3=23 miss4=23
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []
+0x1c37ceb7 paks=14 npcrefs3=145 npcrefs4=145 have3=1245 have4=1245 miss3=13 miss4=13
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []
+NET_GAME_YEMEN_SHADE_1 paks=10 npcrefs3=71 npcrefs4=70 have3=557 have4=557 miss3=28 miss4=27
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_AIRPORT_SHADE_1 paks=10 npcrefs3=71 npcrefs4=70 have3=608 have4=608 miss3=28 miss4=27
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_CHA_SHADE_1 paks=9 npcrefs3=70 npcrefs4=69 have3=547 have4=547 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_SYRIA_SHADE_1 paks=10 npcrefs3=70 npcrefs4=69 have3=608 have4=608 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_DESERT_SHADE_1 paks=10 npcrefs3=70 npcrefs4=69 have3=518 have4=518 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_RUINS_SHADE_1 paks=10 npcrefs3=84 npcrefs4=83 have3=848 have4=848 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_FACILITY_SHADE_1 paks=9 npcrefs3=76 npcrefs4=75 have3=664 have4=664 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_HIGHRISE_SHADE_1 paks=10 npcrefs3=84 npcrefs4=83 have3=725 have4=725 miss3=28 miss4=27
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_MUSEUM_SHADE_1 paks=10 npcrefs3=89 npcrefs4=88 have3=721 have4=721 miss3=30 miss4=29
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+NET_GAME_GOMPA_SHADE_1 paks=11 npcrefs3=71 npcrefs4=60 have3=718 have4=692 miss3=27 miss4=42
+   only-ps4-missing: ['npc-grapple', 'npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-uzi-1']
+   not-even-referenced-by-ps4: ['npc-grapple-shade', 'npc-ingame12', 'npc-kickback-mark-grappler-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1']
+NET_GAME_FORT_SHADE_1 paks=12 npcrefs3=80 npcrefs4=69 have3=486 have4=460 miss3=27 miss4=42
+   only-ps4-missing: ['npc-grapple', 'npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-uzi-1']
+   not-even-referenced-by-ps4: ['npc-grapple-shade', 'npc-ingame12', 'npc-kickback-mark-grappler-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1']
+NET_GAME_SHAM_SHADE_1 paks=11 npcrefs3=70 npcrefs4=59 have3=614 have4=588 miss3=27 miss4=42
+   only-ps4-missing: ['npc-grapple', 'npc-kickback-armor-grappler-1', 'npc-kickback-mark-armor-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-light-ak-1', 'npc-shade-light-m9-1', 'npc-shade-light-para-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-uzi-1']
+   not-even-referenced-by-ps4: ['npc-grapple-shade', 'npc-ingame12', 'npc-kickback-mark-grappler-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1']
+NET_GAME_WARZONE_SHADE_1 paks=10 npcrefs3=70 npcrefs4=59 have3=572 have4=550 miss3=27 miss4=38
+   only-ps4-missing: ['npc-kickback-mark-armor-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-uzi-1']
+   not-even-referenced-by-ps4: ['npc-ingame12', 'npc-kickback-mark-grappler-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1']
+0xc80dc107 paks=11 npcrefs3=81 npcrefs4=70 have3=474 have4=452 miss3=28 miss4=39
+   only-ps4-missing: ['npc-kickback-mark-armor-grappler-1', 'npc-shade-armor-1', 'npc-shade-armor-sniper-1', 'npc-shade-mark-armor-1', 'npc-shade-mark-armor-sniper-1', 'npc-shade-mark-boss-hammer-1', 'npc-shade-mark-boss-m9-1', 'npc-shade-mark-boss-militia-1', 'npc-shade-mark-boss-shotgun-1', 'npc-shade-mark-burst-1', 'npc-shade-mark-para9-1', 'npc-shade-mark-uzi-1']
+   not-even-referenced-by-ps4: ['npc-ingame12', 'npc-kickback-mark-grappler-1', 'npc-shade-mark-ak-1', 'npc-shade-mark-boss-carpet-1', 'npc-shade-mark-carpet-1', 'npc-shade-mark-kal-1', 'npc-shade-mark-light-ak-1', 'npc-shade-mark-light-m9-1', 'npc-shade-mark-m9-1', 'npc-shade-mark-shield-1', 'npc-shade-mark-shotgun-1', 'npc-shade-mark-shotgun-basic-1']
+0x69d6f6f1 paks=11 npcrefs3=70 npcrefs4=69 have3=405 have4=405 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+0x7248286c paks=11 npcrefs3=83 npcrefs4=82 have3=410 have4=410 miss3=40 miss4=39
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+0xb9205add paks=11 npcrefs3=70 npcrefs4=69 have3=420 have4=420 miss3=27 miss4=26
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: ['npc-ingame12']
+0xf04f4c84 paks=11 npcrefs3=234 npcrefs4=234 have3=1171 have4=1171 miss3=10 miss4=10
+   only-ps4-missing: []
+   not-even-referenced-by-ps4: []

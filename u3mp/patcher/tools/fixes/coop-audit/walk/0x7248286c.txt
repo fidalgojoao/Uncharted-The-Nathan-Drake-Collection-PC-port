@@ -1,0 +1,27 @@
+stage 0 ss-survival-wave: 
+   states: start wave1-update failing done fail complete
+   uses group-at: not-region/spawner
+stage 1 ss-survival-wave: 
+   states: start wave1-update failing done fail complete
+   uses group-at: not-region/spawner
+stage 2 ss-marked-wave: 
+   states: start wave1-update failing next-round done fail complete
+   uses group-at: not-region/spawner
+stage 3 ss-survivitory-wave: 
+   states: start capture-territory failing done fail complete
+   uses group-at: not-region/spawner
+stage 4 ss-survival-wave: 
+   states: start wave1-update failing done fail complete
+   uses group-at: not-region/spawner
+stage 5 ss-marked-wave: 
+   states: start wave1-update failing next-round done fail complete
+   uses group-at: not-region/spawner
+stage 6 ss-survivitory-wave: 
+   states: start capture-territory failing done fail complete
+   uses group-at: not-region/spawner
+stage 7 ss-marked-wave: 
+   states: start wave1-update failing next-round done fail complete
+   uses group-at: not-region/spawner
+stage 8 ss-survival-wave: 
+   states: start wave1-update failing done fail complete
+   uses group-at: not-region/spawner

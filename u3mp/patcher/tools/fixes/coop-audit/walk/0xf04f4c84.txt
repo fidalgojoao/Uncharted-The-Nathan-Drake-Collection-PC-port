@@ -1,0 +1,291 @@
+stage 0 ss-igc-fort-opening: 
+   states: --all-- initial complete
+stage 1 ss-coop-adv-fort-start: 
+   states: --all-- initial complete
+   uses bm-start-wave1-1: ok
+   uses bm-start-wave1-upper-1: ok
+   uses bm-start-wave1-upper-2: ok
+   uses bm-start-wave2-1: ok
+   uses bm-start-wave2-sniper-1: ok
+   uses bm-start-wave2-sniper-2: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-enable-abandon-cover-when-shot-while-hiding: not-region/spawner
+   uses npc-enable-blind-fire: not-region/spawner
+   uses npc-enable-hit-reactions: not-region/spawner
+   uses npc-set-skill-dda-settings: not-region/spawner
+   uses npc-start-sniper-quickshot-1: ok
+   uses npc-start-sniper-quickshot-2: ok
+stage 2 ss-igc-fort-courtyard-boss-intro: 
+   states: --all-- initial complete
+stage 3 ss-coop-adv-fort-courtyard-boss: 
+   states: --all-- initial complete
+   wait get-boolean 0x8f0f706a on self setter:closure
+   uses bm-courtyard-boss-ground-1: ok
+   uses bm-courtyard-bossfight-grappler-1: ok
+   uses bm-start-wave1-upper-5: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-uppertier-courtyard-bossfight: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-courtyard-boss-1: ok
+   uses npc-courtyard-boss-crushing-1: ok
+   uses npc-move-to-spawner: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+stage 4 ss-igc-fort-courtyard-gate-opens: 
+   states: --all-- initial complete
+stage 5 ss-coop-adv-fort-hallway-battle: 
+   states: --all-- initial complete
+   wait get-boolean reg-upper-tier-hallway-1 on self setter:closure
+   wait get-boolean reg-upper-tier-hallway-2 on self setter:closure
+   wait get-boolean reg-upper-tier-hallway-3 on self setter:closure
+   wait get-boolean reg-upper-tier-hallway-4 on self setter:closure
+   uses bm-hallway-battle-sniper-1: ok
+   uses bm-upper-tier-hallway-armor-1: ok
+   uses bm-upper-tier-hallway-guard-1: ok
+   uses bm-upper-tier-hallway-rear-guard-1: ok
+   uses bm-upper-tier-hallway-shield-1: ok
+   uses bm-upper-tier-hallway-shield-2: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-set-zone-y-threshold: not-region/spawner
+   uses reg-door-to-upper-tier-1: ok
+   uses reg-upper-tier-hallway-1: ok
+   uses reg-upper-tier-hallway-2: ok
+   uses reg-upper-tier-hallway-3: ok
+   uses reg-upper-tier-hallway-4: ok
+stage 6 ss-coop-adv-fort-blow-door: 
+   states: --all-- initial door-destroyed complete
+   wait get-boolean 0x921a783 on self setter:closure
+   uses bm-landing-rpg-1: ok
+   uses bm-upper-tier-hallway-rpg-guards-1: ok
+   uses bm-upper-tier-hallway-rpg-guards-armor-1: ok
+   uses bm-upper-tier-hallway-rpg-guards-armor-2: ok
+   uses bm-upper-tier-hallway-rpg-guards-rear-1: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-clear: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-hallway-battle-immobile: not-region/spawner
+   uses group-npc-blow-door: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-kill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-set-zone-y-threshold: not-region/spawner
+   uses npc-upper-tier-hallway-rpg-guards-armor-1: ok
+   uses spawner-group: not-region/spawner
+stage 7 ss-coop-adv-fort-valve-scared-pirates: 
+   states: --all-- initial complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-npc-blow-door: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-kill: not-region/spawner
+   uses reg-valve-scared-pirates-1: ok
+   uses reg-valve-scared-pirates-re-zone-1: ok
+stage 8 ss-igc-fort-scared-pirates: 
+   states: --all-- initial complete
+stage 9 ss-coop-adv-fort-upper-tier: 
+   states: --all-- initial complete
+   wait get-boolean 0x1b52d8e5 on self setter:closure
+   wait get-boolean 0x7cfbd892 on self setter:closure
+   wait get-boolean 0x81a64feb on self setter:closure
+   wait get-boolean reg-upper-tier-1 on self setter:closure
+   wait get-boolean reg-upper-tier-2 on self setter:closure
+   wait get-boolean reg-upper-tier-jump-down-1 on self setter:closure
+   uses bm-balcony-sniper-1: ok
+   uses bm-balcony-sniper-quickshot-1: ok
+   uses bm-balcony-sniper-quickshot-cliff-1: ok
+   uses bm-castle-roof-sniper-1: ok
+   uses bm-upper-tier-boss-1: ok
+   uses bm-upper-tier-grappler-1: ok
+   uses bm-upper-tier-support-1: ok
+   uses bm-upper-tier-wall-climber-1: ok
+   uses group-add: not-region/spawner
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-upper-tier: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-enable-abandon-cover-when-shot-while-hiding: not-region/spawner
+   uses npc-enable-blind-fire: not-region/spawner
+   uses npc-enable-hit-reactions: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-skill-dda-settings: not-region/spawner
+   uses npc-set-zone-marker: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-upper-tier-boss-1: ok
+   uses npc-upper-tier-boss-militia-1: ok
+   uses reg-upper-tier-1: ok
+   uses reg-upper-tier-2: ok
+   uses reg-upper-tier-jump-down-1: ok
+   uses spawner-group: not-region/spawner
+stage 10 ss-coop-adv-fort-valve-radio: 
+   states: --all-- initial complete
+   uses reg-valve-radio-1: ok
+stage 11 ss-igc-fort-radio: 
+   states: --all-- initial complete
+stage 12 ss-coop-adv-fort-truck-battle: 
+   states: --all-- initial complete
+   wait get-boolean 0x6d72c6e2 on self setter:closure
+   wait get-boolean reg-rpg-door-ground-1 on self setter:closure
+   uses bm-courtyard-rpg-1: ok
+   uses bm-main-gate-rpg-1: ok
+   uses bm-trucks-crossfire-1: ok
+   uses bm-trucks-ground-forces-1: ok
+   uses bm-trucks-wall-climber-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-npc-truck-battle: not-region/spawner
+   uses group-npc-truck-battle-immobile: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-enable-abandon-cover-when-shot-while-hiding: not-region/spawner
+   uses npc-enable-blind-fire: not-region/spawner
+   uses npc-enable-hit-reactions: not-region/spawner
+   uses npc-kill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-skill-dda-settings: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-trucks-crossfire-sniper-armor-quick-1: ok
+   uses reg-rpg-door-ground-1: ok
+stage 13 ss-coop-adv-fort-valve-main-gate: 
+   states: initial complete
+   uses reg-valve-main-gate-1: ok
+stage 14 ss-igc-fort-main-gate: 
+   states: --all-- initial complete
+stage 15 ss-coop-adv-fort-courtyard-idols: 
+   states: --all-- initial complete
+   wait get-boolean 0x6a36fa7b on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-1 on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-2 on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-4 on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-5 on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-6 on self setter:closure
+   wait get-boolean reg-courtyard-idol-start-7 on self setter:closure
+   uses bm-courtyard-idol-sniper-1: ok
+   uses bm-courtyard-idol-sniper-2: ok
+   uses bm-courtyard-idol-sniper-wall-1: ok
+   uses bm-idol-courtyard-final-boss-1: ok
+   uses bm-idol-courtyard-grappler-1: ok
+   uses bm-idol-courtyard-ground-1: ok
+   uses bm-idol-courtyard-ground-final-1: ok
+   uses bm-idol-courtyard-tower-1: ok
+   uses bm-idol-courtyard-tower-armor-1: ok
+   uses bm-idol-courtyard-tower-idol-guards-1: ok
+   uses bm-idol-courtyard-tower-sentries-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-idol-courtyard-all: not-region/spawner
+   uses group-idol-courtyard-immobile: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-kill: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-courtyard-idol-cells-1: ok
+   uses reg-courtyard-idol-start-1: ok
+   uses reg-courtyard-idol-start-2: ok
+   uses reg-courtyard-idol-start-4: ok
+   uses reg-courtyard-idol-start-5: ok
+   uses reg-courtyard-idol-start-6: ok
+   uses reg-courtyard-idol-start-7: ok
+   uses rgn-idol-courtyard-last-idol-1: ok
+stage 16 ss-coop-adv-fort-tower-idols: 
+   states: --all-- initial complete
+   wait get-boolean 0x7cfbd892 on self setter:closure
+   wait get-boolean reg-tower-idol-2 on self setter:closure
+   wait get-boolean reg-tower-idol-3 on self setter:closure
+   wait get-boolean reg-tower-idol-door-1 on self setter:closure
+   uses bm-castle-roof-sniper-2: ok
+   uses bm-courtyard-tower-sniper-1: ok
+   uses bm-courtyard-tower-sniper-2: ok
+   uses bm-courtyard-tower-sniper-4: ok
+   uses bm-idol-tower-armor-final-1: ok
+   uses bm-idol-tower-armor-guard-1: ok
+   uses bm-idol-tower-boss-1: ok
+   uses bm-idol-tower-round-1: ok
+   uses bm-idol-tower-round-2: ok
+   uses bm-idol-tower-rpg-1: ok
+   uses bm-idol-tower-turret-operator-1: ok
+   uses bm-idol-tower-vertical-1: ok
+   uses bm-tower-idol-grappler-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-idol-tower-all: not-region/spawner
+   uses group-idol-tower-immobile: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-enable-abandon-cover-when-shot-while-hiding: not-region/spawner
+   uses npc-enable-blind-fire: not-region/spawner
+   uses npc-enable-hit-reactions: not-region/spawner
+   uses npc-idol-tower-sniper-quick-3: ok
+   uses npc-idol-tower-sniper-quick-4: ok
+   uses npc-idol-tower-turret-operator-1: ok
+   uses npc-kill: not-region/spawner
+   uses npc-set-accuracy-multiplier: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-skill-dda-settings: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses reg-tower-idol-1: ok
+   uses reg-tower-idol-2: ok
+   uses reg-tower-idol-3: ok
+   uses reg-tower-idol-door-1: ok
+stage 17 ss-coop-adv-fort-valve-cistern: 
+   states: --all-- initial complete
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-idol-tower-all: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-radius: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-set-zone-y-threshold: not-region/spawner
+   uses reg-valve-cistern-1: ok
+stage 18 ss-igc-fort-cistern: 
+   states: --all-- initial complete
+stage 19 ss-coop-adv-fort-cistern: 
+   states: --all-- initial complete
+   uses bm-cistern-grappler-1: ok
+   uses bm-cistern-lower-shade-intro-1: ok
+   uses bm-cistern-shade-rocket-1: ok
+   uses bm-cistern-upper-shade-1: ok
+   uses group-add: not-region/spawner
+   uses group-clear: not-region/spawner
+   uses spawner-group: not-region/spawner
+stage 20 ss-coop-adv-fort-cistern-boss: 
+   states: --all-- initial complete
+   wait get-boolean 0xf10cedd8 on self setter:closure
+   uses bm-cistern-shade-shield-1: ok
+   uses bm-cistern-upper-boss-1: ok
+   uses group-at: not-region/spawner
+   uses group-count: not-region/spawner
+   uses group-npc-teleport: not-region/spawner
+   uses npc-alive: not-region/spawner
+   uses npc-alive-count: not-region/spawner
+   uses npc-confirm-coop-players-contact: not-region/spawner
+   uses npc-set-combat-behavior: not-region/spawner
+   uses npc-set-zone-update-method: not-region/spawner
+   uses npc-shade-boss-carpet-1: ok
+   uses npc-shade-boss-hammer-1: ok
+   uses npc-shade-boss-militia-1: ok
+stage 21 ss-coop-adv-fort-valve-finale: 
+   states: --all-- initial complete
+   uses reg-valve-finale-1: ok
+stage 22 ss-igc-fort-finale: 
+   states: --all-- initial complete

@@ -1,0 +1,555 @@
+NET_GAME_YEMEN_SURVIVAL_1 0xe4e6147 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_AIRPORT_SURVIVAL_1 0x1ce733f4 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_CHA_SURVIVAL_1 0xf56c0528 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_SYRIA_SURVIVAL_1 0x31b0a47 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_DESERT_SURVIVAL_1 0xf045d7fd n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_RUINS_SURVIVAL_1 0x37be4d69 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_FACILITY_SURVIVAL_1 0x7069f592 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_HIGHRISE_SURVIVAL_1 0xb89e363e n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_MUSEUM_SURVIVAL_1 0xee1d78ce n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_WARZONE_SURVIVAL_1 0x467db0f2 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_VILLAGE_SURVIVAL_1 0x9c1890e4 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_GOMPA_SURVIVAL_1 0x67fc1396 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_FORT_SURVIVAL_1 0x36ceb66b n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_SHAM_SURVIVAL_1 0xc4139f78 n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_OASIS_SURVIVAL_1 0x82fb8e9e n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_OLD_SURVIVAL_1 0x2f92fe0a n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_STREETS_SURVIVAL_1 0xdcd88efb n=10
+   0 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+   8 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-9
+   9 0x0                                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-10
+NET_GAME_YEMEN_HUNTER_1 0xe4e6147 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_AIRPORT_HUNTER_1 0x1ce733f4 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_CHA_HUNTER_1 0xf56c0528 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_SYRIA_HUNTER_1 0x31b0a47 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_DESERT_HUNTER_1 0xf045d7fd n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_RUINS_HUNTER_1 0x37be4d69 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_FACILITY_HUNTER_1 0x7069f592 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_HIGHRISE_HUNTER_1 0xb89e363e n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_MUSEUM_HUNTER_1 0xee1d78ce n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_WARZONE_HUNTER_1 0x467db0f2 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_VILLAGE_HUNTER_1 0x9c1890e4 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_GOMPA_HUNTER_1 0x67fc1396 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_FORT_HUNTER_1 0x36ceb66b n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_SHAM_HUNTER_1 0xc4139f78 n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_OLD_HUNTER_1 0x2f92fe0a n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_OASIS_HUNTER_1 0x82fb8e9e n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+NET_GAME_STREETS_HUNTER_1 0xdcd88efb n=3
+   0 ss-hunter-plunder-wave-1                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-1
+   1 ss-hunter-plunder-wave-2                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-2
+   2 ss-hunter-plunder-wave-3                       c3=0 c4=1 list=['online-spawner-coop-1'] kind=0x0 lb=wave-3
+0x8a746a66 dig-adv n=25
+   0 ss-igc-dig-opening                             c3=0 c4=1 list=['online-spawner-approach-start-1'] kind=0x9271220a lb=0x24425ceb
+   1 ss-coop-adv-dig-approach-start                 c3=1 c4=1 list=['online-spawner-approach-start-1'] kind=0x9271220a lb=0x773fa139
+   2 ss-coop-adv-dig-groupup-crate                  c3=0 c4=1 list=['online-spawner-lowertier-1'] kind=0x8cf8e1cc lb=0xc9b13cd6
+   3 ss-igc-crate-intro                             c3=0 c4=1 list=['online-spawner-crate-intro-2'] kind=0x8cf8e1cc lb=0xf1a10119
+   4 ss-coop-adv-dig-crate-fight                    c3=0 c4=1 list=['online-spawner-lowertier-1'] kind=0x8cf8e1cc lb=0x94e2216e
+   5 ss-coop-adv-dig-groupup-artifact-intro         c3=0 c4=1 list=['online-spawner-lowertier-1'] kind=0x8cf8e1cc lb=0xd35e8f0e
+   6 ss-igc-valve-upper-tier                        c3=0 c4=1 list=['online-spawner-lowertier-1'] kind=0x8cf8e1cc lb=0x7fce46b6
+   7 ss-coop-adv-dig-approach-upper-tier            c3=0 c4=1 list=['online-spawner-uppertier-1'] kind=0x8cf8e1cc lb=0x946f04fd
+   8 ss-coop-adv-dig-valve-into-big-arena           c3=0 c4=1 list=['online-spawner-valve-mini-arena-1'] kind=0x8cf8e1cc lb=0xbdeaae7c
+   9 ss-igc-valve-into-big-arena                    c3=0 c4=1 list=['online-spawner-valve-mini-arena-1'] kind=0x8cf8e1cc lb=0x3532fb6a
+  10 ss-coop-adv-dig-big-arena                      c3=0 c4=1 list=['online-spawner-big-arena-1'] kind=0x8cf8e1cc lb=0x7c6d5602
+  11 ss-igc-kickback-intro                          c3=0 c4=1 list=['online-spawner-big-arena-part2-1'] kind=0x8cf8e1cc lb=0x6fca9648
+  12 ss-coop-adv-dig-big-arena-part-2               c3=0 c4=1 list=['online-spawner-big-arena-part2-1'] kind=0x8cf8e1cc lb=0x252e2858
+  13 ss-coop-adv-dig-approach-valve-post-big-arena  c3=0 c4=1 list=['online-spawner-valve-big-arena-1'] kind=0x8cf8e1cc lb=0x141f9091
+  14 ss-igc-valve-into-upper-plateau                c3=0 c4=1 list=['online-spawner-valve-big-arena-1'] kind=0x8cf8e1cc lb=0xce280fad
+  15 ss-coop-adv-dig-post-trucks                    c3=0 c4=1 list=['online-spawner-post-trucks-1'] kind=0x8cf8e1cc lb=0x8af95572
+  16 ss-coop-adv-dig-valve-into-ship-arena          c3=0 c4=1 list=['online-spawner-valve-ship-1'] kind=0x8cf8e1cc lb=0xf05c4b64
+  17 ss-igc-ship-intro                              c3=0 c4=1 list=['online-spawner-ship-1'] kind=0x8cf8e1cc lb=0x22946e5b
+  18 ss-coop-adv-dig-ship-crate3                    c3=0 c4=1 list=['online-spawner-ship-1'] kind=0x8cf8e1cc lb=0x291d3288
+  19 ss-coop-adv-dig-ship-crate4                    c3=0 c4=1 list=['online-spawner-ship-crate2-1'] kind=0x8cf8e1cc lb=0x375a628d
+  20 ss-coop-adv-dig-ship-groupup-boss              c3=0 c4=1 list=['online-spawner-groupup-boss-1'] kind=0x8cf8e1cc lb=0xd2161604
+  21 ss-igc-draza-intro                             c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0x24711a3b
+  22 ss-coop-adv-dig-ship-boss-fight                c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0x7dc68f45
+  23 ss-coop-adv-dig-groupup-finale                 c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0xbdb2b06b
+  24 ss-igc-finale                                  c3=0 c4=1 list=['online-spawner-finale-1'] kind=0x8cf8e1cc lb=0x8728230e
+0x9cb9a5b3 0x1548154e n=25
+   0 ss-igc-london-intro                            c3=0 c4=1 list=['player-spawner-start-1'] kind=0x8cf8e1cc lb=0xa8036ea4
+   1 ss-station-start                               c3=2 c4=2 list=['player-spawner-start-1', 'player-spawner-start-2'] kind=0x8cf8e1cc lb=0xf916afe8
+   2 ss-valve-inspect-wall                          c3=0 c4=1 list=['player-spawner-wall-1'] kind=0x8cf8e1cc lb=0xdd142951
+   3 ss-igc-sealed-off                              c3=0 c4=1 list=['player-spawner-wall-1'] kind=0x8cf8e1cc lb=0x15e70e9b
+   4 ss-destroy-wall                                c3=0 c4=1 list=['player-spawner-wall-4'] kind=0x8cf8e1cc lb=0x7c5cb575
+   5 ss-valve-to-library                            c3=0 c4=1 list=['player-spawner-wall-1'] kind=0x8cf8e1cc lb=0xaee9c73e
+   6 ss-igc-to-library                              c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0x1aa38ea9
+   7 ss-get-to-library                              c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0x5495031
+   8 ss-retrieve-treasure                           c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0x339d5966
+   9 ss-igc-retrieve-treasure                       c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0xa62fa3ad
+  10 ss-smoke-fight                                 c3=0 c4=1 list=['player-spawner-inner-library-1'] kind=0x8cf8e1cc lb=0xd4658fc8
+  11 ss-igc-smoke-boss                              c3=0 c4=1 list=['player-spawner-inner-library-1'] kind=0x8cf8e1cc lb=0x9ca45cc7
+  12 ss-smoke-boss                                  c3=0 c4=1 list=['player-spawner-inner-library-1'] kind=0x8cf8e1cc lb=0x26b77105
+  13 ss-victorian-station-detour                    c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0xfe644b4f
+  14 ss-igc-victorian-station-detour                c3=0 c4=1 list=['player-spawner-library-1'] kind=0x8cf8e1cc lb=0xb8e7a1b8
+  15 ss-atwood-push-cart                            c3=0 c4=1 list=['player-spawner-atwood-1'] kind=0x8cf8e1cc lb=0x9b10b291
+  16 ss-atwood-platform                             c3=0 c4=1 list=['player-spawner-atwood-platform-1'] kind=0x8cf8e1cc lb=0x293b414
+  17 ss-atwood-valve                                c3=0 c4=1 list=['player-spawner-atwood-valve-1'] kind=0x8cf8e1cc lb=0x680a1f91
+  18 ss-igc-atwood-valve                            c3=0 c4=1 list=['player-spawner-atwood-valve-1'] kind=0x8cf8e1cc lb=0x9c5e4ac8
+  19 ss-atwood-escape                               c3=0 c4=1 list=['player-spawner-atwood-escape-1'] kind=0x8cf8e1cc lb=0xcba69998
+  20 ss-exit-to-street-valve                        c3=0 c4=1 list=['player-spawner-street-valve-1'] kind=0x8cf8e1cc lb=0x78e62a40
+  21 ss-igc-exit-to-street-valve                    c3=0 c4=1 list=['player-spawner-street-valve-1'] kind=0x8cf8e1cc lb=0x8cb27f19
+  22 ss-street-fight                                c3=0 c4=1 list=['player-spawner-street-1'] kind=0x8cf8e1cc lb=0x396d8cd7
+  23 ss-ending-valve                                c3=0 c4=1 list=['player-spawner-street-1'] kind=0x8cf8e1cc lb=0xf44699df
+  24 ss-igc-getaway                                 c3=0 c4=1 list=['player-spawner-street-1'] kind=0x8cf8e1cc lb=0x6381db4a
+0x6bb2b65f 0xae270117 n=25
+   0 ss-igc-hostage                                 c3=0 c4=1 list=['online-spawner-start-1'] kind=0x42a5be7f lb=0x3e30d889
+   1 ss-coop-adv-mon-start                          c3=3 c4=3 list=['online-spawner-start-1', 'online-spawner-start-2', 'online-spawner-start-3'] kind=0x42a5be7f lb=hostage
+   2 ss-coop-adv-mon-cloister-2                     c3=0 c4=1 list=['0x20d8727e'] kind=0x73d5fce5 lb=0x3cd36fc
+   3 ss-coop-adv-mon-cloister-boss-igc              c3=0 c4=1 list=['0x89a0ba78'] kind=0x0 lb=0x85355970
+   4 ss-coop-adv-mon-cloister-boss-fight            c3=0 c4=1 list=['0x89a0ba78'] kind=0x0 lb=0x1c30fe55
+   5 ss-coop-adv-mon-gate                           c3=0 c4=1 list=['0x26e55273'] kind=0x0 lb=gate
+   6 ss-coop-adv-mon-igc-gate                       c3=0 c4=1 list=['0x26e55273'] kind=0x0 lb=0x80d0ee91
+   7 ss-coop-adv-mon-vine-ambush                    c3=0 c4=1 list=['0x78810f4a'] kind=0x0 lb=0x38123776
+   8 ss-coop-adv-mon-vine                           c3=0 c4=1 list=['0x78810f4a'] kind=0x0 lb=vine
+   9 ss-coop-adv-mon-church-igc-1                   c3=0 c4=1 list=['0xf1999047'] kind=0x0 lb=0x81135069
+  10 ss-coop-adv-mon-church-1                       c3=0 c4=1 list=['0xf1999047'] kind=0x0 lb=0x38a6a3a4
+  11 ss-secure-chuch-floor                          c3=0 c4=1 list=['0xa3bf7b0d'] kind=0x0 lb=0x61e7e6b5
+  12 ss-open-altar                                  c3=0 c4=1 list=['0xa3bf7b0d'] kind=0x0 lb=0x53e59b49
+  13 ss-igc-free-archeologist                       c3=0 c4=1 list=['0xb47a1066'] kind=0x0 lb=0xcf9f2f06
+  14 ss-escape-with-archeologist                    c3=0 c4=1 list=['0xb47a1066'] kind=0x0 lb=0xe5a3f839
+  15 ss-open-church-door                            c3=0 c4=1 list=['0xb47a1066'] kind=0x0 lb=0x339f8b7
+  16 igc-archeologist-shot-1                        c3=0 c4=1 list=['0xb47a1066'] kind=0x0 lb=0x371f1493
+  17 ss-coop-adv-mon-courtyard-cross                c3=0 c4=1 list=['0x8b95bce6'] kind=0x0 lb=0xb57136b1
+  18 ss-coop-adv-mon-courtyard-center               c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=0x85fc8e03
+  19 ss-hold-center-rpgs                            c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=0xaf3934d9
+  20 ss-valve-artifact-found                        c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=0xe277922c
+  21 igc-artifact-found                             c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=igc-artifact-found
+  22 courtyard-boss                                 c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=courtyard-boss
+  23 ss-valve-helicopter-escape                     c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=0x3db85c1
+  24 igc-helicopter-escape                          c3=0 c4=1 list=['0xbb13278b'] kind=0x0 lb=igc-helicopter-escape
+0xcd368052 0xab8d7bad n=28
+   0 ss-igc-tower-intro                             c3=0 c4=1 list=['player-spawner-tower1-1'] kind=0x73d5fce5 lb=0xc09abef3
+   1 ss-tower-descent                               c3=4 c4=4 list=['player-spawner-tower1-1', 'player-spawner-tower1-2', 'player-spawner-tower1-3', '0xe4af1492'] kind=0x73d5fce5 lb=0x68a83596
+   2 ss-valve-tower-1                               c3=0 c4=1 list=['player-spawner-tower1-4'] kind=0x73d5fce5 lb=0x69904830
+   3 ss-igc-valve-tower-1                           c3=0 c4=1 list=['player-spawner-tower1-4'] kind=0x73d5fce5 lb=0xa7799ae5
+   4 ss-area-1                                      c3=0 c4=1 list=['player-spawner-area1-1'] kind=0x73d5fce5 lb=0x8d29ac63
+   5 ss-valve-stuck-door                            c3=0 c4=1 list=['player-spawner-area-boss-1'] kind=0x73d5fce5 lb=0x6964db0a
+   6 ss-igc-stuck-door                              c3=0 c4=1 list=['player-spawner-area1-ambush-1'] kind=0x73d5fce5 lb=0xdd2e929d
+   7 ss-area-1-ground-fight                         c3=0 c4=1 list=['player-spawner-area1-ambush-1'] kind=0x5915ddac lb=0x23f29d17
+   8 ss-igc-boss-area-1                             c3=0 c4=1 list=['player-spawner-area-boss-1'] kind=0x5915ddac lb=0xa254136e
+   9 ss-boss-area-1                                 c3=0 c4=1 list=['player-spawner-area-boss-1'] kind=0x5915ddac lb=0x23cd8ac6
+  10 ss-valve-area-1                                c3=0 c4=1 list=['player-spawner-area1-valve-1'] kind=0x5915ddac lb=0x519f6a8b
+  11 ss-igc-valve-area-1                            c3=0 c4=1 list=['player-spawner-area1-valve-1'] kind=0x5915ddac lb=0xa5cb3fd2
+  12 ss-out-of-well                                 c3=0 c4=1 list=['player-spawner-well-1'] kind=0x5915ddac lb=0x2612fbfa
+  13 ss-valve-place-artifact                        c3=0 c4=1 list=['player-spawner-area2-1'] kind=0x5915ddac lb=0xd24e52b4
+  14 ss-igc-place-artifact                          c3=0 c4=1 list=['player-spawner-area2-1'] kind=0x5915ddac lb=0x4cb2d151
+  15 ss-find-idols                                  c3=0 c4=1 list=['player-spawner-idols-1'] kind=0x5915ddac lb=0xc59b97bd
+  16 ss-find-idols-part2                            c3=0 c4=1 list=['player-spawner-idols-6'] kind=0x5915ddac lb=0x84fd35a1
+  17 ss-igc-idol-boss                               c3=0 c4=1 list=['player-spawner-idols-1'] kind=0x5915ddac lb=0x7efc77b2
+  18 ss-idol-boss-fight                             c3=0 c4=1 list=['player-spawner-brute-1'] kind=0x5915ddac lb=0xd8a9872a
+  19 ss-place-last-idol                             c3=0 c4=1 list=['player-spawner-idols-1'] kind=0x5915ddac lb=0x33e1f55c
+  20 ss-valve-tower-2                               c3=0 c4=1 list=['player-spawner-idols-1'] kind=0x5915ddac lb=0x64d36ee9
+  21 ss-igc-valve-tower-2                           c3=0 c4=1 list=['player-spawner-tower2-1'] kind=0x5915ddac lb=0xaa3abc3c
+  22 ss-tower-wall                                  c3=0 c4=1 list=['player-spawner-wall-1'] kind=0x5915ddac lb=0x96134fc2
+  23 ss-valve-tower-2-top                           c3=0 c4=1 list=['player-spawner-heli-1'] kind=0x5915ddac lb=0xf3110c50
+  24 ss-igc-valve-tower-2-top                       c3=0 c4=1 list=['player-spawner-heli-1'] kind=0x5915ddac lb=0x66a3f69b
+  25 ss-boss-helicopters                            c3=0 c4=1 list=['player-spawner-heli-1'] kind=0x5915ddac lb=0x1f38fd21
+  26 ss-valve-tower-treasure                        c3=0 c4=1 list=['player-spawner-heli-1'] kind=0x5915ddac lb=0x91bda647
+  27 ss-igc-syria-finale                            c3=0 c4=1 list=['player-spawner-heli-1'] kind=0x5915ddac lb=0x8728230e
+0x1c37ceb7 0xd3925240 n=15
+   0 ss-igc-airport-opening                         c3=0 c4=1 list=['online-spawner-start-1'] kind=0x8cf8e1cc lb=0x24425ceb
+   1 ss-coop-adv-airport-start                      c3=5 c4=5 list=['online-spawner-start-1', 'online-spawner-start-2', 'online-spawner-start-3', '0xe4af1492', 'online-spawner-sniper-battle-1'] kind=0x8cf8e1cc lb=start
+   2 ss-coop-adv-airport-sniper-battle              c3=0 c4=1 list=['online-spawner-sniper-battle-1'] kind=0x8cf8e1cc lb=0x5dfa7dfa
+   3 ss-coop-adv-airport-valve-into-overlook        c3=0 c4=1 list=['online-spawner-valve-overlook-1'] kind=0x8cf8e1cc lb=0x669993b4
+   4 ss-igc-valve-into-overlook                     c3=0 c4=1 list=['online-spawner-valve-overlook-1'] kind=0x8cf8e1cc lb=0x2d0e865a
+   5 ss-coop-adv-airport-turret-trap                c3=0 c4=1 list=['online-spawner-overlook-1'] kind=0x8cf8e1cc lb=0x4c0b74a0
+   6 ss-coop-adv-airport-valve-into-truck-smash     c3=0 c4=1 list=['online-spawner-truck-smash-1'] kind=0x8cf8e1cc lb=0x6cd72f06
+   7 ss-igc-valve-into-truck-smash                  c3=0 c4=1 list=['online-spawner-truck-smash-1'] kind=0x8cf8e1cc lb=0x696129d
+   8 ss-coop-adv-airport-truck-push                 c3=0 c4=1 list=['online-spawner-truck-push-1'] kind=0x8cf8e1cc lb=0xebb55e27
+   9 ss-coop-adv-airport-valve-into-boss-fight      c3=0 c4=1 list=['online-spawner-valve-into-boss-fight-1'] kind=0x8cf8e1cc lb=0xc51355c9
+  10 ss-igc-airport-boss-intro                      c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0x456932fa
+  11 ss-coop-adv-airport-boss-fight                 c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0x1ba0a6e7
+  12 ss-igc-airport-lazarevic-death                 c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0xf2d9233
+  13 ss-coop-adv-airport-groupup-finale             c3=0 c4=1 list=['online-spawner-finale-1'] kind=0x8cf8e1cc lb=0xbdb2b06b
+  14 ss-igc-airport-finale                          c3=0 c4=1 list=['online-spawner-boss-fight-1'] kind=0x8cf8e1cc lb=0x8728230e
+NET_GAME_YEMEN_SHADE_1 0x19ff3832 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_AIRPORT_SHADE_1 0xcc583c27 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_CHA_SHADE_1 0xef0e0884 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_SYRIA_SHADE_1 0x6a17d8c1 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_DESERT_SHADE_1 0x142d62e0 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_RUINS_SHADE_1 0xf54547e3 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_FACILITY_SHADE_1 0xb484b873 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_HIGHRISE_SHADE_1 0xb78be640 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_MUSEUM_SHADE_1 0xd253b571 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_GOMPA_SHADE_1 0x6130fc35 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_FORT_SHADE_1 0x168dfa84 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_SHAM_SHADE_1 0xfe78412b n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+NET_GAME_WARZONE_SHADE_1 0x97298817 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+0xc80dc107 0x283b89b8 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+0x69d6f6f1 0x421d5e2c n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+0x7248286c 0x8ff6f0c5 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+0xb9205add 0xa87a80a5 n=8
+   0 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-1
+   1 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-2
+   2 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-3
+   3 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-4
+   4 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-5
+   5 ss-survivitory-wave                            c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-6
+   6 ss-marked-wave                                 c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-7
+   7 ss-survival-wave                               c3=0 c4=1 list=['0x44433030'] kind=0x0 lb=wave-8
+0xf04f4c84 0x44b4af22 n=23
+   0 ss-igc-fort-opening                            c3=0 c4=1 list=['online-spawner-start-1'] kind=0x8cf8e1cc lb=igc-intro
+   1 ss-coop-adv-fort-start                         c3=0 c4=1 list=['online-spawner-start-1'] kind=0x8cf8e1cc lb=start
+   2 ss-igc-fort-courtyard-boss-intro               c3=0 c4=1 list=['online-spawner-gate1-1'] kind=0x8cf8e1cc lb=0xf4d46dcb
+   3 ss-coop-adv-fort-courtyard-boss                c3=0 c4=1 list=['online-spawner-gate1-1'] kind=0x8cf8e1cc lb=courtyard-boss
+   4 ss-igc-fort-courtyard-gate-opens               c3=0 c4=1 list=['online-spawner-gate1-1'] kind=0x8cf8e1cc lb=0xd52e636a
+   5 ss-coop-adv-fort-hallway-battle                c3=0 c4=1 list=['online-spawner-hallway-1'] kind=0x8cf8e1cc lb=hallway-battle
+   6 ss-coop-adv-fort-blow-door                     c3=0 c4=1 list=['online-spawner-rpg-door-1'] kind=0x8cf8e1cc lb=0x7974f8e3
+   7 ss-coop-adv-fort-valve-scared-pirates          c3=0 c4=1 list=['online-spawner-valve-scared-pirates-1'] kind=0x8cf8e1cc lb=valve-scared-pirates
+   8 ss-igc-fort-scared-pirates                     c3=0 c4=1 list=['online-spawner-valve-scared-pirates-1'] kind=0x8cf8e1cc lb=igc-scared-pirates
+   9 ss-coop-adv-fort-upper-tier                    c3=0 c4=1 list=['online-spawner-upper-tier-1'] kind=0x8cf8e1cc lb=upper-tier
+  10 ss-coop-adv-fort-valve-radio                   c3=0 c4=1 list=['online-spawner-radio-1'] kind=0x8cf8e1cc lb=0x6dece42d
+  11 ss-igc-fort-radio                              c3=0 c4=1 list=['online-spawner-radio-1'] kind=0x8cf8e1cc lb=0x15c54a4d
+  12 ss-coop-adv-fort-truck-battle                  c3=0 c4=1 list=['online-spawner-radio-1'] kind=0x8cf8e1cc lb=truck-battle
+  13 ss-coop-adv-fort-valve-main-gate               c3=0 c4=1 list=['online-spawner-main-gate-1'] kind=0x8cf8e1cc lb=0xb0f66328
+  14 ss-igc-fort-main-gate                          c3=0 c4=1 list=['online-spawner-main-gate-1'] kind=0x8cf8e1cc lb=0xd0ee8ca7
+  15 ss-coop-adv-fort-courtyard-idols               c3=0 c4=1 list=['online-spawner-courtyard-1'] kind=0x8cf8e1cc lb=0xfcaf11e9
+  16 ss-coop-adv-fort-tower-idols                   c3=0 c4=1 list=['online-spawner-tower-1'] kind=0x8cf8e1cc lb=0x1307e9ba
+  17 ss-coop-adv-fort-valve-cistern                 c3=0 c4=1 list=['online-spawner-tower-1'] kind=0x8cf8e1cc lb=0x8233f293
+  18 ss-igc-fort-cistern                            c3=0 c4=1 list=['online-spawner-cistern-1'] kind=0x8cf8e1cc lb=0x6d453657
+  19 ss-coop-adv-fort-cistern                       c3=0 c4=1 list=['online-spawner-cistern-1'] kind=0x8cf8e1cc lb=cistern
+  20 ss-coop-adv-fort-cistern-boss                  c3=0 c4=1 list=['online-spawner-cistern-boss-1'] kind=0x8cf8e1cc lb=0xe839e323
+  21 ss-coop-adv-fort-valve-finale                  c3=0 c4=1 list=['online-spawner-finale-1'] kind=0x8cf8e1cc lb=0x683ab351
+  22 ss-igc-fort-finale                             c3=0 c4=1 list=['online-spawner-finale-1'] kind=0x8cf8e1cc lb=0x8728230e
