@@ -2686,7 +2686,7 @@ def build(raw,blob,pool_blob=None):
  # v5.11 PS3 f_30867c spawner filter: PS4 0x72fbc0 kept the netgame type 0x11/0x12 tests but dropped type 8 (co-op Shade),
  # so 0x2378cd79-gated spawners never activate in type 8. One lookup now tests 0x11, 0x12 and 8 like PS3 (0x72fde0..0x72fe80).
  a=0x72fde0
- if image[a:a+0xa0]!=bytes.fromhex('(retail code bytes removed from history)'):raise ValueError('spawn type-8 site mismatch')
+ if hashlib.sha256(bytes(image[a:a+0xa0])).hexdigest()!='c715d3cad1ba14f8d04233c8c40db429a57521c89268fa22cabe98ef50b963b0':raise ValueError('spawn type-8 site mismatch')   # the retail code there (sha256)
  image[a:a+0xa0]=bytes.fromhex('bf7d069a3be8062eac004885c0743e488b004885c07436410fbf8e1c66000085c9782a3b087d264863c9488b40084885c0741a4869c9d00000008b44080c83f811740f83f812740a83f8087405e989010000e949000000cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc');wrappers.append(dict(site=hex(a),kind='spawner-type8'))
  # v5.10: MAX_CACHED_LEVELS 800 -> 1100 (heap 0x46 is 0x3fc00: 1100*0xd0 + 0x5020 ptr table fits, 1200 doesn't; the heap can't grow, ValidateContext) (all PS3 MP levels: ~965 level defs vs retail 681).
  # LevelMgr level-def array [mgr+0x178] = N*0xd0 (alloc 0x10eb00b), init loop 0x10e9d3e, assert 0x10ea0b3.

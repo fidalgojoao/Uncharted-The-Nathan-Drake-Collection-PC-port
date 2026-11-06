@@ -14,7 +14,7 @@
  "files": {
   "profile-helper.bin": "341cabcffcf8f5ee9858b0065993cfc93783f0bd6505f766b77fda551cf39b40",
   "u3_pool_init.bin": "108879278e0e477fcdb010584151a020119723696f7f03815a42664a62279821",
-  "build_u3_profile_probe.py": "b8013d48227708efa4af027fb9e2e48133d11aaea8d91d3ce44fa0c2c3a5eab0",
+  "build_u3_profile_probe.py": "4c490e35662785427c24e53304e78e19bbcf0b7da9d2dba33ac43829c17bf611",
   "build_u3_pool_blob.py": "33e84395db30a2c76f2e6bdd7a4a6b6f401597635677952c6a12f83162368751",
   "build_u3_bootstrap_probe.py": "94f3123030ad4a4f60930efc0fa3c72c5631d8b616237abbca3d3f1e9db72346"
  }
