@@ -499,7 +499,8 @@ def build_data2(out_dir, dns_ipv4, ps3_eboot_path, text_ids=(7,), upgrades_names
             _write(os.path.join(out_dir, name), data, lm)
             log('%s %d bytes' % (name, len(data)))
         except (OSError, ValueError) as ex:
-            problems.append('%s: %s' % (name, ex))
+            # not read by the import (the store's upgrade list): a warning, not a reason to stop
+            log('note: %s not downloaded (%s); the import does not need it' % (name, ex))
 
     # 5. EULA pages into http-cache (plain JPEG bodies) + toc1
     sets = eula_sets(net18)
