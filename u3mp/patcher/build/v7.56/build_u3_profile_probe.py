@@ -82,6 +82,11 @@ def build(raw,blob,pool_blob=None):
  # net player tracker exists. Replace the trap with a 2-byte NOP (nothing drawn).
  if image[0xc3b822:0xc3b824]!=b'\xcd\x41':raise ValueError('hud trap mismatch')
  image[0xc3b822:0xc3b824]=b'\x66\x90'
+ # v7.56b: NpcManager::Register 0x342cb0 asserts m_npcCount < 9 (npc-manager.cpp:1193) before adding an NPC, but
+ # the table holds 32 (the add below checks 0x20 / 0x1f). PS3 1.19's retail build has the assert compiled out; co-op
+ # adventures go past 8 (London chapter 2 end crashed with int 0x41). jl over the assert -> jmp: the 32 limit stays.
+ if image[0x342ced:0x342cf2]!=bytes.fromhex('833b097c35'):raise ValueError('npc count assert mismatch')
+ image[0x342cf0]=0xeb
  # v5.28: port the PS3 draw (kind 52, see hud_spotted_draw). The whole slot is replaced: jmp at 0xc3b770 -> full-save stub,
  # helper, then ret (the PS4 body only had the checks and the trap). U3MP_SPOTTED_HUD=0 keeps the NOP-only shortcut.
  # (Installed later, after fullsave_stub exists: see 'v5.28 slot 3'.)
