@@ -87,6 +87,12 @@ def build(raw,blob,pool_blob=None):
  # adventures go past 8 (London chapter 2 end crashed with int 0x41). jl over the assert -> jmp: the 32 limit stays.
  if image[0x342ced:0x342cf2]!=bytes.fromhex('833b097c35'):raise ValueError('npc count assert mismatch')
  image[0x342cf0]=0xeb
+ # v7.56c: the story characters Chloe / Elena / Marlowe register their process type with a 0x24400-byte heap
+ # (static initializers 0x394120 / 0x398b80 / 0x39d710). Co-op London chapter 2's final cutscene ran one full
+ # ("Allocation failed: 5136 bytes ... Unnamed [F:3056 T:148480]") once more than 8 enemies were up. Doubled.
+ for at in (0x3943ba,0x399fba,0x39d98a):
+  if image[at:at+4]!=bytes.fromhex('00440200'):raise ValueError('character heap size mismatch')
+  image[at:at+4]=(0x48800).to_bytes(4,'little')
  # v5.28: port the PS3 draw (kind 52, see hud_spotted_draw). The whole slot is replaced: jmp at 0xc3b770 -> full-save stub,
  # helper, then ret (the PS4 body only had the checks and the trap). U3MP_SPOTTED_HUD=0 keeps the NOP-only shortcut.
  # (Installed later, after fullsave_stub exists: see 'v5.28 slot 3'.)

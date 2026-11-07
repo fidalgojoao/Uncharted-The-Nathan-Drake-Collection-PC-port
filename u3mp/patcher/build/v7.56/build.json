@@ -5,7 +5,7 @@
  "self_sha256": "02c111aa7e73e445d71a1ad861702811f31d471abc61caf01732d55a77eb1c38",
  "base_sha256": "64466a99fa91bf49da3498e3df016b4f84f298e0929a3b4ab797bd3282dd9fbc",
  "menu_shell_sha256": "8979cc0d2e0590d61bdf7935ab8c29e617010aa2aa096584cd868d004058554b",
- "image_sha256": "162eeceed116515cc824c3d45dff470ecc933241136b2a249ddd9814c769fcd6",
+ "image_sha256": "487b6748f4763ba134bfd5755f563ab9afbf8d42afaa8e154d9f9d89e17e06e5",
  "env": {
   "U3MP_N033": "2",
   "U3MP_LAN_LOOP": "0",
@@ -14,7 +14,7 @@
  "files": {
   "profile-helper.bin": "f9c9ff1753b2791b25adc7139ec65399ddaa0c6fc1dccde9cf20ff3fe9f4e5ee",
   "u3_pool_init.bin": "108879278e0e477fcdb010584151a020119723696f7f03815a42664a62279821",
-  "build_u3_profile_probe.py": "1be96d27ae388f343662119ee2fff5f8b9403e8bcb8e1e7248fa7b8d5f12e37c",
+  "build_u3_profile_probe.py": "489aa5c1d3f7ee411ace831cdb3870fae06ef7df62a84ee743b25807c88cd4e3",
   "build_u3_pool_blob.py": "ec60dbf1221aec46b36180724a217a86b3e7b7d1e220f05e88f3fad97dd0445a",
   "build_u3_bootstrap_probe.py": "94f3123030ad4a4f60930efc0fa3c72c5631d8b616237abbca3d3f1e9db72346"
  }
