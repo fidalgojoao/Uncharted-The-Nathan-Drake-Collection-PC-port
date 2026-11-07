@@ -38,7 +38,18 @@ except ImportError:  # pure-Python Blowfish fallback (slow on the 55 MB Lab psar
     np = None
 
 # sha256 of the net18.bin the DC recipes were made from (recipe_lib.expected_net18_sha256; a hash, not game data)
-EXPECTED_NET18_SHA256 = '8c8bc870b3733beaece421beaf11fbe1cceb6d65536443535bd54cf126938da8'
+EXPECTED_NET18_SHA256 = '8c8bc870b3733beaece421beaf11fbe1cceb6d65536443535bd54cf126938da8'   # the recipes' reference
+
+
+def accepted_net18():
+    """Accepted net18.bin versions: tools/dcconv/net18-versions.json next to this file (the server updates net18.bin
+    in place; each version is checked and listed there), else the reference only."""
+    import json
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tools', 'dcconv', 'net18-versions.json')
+    try:
+        return set(json.load(open(p, encoding='utf-8'))['accepted'])
+    except (OSError, ValueError, KeyError):
+        return {EXPECTED_NET18_SHA256}
 DOWNLOAD_LIST_SID = 0x4E45F19F  # net18.bin DC symbol read by f_32a7b0 (array of {char* dir; char* name})
 USER_AGENT = 'DNTG-HTTPC/1.1'
 
@@ -469,8 +480,8 @@ def build_data2(out_dir, dns_ipv4, ps3_eboot_path, text_ids=(7,), upgrades_names
     _write(os.path.join(out_dir, 'net18.bin'), net18, lm)
     h = hashlib.sha256(net18).hexdigest()
     log('net18.bin %d bytes sha256 %s' % (len(net18), h))
-    if h != EXPECTED_NET18_SHA256:
-        problems.append('net18.bin sha256 %s differs from the one the recipes were made from' % h)
+    if h not in accepted_net18():
+        problems.append('net18.bin sha256 %s is a version the recipes do not know yet (report this hash)' % h)
 
     # 2. level / actor packs (f_32a7b0 list)
     for d, n in download_list(net18):
