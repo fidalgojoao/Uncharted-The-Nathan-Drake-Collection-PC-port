@@ -711,6 +711,11 @@ def convert(ps3_path, tmpl_path, out_path, rename=None, stream_flags=3, verbose=
                             2: lambda: np.tile(np.array([0, 0, 1, 1], '<f2'), (nv, 1)).tobytes(),
                             3: lambda: np.tile(np.array([1, 0, 0, 1], '<f2'), (nv, 1)).tobytes(),
                             4: lambda: np.ones((nv, 4), '<f2').tobytes()}
+                    if any('blend0' in b for b in s['blocks']):
+                        # PS3 attribute 0x15 (0-bit attribute decodes to -1 = none) -> r = g = b, a = 1
+                        bl = np.clip(np.concatenate([b['blend0'][:, :1] if 'blend0' in b else
+                                                     np.zeros((b['nverts'], 1)) for b in s['blocks']]), 0.0, 1.0)
+                        fill[4] = lambda bl=bl: f16(np.concatenate([bl, bl, bl, np.ones((nv, 1))], 1)).astype('<f2').tobytes()
                     new = []
                     for sl, stride, _fb in want:
                         if sl in have:
