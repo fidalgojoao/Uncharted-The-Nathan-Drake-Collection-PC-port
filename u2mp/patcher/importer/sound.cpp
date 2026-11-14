@@ -60,6 +60,7 @@ Bytes xvag_convert(const Bytes &d, uint32_t interleave) {
     Bytes body_data;
     if (ch > 1) {
         const uint32_t nblk = (nfr + il - 1) / il;
+        body_data.reserve(size_t(nblk) * ch * il * 16);
         for (uint32_t b = 0; b < nblk; b++)
             for (uint32_t c = 0; c < ch; c++)
                 for (uint32_t k = 0; k < il; k++) {
