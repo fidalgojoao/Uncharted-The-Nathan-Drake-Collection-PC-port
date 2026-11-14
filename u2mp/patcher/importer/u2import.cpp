@@ -249,6 +249,92 @@ std::string upper(std::string s) {
     return s;
 }
 
+// ------------------------------------------------------------------------------------------------ SHA-1 memo
+// The verified SHA-1 of a source, kept in <out>/work/sha1-cache.json while its container (the psarc archive holding
+// the member, or the loose file) keeps the same size and write time: an update run then checks an unchanged source
+// without reading and hashing it again, the way the step fingerprint trusts the archives' size and mtime.
+struct Sha1MemoEntry {
+    long long size = 0, mtime = 0;
+    std::string sha;
+};
+std::map<std::string, Sha1MemoEntry> sha1_memo;
+bool sha1_memo_loaded = false, sha1_memo_dirty = false;
+
+void sha1_memo_load(const fs::path &work) {
+    if (sha1_memo_loaded) return;
+    sha1_memo_loaded = true;
+    const auto v = try_json(work / "sha1-cache.json");
+    if (!v || !v->is_object()) return;
+    const Value *ver = v->get("version"), *es = v->get("entries");
+    if (!ver || ver->kind != Value::Int || ver->i != 1 || !es || !es->is_object()) return;
+    for (const auto &[k, e] : es->fields) {
+        const Value *sz = e.get("size"), *mt = e.get("mtime"), *sh = e.get("sha1");
+        if (sz && mt && sh && sz->kind == Value::Int && mt->kind == Value::Int && sh->kind == Value::String)
+            sha1_memo[k] = {sz->i, mt->i, sh->s};
+    }
+}
+
+void sha1_memo_save(const fs::path &work) {
+    if (!sha1_memo_dirty) return;
+    Value es = Value::object();
+    for (const auto &[k, e] : sha1_memo)
+        es.set(k, obj({{"size", num(e.size)}, {"mtime", num(e.mtime)}, {"sha1", str(e.sha)}}));
+    const Value v = obj({{"version", num(1)}, {"entries", es}});
+    try {
+        std::error_code ec;
+        fs::create_directories(work, ec);
+        write_text(work / "sha1-cache.json", dumps(v));
+        sha1_memo_dirty = false;
+    } catch (const std::exception &) {
+    }
+}
+
+bool sha1_memo_stamp(const fs::path &container, long long &size, long long &mtime) {
+    WIN32_FILE_ATTRIBUTE_DATA d = {};
+    if (!GetFileAttributesExW(container.wstring().c_str(), GetFileExInfoStandard, &d)) return false;
+    if (d.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) return false;
+    size = (long long)((uint64_t(d.nFileSizeHigh) << 32) | d.nFileSizeLow);
+    mtime = (long long)((uint64_t(d.ftLastWriteTime.dwHighDateTime) << 32) | d.ftLastWriteTime.dwLowDateTime);
+    return true;
+}
+std::string sha1_memo_key(const Entry &e) { return e.path.empty() ? e.arc_path + "::" + std::to_string(e.index) : S(e.path); }
+fs::path sha1_memo_container(const Entry &e) { return e.path.empty() ? P(e.arc_path) : e.path; }
+
+bool sha1_memo_get(const Entry &e, std::string &sha) {
+    long long size, mtime;
+    if (!sha1_memo_stamp(sha1_memo_container(e), size, mtime)) return false;
+    const auto it = sha1_memo.find(sha1_memo_key(e));
+    if (it == sha1_memo.end() || it->second.size != size || it->second.mtime != mtime) return false;
+    sha = it->second.sha;
+    return true;
+}
+bool sha1_memo_get(const fs::path &p, std::string &sha) {
+    long long size, mtime;
+    if (!sha1_memo_stamp(p, size, mtime)) return false;
+    const auto it = sha1_memo.find(S(p));
+    if (it == sha1_memo.end() || it->second.size != size || it->second.mtime != mtime) return false;
+    sha = it->second.sha;
+    return true;
+}
+void sha1_memo_put(const Entry &e, const std::string &sha) {
+    long long size, mtime;
+    if (!sha1_memo_stamp(sha1_memo_container(e), size, mtime)) return;
+    const std::string k = sha1_memo_key(e);
+    const auto it = sha1_memo.find(k);
+    if (it != sha1_memo.end() && it->second.size == size && it->second.mtime == mtime && it->second.sha == sha) return;
+    sha1_memo[k] = {size, mtime, sha};
+    sha1_memo_dirty = true;
+}
+void sha1_memo_put(const fs::path &p, const std::string &sha) {
+    long long size, mtime;
+    if (!sha1_memo_stamp(p, size, mtime)) return;
+    const std::string k = S(p);
+    const auto it = sha1_memo.find(k);
+    if (it != sha1_memo.end() && it->second.size == size && it->second.mtime == mtime && it->second.sha == sha) return;
+    sha1_memo[k] = {size, mtime, sha};
+    sha1_memo_dirty = true;
+}
+
 class Importer {
 public:
     explicit Importer(const Args &a) : a(a) {
@@ -276,6 +362,7 @@ private:
     std::vector<Row> rows;
     std::map<std::string, std::string> level_txt;   // level -> its PS3 .txt (latin-1)
     std::string exe_digest, base_digest;
+    bool state_dirty = false;
     FILE *logf = nullptr;
     Context ctx;
 
@@ -297,7 +384,10 @@ private:
         write_text(tmp, dump_indent1(sorted_keys(state)));
         // a sync client or a virus scanner may hold state.json for a moment: retry
         for (int i = 0; i < 40; i++) {
-            if (MoveFileExW(tmp.wstring().c_str(), state_file.wstring().c_str(), MOVEFILE_REPLACE_EXISTING)) return;
+            if (MoveFileExW(tmp.wstring().c_str(), state_file.wstring().c_str(), MOVEFILE_REPLACE_EXISTING)) {
+                state_dirty = false;
+                return;
+            }
             if (i == 39) throw std::runtime_error("PermissionError: cannot replace " + S(state_file));
             std::this_thread::sleep_for(std::chrono::milliseconds(250));
         }
@@ -317,6 +407,7 @@ private:
         for (auto &[k, v] : kw) it.set(k, v);
         it.set("conv", str(CONV_VERSION));
         items().set(key, it);
+        state_dirty = true;
     }
 
     bool done_before(const std::string &key, const std::string &src_sha) {
@@ -343,8 +434,9 @@ private:
         it.set("size", num(fsize(out / P(o))));
     }
 
-    // (entry, bytes) of the PS3 file of a row, checked by SHA-1; throws std::out_of_range with the reason
-    std::pair<const Entry *, Bytes> source(const Row &row) {
+    // (entry, bytes) of the PS3 file of a row, checked by SHA-1; throws std::out_of_range with the reason. A row
+    // already done (need_data false) is checked from the SHA-1 memo, so an unchanged source is not read again.
+    std::pair<const Entry *, Bytes> source(const Row &row, bool need_data) {
         auto cands = ps3->candidates(row["key"]);
         if (cands.empty()) throw std::out_of_range("not in the given PS3 folders (needs " + row["ps3_source"] + ")");
         const std::string want = row["sha1"];
@@ -355,8 +447,20 @@ private:
             return kx < ky;
         });
         for (const Entry *e : cands) {
-            Bytes data = e->read();
-            if (want.empty() || a.no_verify || sha1_hex(data) == want) return {e, std::move(data)};
+            if (want.empty() || a.no_verify) return {e, need_data ? e->read() : Bytes{}};
+            if (need_data) {
+                Bytes data = e->read();
+                const std::string sha = sha1_hex(data);
+                sha1_memo_put(*e, sha);
+                if (sha == want) return {e, std::move(data)};
+            } else {
+                std::string sha;
+                if (!sha1_memo_get(*e, sha)) {
+                    sha = sha1_hex(e->read());
+                    sha1_memo_put(*e, sha);
+                }
+                if (sha == want) return {e, Bytes{}};
+            }
             mism.push_back(e->where());
         }
         std::string w;
@@ -676,6 +780,7 @@ bool Importer::step_outputs_ok(const std::string &sid) {
 // step import-list: every import-list row the PS4 game lacks, converted (unchanged inputs keep their files)
 void Importer::step_items() {
     level_txt.clear();
+    sha1_memo_load(work);
     for (size_t n = 0; n < rows.size(); n++) {
         const Row &row = rows[n];
         const std::string key = row["key"], kl = lower(key), group = row["group"];
@@ -687,10 +792,12 @@ void Importer::step_items() {
             set_item(key, st, group, {{"note", str(have)}});
             continue;
         }
+        const bool txt_input = ends(kl, ".txt") && starts(kl, "pak22/");
+        const bool done = !txt_input && !row["sha1"].empty() && done_before(key, row["sha1"]);
         const Entry *entry = nullptr;
         Bytes data;
         try {
-            std::tie(entry, data) = source(row);
+            std::tie(entry, data) = source(row, !done);
         } catch (const std::out_of_range &e) {
             if ((group[0] == 'C' || group[0] == 'D') && a.ps3_dlc.empty() && ps3->candidates(key).empty()) {
                 // map pack rows without --ps3-dlc (the launcher's GOTY-only import): not part of this import
@@ -702,14 +809,18 @@ void Importer::step_items() {
             continue;
         }
         const std::string src_sha = !row["sha1"].empty() ? row["sha1"] : sha1_hex(data);
-        if (ends(kl, ".txt") && starts(kl, "pak22/")) {
+        if (txt_input) {
             const std::string b = basename(key);
             level_txt[b.substr(0, b.size() - 4)] = std::string(data.begin(), data.end());
             set_item(key, "ok", group, {{"note", str("registry input")}, {"src", str(entry->source)}, {"src_sha1", str(src_sha)}});
             continue;
         }
-        if (done_before(key, src_sha)) {
-            item(key)->set("src", str(entry->source));   // same bytes; the archive they are read from now
+        if (done || done_before(key, src_sha)) {
+            Value *it = item(key);
+            if (text_of(it->get("src")) != entry->source) {   // same bytes; the archive they are read from now
+                it->set("src", str(entry->source));
+                state_dirty = true;
+            }
             continue;
         }
         std::function<Converted(const Row &, const Entry &, const Bytes &)> fn;
@@ -734,7 +845,7 @@ void Importer::step_items() {
             set_item(key, "failed", group, {{"src", str(entry->source)}, {"note", str(cut(e.what(), 400))}});
             lg("FAILED " + key + ": " + cut(e.what(), 300));
         }
-        if (n % 20 == 0) save();
+        if (n % 20 == 0 && state_dirty) save();
     }
     std::error_code ec;
     fs::create_directories(work, ec);
@@ -742,6 +853,7 @@ void Importer::step_items() {
     for (const auto &[k, v] : level_txt) lt.set(k, str(latin1_utf8(v)));
     write_text(work / "level-txt.json", dumps(lt));
     save();
+    sha1_memo_save(work);
 }
 
 // --ps3-data as given, plus (when it is RPCS3's dev_hdd0/game or holds <id>DATA2 folders) the title's own DATA2 folder
@@ -808,6 +920,7 @@ std::optional<fs::path> Importer::ps3_data_file(const std::string &name) {
 // level '<map>-pak'; PS3 1.10 downloaded these packages as 1-<map>-pak-ingame10.pak (neither disc has them, PS4 ships only
 // stage-multi-pak-ingame10). Converted like any -ingame10 data pak, registered as level '<map>-pak'.
 void Importer::net_spawn_paks() {
+    sha1_memo_load(work);
     const auto d = ps3_data_pak22();
     std::vector<std::string> found;
     if (d)
@@ -830,7 +943,11 @@ void Importer::net_spawn_paks() {
             continue;
         }
         const fs::path src = *d / P(f);
-        const std::string src_sha = sha1_hex(read_bytes(src));
+        std::string src_sha;
+        if (!sha1_memo_get(src, src_sha)) {
+            src_sha = sha1_hex(read_bytes(src));
+            sha1_memo_put(src, src_sha);
+        }
         if (!done_before(key, src_sha)) {
             const auto t = std::chrono::steady_clock::now();
             std::vector<std::string> notes;
@@ -856,6 +973,7 @@ void Importer::net_spawn_paks() {
 // playlists ...). PS3 1.10 downloaded it into the game-data folder and bound its symbols at NetInit; the runtime
 // (netpatch.cpp) loads the converted file the same way.
 void Importer::net_patch() {
+    sha1_memo_load(work);
     const std::string key = "dc1/net-patch9.bin", rel = "dc1/ps4/net-patch9.bin";
     const auto src = ps3_data_file("net-patch9.bin");
     if (!src) {
@@ -863,8 +981,11 @@ void Importer::net_patch() {
         lg("MISSING " + key + ": no PS3 game-data folder with net-patch9.bin (start the PS3 GOTY once in RPCS3 or set --ps3-data): match start asserts on weapon set 0x8cf8e1cc");
         return;
     }
+    std::string src_sha;
+    if (sha1_memo_get(*src, src_sha) && done_before(key, src_sha) && text_of(item(key)->get("dc")) == NETPATCH_VERSION) return;
     const Bytes data = read_bytes(*src);
-    const std::string src_sha = sha1_hex(data);
+    src_sha = sha1_hex(data);
+    sha1_memo_put(*src, src_sha);
     if (done_before(key, src_sha) && text_of(item(key)->get("dc")) == NETPATCH_VERSION) return;
     const auto t = std::chrono::steady_clock::now();
     Bytes conv;
@@ -884,6 +1005,7 @@ void Importer::net_patch() {
 
 // pak22/ps4/net-u2mp.pak: the PS3 net.pak menu images the PS4 net.pak lacks, registered as its own level / package
 void Importer::net_images() {
+    sha1_memo_load(work);
     const std::string out_name = NETIMG_OUT_NAME, key = "pak22/" + out_name;
     // the GOTY all-patches net.pak first (the newer BCUS dlc-patch7 one adds only images nothing names)
     auto c = ps3->candidates("pak22/net.pak");
@@ -893,29 +1015,38 @@ void Importer::net_images() {
         set_item(key, "missing", "A", {{"note", str("no PS3 or PS4 net.pak")}});
         return;
     }
-    const Bytes data = c[0]->read();
-    const std::string src_sha = sha1_hex(data);
+    std::string src_sha;
+    const bool memo = sha1_memo_get(*c[0], src_sha);
     const fs::path o = out_path("pak22/ps4/" + out_name);
-    if (!done_before(key, src_sha) || !item(key)->get("netimg") || item(key)->get("netimg")->kind != Value::Int || item(key)->get("netimg")->i != NETIMG_VERSION) {
-        const fs::path src = work / "ps3-net.pak";
-        std::error_code ec;
-        fs::create_directories(work, ec);
-        write_bytes(src, data);
-        const auto t = std::chrono::steady_clock::now();
-        std::vector<std::string> names;
-        try {
-            names = convert_net_images(src, ps4_net, o);
-        } catch (const std::exception &e) {
+    auto needs_conversion = [&] {
+        const Value *ni = item(key) ? item(key)->get("netimg") : nullptr;
+        return !done_before(key, src_sha) || !ni || ni->kind != Value::Int || ni->i != NETIMG_VERSION;
+    };
+    if (!memo || needs_conversion()) {
+        const Bytes data = c[0]->read();
+        src_sha = sha1_hex(data);
+        sha1_memo_put(*c[0], src_sha);
+        if (needs_conversion()) {
+            const fs::path src = work / "ps3-net.pak";
+            std::error_code ec;
+            fs::create_directories(work, ec);
+            write_bytes(src, data);
+            const auto t = std::chrono::steady_clock::now();
+            std::vector<std::string> names;
+            try {
+                names = convert_net_images(src, ps4_net, o);
+            } catch (const std::exception &e) {
+                fs::remove(src, ec);
+                set_item(key, "failed", "A", {{"src", str(c[0]->source)}, {"note", str(cut(e.what(), 400))}});
+                lg("FAILED " + key + ": " + cut(e.what(), 300));
+                return;
+            }
             fs::remove(src, ec);
-            set_item(key, "failed", "A", {{"src", str(c[0]->source)}, {"note", str(cut(e.what(), 400))}});
-            lg("FAILED " + key + ": " + cut(e.what(), 300));
-            return;
+            if (names.empty()) return;
+            record(key, "A", "pak22/ps4/" + out_name,
+                   {{"src", str(c[0]->source)}, {"src_sha1", str(src_sha)}, {"note", str(fmt("%zu menu images", names.size()))}, {"netimg", num(NETIMG_VERSION)}});
+            lg(fmt("ok      %s <- %s (%.1fs) %zu menu images", key.c_str(), c[0]->source.c_str(), seconds_since(t), names.size()));
         }
-        fs::remove(src, ec);
-        if (names.empty()) return;
-        record(key, "A", "pak22/ps4/" + out_name,
-               {{"src", str(c[0]->source)}, {"src_sha1", str(src_sha)}, {"note", str(fmt("%zu menu images", names.size()))}, {"netimg", num(NETIMG_VERSION)}});
-        lg(fmt("ok      %s <- %s (%.1fs) %zu menu images", key.c_str(), c[0]->source.c_str(), seconds_since(t), names.size()));
     }
     if (isfile(o)) {
         const std::string lv = out_name.substr(0, out_name.size() - 4);
@@ -1069,6 +1200,7 @@ int Importer::finish(const std::string &status, std::vector<std::pair<std::strin
     // an automatic update (--update) that failed is not started again at every launcher start for the same import version
     if (status == "failed" && a.update) state.set("update_failed_for", str(shipped_id_text()));
     else if (status == "imported" || status == "partial") state.remove("update_failed_for");
+    sha1_memo_save(work);
     save();
     event(obj({{"phase", str("done")}, {"status", str(status)}, {"error", str(text_of(state.get("error")))}}));
     lg("status: " + status + " " + text_of(state.get("error")));
@@ -1082,16 +1214,18 @@ int Importer::finish(const std::string &status, std::vector<std::pair<std::strin
 namespace u2imp {
 
 std::string sha1_hex(const Bytes &b) {
-    BCRYPT_ALG_HANDLE alg = nullptr;
+    static BCRYPT_ALG_HANDLE provider = [] {
+        BCRYPT_ALG_HANDLE alg = nullptr;
+        BCryptOpenAlgorithmProvider(&alg, BCRYPT_SHA1_ALGORITHM, nullptr, 0);
+        return alg;
+    }();
     BCRYPT_HASH_HANDLE h = nullptr;
     uint8_t d[20];
-    BCryptOpenAlgorithmProvider(&alg, BCRYPT_SHA1_ALGORITHM, nullptr, 0);
-    BCryptCreateHash(alg, &h, nullptr, 0, nullptr, 0, 0);
+    BCryptCreateHash(provider, &h, nullptr, 0, nullptr, 0, 0);
     for (size_t o = 0; o < b.size(); o += 1u << 30)
         BCryptHashData(h, const_cast<PUCHAR>(b.data() + o), ULONG(std::min<size_t>(b.size() - o, 1u << 30)), 0);
     BCryptFinishHash(h, d, sizeof d, 0);
     BCryptDestroyHash(h);
-    BCryptCloseAlgorithmProvider(alg, 0);
     std::string s;
     for (uint8_t x : d) s += fmt("%02x", x);
     return s;
