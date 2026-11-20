@@ -368,8 +368,8 @@ Value read_config(const std::wstring &config_file, const std::wstring &prefix_fi
     Value config = launcher_defaults();
     Value stored = load_config_file(config_file);
     if (lstrcmpiW(config_file.c_str(), prefix_file.c_str()) != 0) {
-        // Wine case: values in the shared file take priority; gaps are filled per game from the copy stored in this
-        // Wine prefix
+        // An install's first start (GitHub #47): its own file does not exist yet, so the settings all installs used to
+        // share fill it, per game; values already in its own file take priority
         Value older = load_config_file(prefix_file);
         if (!older.fields.empty()) {
             Value games = Value::object();

@@ -471,6 +471,7 @@ void set_status(const std::string &text, const std::string &detail) { set_status
 
 // ------------------------------------------------------------------------------------------------ settings
 
+// the settings file all installs shared before GitHub #47; only read once, to seed an install's own file
 std::string appdata_file() {
     wchar_t buf[32768];
     DWORD n = GetEnvironmentVariableW(L"APPDATA", buf, 32768);
@@ -2220,9 +2221,16 @@ void start(const std::string &root, const Value &args) {
     g.u3mp_dir = join(join(root, "u3mp"), "patcher");
     g.u2mp_dir = join(g.user_dir, "u2mp");
     g.wine = un_wine() != 0;
-    g.prefix_file = appdata_file();
-    const std::string shared = g.wine ? sys("shared_config") : "";
-    g.config_file = !shared.empty() ? shared : g.prefix_file;
+    // Every install keeps its own settings file in its own folder (GitHub #47), so two launchers on one PC never read
+    // or write each other's settings. Earlier versions kept one file for all installs (%APPDATA%\Uncharted Launcher,
+    // under Wine the XDG data folder); an install without its own file yet starts from that one, once.
+    g.config_file = join(root, "launcher.json");
+    if (is_file(g.config_file)) {
+        g.prefix_file = g.config_file;
+    } else {
+        const std::string shared = g.wine ? sys("shared_config") : "";
+        g.prefix_file = !shared.empty() && is_file(shared) ? shared : appdata_file();
+    }
     g.direct = text(args, "direct");
     {
         auto t = text_call([](char *o, int c) { return un_system_tables(o, c); });

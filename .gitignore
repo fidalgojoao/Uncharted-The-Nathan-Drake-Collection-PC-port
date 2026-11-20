@@ -33,3 +33,6 @@ launcher/native/game_starter.exe
 downloads/
 u2mp/bin/
 u3mp/bin/
+
+# each install keeps its own settings file in its folder (GitHub #47)
+/launcher.json
