@@ -544,10 +544,16 @@ Emitter convert_emitter(const In3 &in, uint32_t mat4, uint32_t sid, const std::m
     if (r3[0x58] || r3[0x59] || r3[0x5a] || r3[0x5b]) throw Stop("ValueError: PS3 +0x58 set: PS4 extra-pointer variant not supported");
     Emitter em;
     em.objs.resize(10);
-    if (n_s0) {
-        B o = h16(opt(in.s3[0]));
-        o.resize(o.size() + 16, 0);
-        o.resize(16);
+    if (n_s0) {   // the curve index table: n_s0 entries {u16 count, u16 start}, in 16-byte steps as retail keeps it
+        B o;
+        if (n_s0 <= 4) {
+            o = h16(opt(in.s3[0]));
+            o.resize(o.size() + 16, 0);
+            o.resize(16);
+        } else {   // a longer table keeps every entry (it was cut to 4: the curves 4.. read keys as counts, GitHub #45)
+            o = h16(sl(opt(in.s3[0]), 0, 4 * int64_t(n_s0)));
+            o.resize((o.size() + 15) & ~size_t(15), 0);
+        }
         em.objs[0] = o;
     }
     em.objs[1] = sw(sl(opt(in.s3[1]), 0, 96 * n_s1));
