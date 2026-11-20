@@ -43,9 +43,11 @@
  ],
  "status": "reproducible",
  "applied": "2026-11-02 00:11",
- "notes": "jobs-am.tsv = template, cap and PS3 source the session search (build.py, build2.py gates, mkretail.py) picked for each of the 37 paks; rebuilt deterministically with no gate against the current overlay. 37/37 byte-identical to actor-materials/manifest.json (2026-11-05, 27 s). hat-colour and airport-igc2 replace some of them afterwards. Since 2026-11-13 C++ (dctools/ps4actor.cpp with Options::am, the material choice am_choice; install-am = apply_actor_materials.py): 37/37 byte-identical, no Python.",
+ "notes": "jobs-am.tsv = template, cap and PS3 source the session search (build.py, build2.py gates, mkretail.py) picked for each of the 37 paks; rebuilt deterministically with no gate against the current overlay. 37/37 byte-identical to actor-materials/manifest.json (2026-11-05, 27 s). hat-colour and airport-igc2 replace some of them afterwards. Since 2026-11-13 C++ (dctools/ps4actor.cpp with Options::am, the material choice am_choice; install-am = apply_actor_materials.py): 37/37 byte-identical, no Python. 1.25.0: the converter rules of convert-actors-r3 1.25.0 (every PS3 mip, cut-out maps, flat slots, cook choice); 27 of 37 changed.",
  "recipe_version_added": "1.0.0",
+ "recipe_version_changed": "1.25.0",
  "with_jobs": [
-  "actor-materials"
+  "actor-materials",
+  "dctools"
  ]
 }

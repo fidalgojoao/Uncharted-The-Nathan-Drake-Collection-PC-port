@@ -3,10 +3,13 @@
 //
 // The geometry comes from the PS3 pak (FOREGROUND_SECTION_2 prototypes, blocks merged per material run); materials,
 // compiled effects (copied as one span at the template's page offset) and the joint-name table come from a PS4 template
-// pak of the same skeleton. One material per template material in the template's order, each re-bound to the
-// converted PS3 textures (by texture kind: -color, -normal, -spec-mask, ...; donor paks for textures the PS3 pak
-// lacks; neutral flat textures). Props with their own skeleton get the PS3 JOINT_HIERARCHY, ANIMs and
-// COLLISION_DATA_FOREGROUND converted (own_skel) or the template's grafted (graft).
+// pak of the same skeleton. One material per template material in the template's order (then a copy of the template
+// material for every further PS3 material on a shared one), each re-bound to the converted PS3 textures (by texture
+// kind: -color, -normal, -spec-mask, -trans, ...; of two cooks of one texture the material's own, the larger; donor
+// paks for textures the PS3 pak lacks; else a neutral flat texture of the slot's kind, never the template's own). A
+// PS3 material with a cut-out map takes a template material with a cut-out map slot. PS3 textures keep every mip
+// unless a retail texture dictionary streams them. Props with their own skeleton get the PS3 JOINT_HIERARCHY, ANIMs
+// and COLLISION_DATA_FOREGROUND converted (own_skel) or the template's grafted (graft).
 //
 // The older actor-materials rules (Options::am, the character paks of steps actor-materials / hat-colour /
 // airport-igc2): one material per PS3 material, named '<path>:<name>,00000000-0000-0000-0000-<string id>,<shader>',
@@ -27,7 +30,7 @@ struct Options {   // the converter's PS4ACTOR_* settings
     std::string drop_mat;
     std::vector<fs::path> donors;
     std::optional<fs::path> skel3;
-    bool stop_at_blend = false;   // bg::decode_fg_block's pre-2026-11-13 attribute 0x15 behaviour (actor33 LEGACY_ATTR15)
+    fs::path texdict;   // the retail TextureDictionaries.csv: only the textures it streams lose their top mips to max_tex
     // the actor-materials rules
     bool am = false;
     std::map<std::string, std::string> mat_choice;                       // PS3 material -> part of a template material name
@@ -41,6 +44,20 @@ struct Kw {   // convert()'s keyword arguments
     std::optional<fs::path> skel_tmpl;
 };
 Bytes convert(const fs::path &ps3, const fs::path &tmpl, const Kw &kw, const Options &o);
+
+// whether a retail PS4 texture dictionary (TextureDictionaries.csv) streams the texture of this full cook path (with or
+// without '.ndb'): such a texture gets its top mips from the dictionary, any other one is drawn only with what the pak holds
+bool texdict_streams(const fs::path &csv, const std::string &full);
+
+// The template for a PS3 pak one of whose drawn materials has a cut-out map (-trans / -alpha / -opacity) when the job's
+// template has no template material that takes one (a transparency or hair alpha feature with a transparency / hair
+// alpha map slot, no second UV set): the retail actor of retail_dir on the same skeleton (FOREGROUND_SECTION_2 skeleton
+// and hierarchy ids; own skeleton props: the same hierarchy id) that has one and keeps what the job's template offers
+// the PS3 materials (an instance tint material for tint masks). Of those: a shadow blocker as the template had, the most
+// of the template's materials (by effect hash), a cut-out material of the kind the PS3 ones are (hair / other), an
+// opaque material for opaque PS3 ones, the fewest materials, in that order (name order breaks ties). Otherwise tmpl.
+fs::path transparency_template(const fs::path &ps3, const fs::path &tmpl, const fs::path &retail_dir, bool own_skel,
+                               const std::optional<fs::path> &skel_tmpl = std::nullopt);
 
 // the worker's post passes: cubefix (PS3 cube maps on retail-copied descs), cb3fix (prototype scope-3 cbuffer
 // capacity), flatfix (the generated flat-color texture sRGB), cubetype (retail cube descs type 2)
@@ -86,8 +103,8 @@ struct TMat {
 };
 std::vector<TMat> tmpl_materials(const Pak &q);
 
-// BC1 texels (PS3 linear order, all mips) of a constant colour, and the mip count
-std::pair<Bytes, uint32_t> bc1_flat(uint32_t w, uint32_t h, const uint32_t rgb[3]);
+// BC1 texels (PS3 linear order, all mips) of a constant colour (clear: alpha 0), and the mip count
+std::pair<Bytes, uint32_t> bc1_flat(uint32_t w, uint32_t h, const uint32_t rgb[3], bool clear = false);
 // numpy float64 -> float16 (round half to even, overflow to inf, NaN payload kept)
 uint16_t f16b(double v);
 // template item data as a Blob; its pointers must stay inside the item

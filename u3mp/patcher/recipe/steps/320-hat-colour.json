@@ -45,11 +45,13 @@
  ],
  "status": "reproducible",
  "applied": "2026-11-02 01:04",
- "notes": "jobs-hats.tsv = template/cap of batch.json per pak; mp-hero-ramses-jak-goggles was built before build_hat got its OVERLAY/UV_3 template filter (option no-overlay-filter = HAT_NO_OVERLAY_FILTER=1). 249/249 byte-identical to hat-colour/manifest.json (2026-11-05, 152 s). Installed: safe_only.txt (229 = work/backup-hat-colour/state.json; the earlier lists/hat-colour-only.txt held only the 81 that had a backup copy). Since 2026-11-13 C++ (u3fix.exe rebuild-am hats / install-am hats): 249/249 byte-identical, no Python. Since 2026-11-13 (PS3 vertex attribute 0x15) the Yeti mask's teeth keep their own PS3 normals/tangents (the decoder used to stop at the blend-factor attribute before them, so they looked lost and were rebuilt from geometry): overlay pak SHA-256 26bd3d820a7e34791032b5e54585dd12d50bbaf1dbeee980eda3321399384c88; the police hats, Flynn and the pirate armour changed with it.",
+ "notes": "jobs-hats.tsv = template/cap of batch.json per pak; mp-hero-ramses-jak-goggles was built before build_hat got its OVERLAY/UV_3 template filter (option no-overlay-filter = HAT_NO_OVERLAY_FILTER=1). 249/249 byte-identical to hat-colour/manifest.json (2026-11-05, 152 s). Installed: safe_only.txt (229 = work/backup-hat-colour/state.json; the earlier lists/hat-colour-only.txt held only the 81 that had a backup copy). Since 2026-11-13 C++ (u3fix.exe rebuild-am hats / install-am hats): 249/249 byte-identical, no Python. Since 2026-11-13 (PS3 vertex attribute 0x15) the Yeti mask's teeth keep their own PS3 normals/tangents (the decoder used to stop at the blend-factor attribute before them, so they looked lost and were rebuilt from geometry): overlay pak SHA-256 26bd3d820a7e34791032b5e54585dd12d50bbaf1dbeee980eda3321399384c88; the police hats, Flynn and the pirate armour changed with it. 1.25.0: the converter rules of convert-actors-r3 1.25.0 (every PS3 mip, cut-out maps, flat slots, cook choice); 216 of 249 changed. A cut-out map wins over the instance tint where one PS3 material has both (no retail template material has both).",
  "recipe_version_added": "1.0.0",
  "with_jobs": [
   "actor-materials",
-  "hat-colour"
+  "hat-colour",
+  "dctools"
  ],
- "recipe_version_updated": "1.10.1"
+ "recipe_version_updated": "1.10.1",
+ "recipe_version_changed": "1.25.0"
 }

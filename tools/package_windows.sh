@@ -148,7 +148,7 @@ u3_import() {   # Uncharted 3's importer, its recipe and tools, and the newest m
         "$fx/dctools/dcconv.cpp" "$fx/dcconv/convert_dc1.cpp" "$fx/dcconv/apply_recipes.cpp" "$fx/sound-banks/convert_banks.cpp" \
         "$fx/part-emitters/build_part_modules.cpp" "$fx/audio-defs/audio_defs.cpp" "$fx/music-streams/copy_music.cpp" "$fx/actor33/actors_hk.cpp" "$fx/coop-vo/apply_vo.cpp" \
         "$fx/coop-voice2/apply_coop_vox.cpp" "$fx/dctools/net_edits.cpp" \
-        "$fx/coop-audit/apply_shade_npc_paks.cpp" "$fx/inline/facility_collapse.cpp" "$fx/eula-batch/make_eula.cpp" "$fx/wall-emblem/make_emblem.cpp" "$fx/outdoor-jacket/apply_outdoor_jacket.cpp" "$fx/dctools/lab_reg.cpp" "$fx/borneo/borneo_fixes.cpp" "$fx/world-levels/world_levels.cpp" "$fx/london/apply_london.cpp" "$fx/map-lighting/apply_map_lighting.cpp" "$fx/map-colors/apply_mapcolor.cpp" "$fx/map-colors2/apply_mapcolor2.cpp" "$fx/hud-mod-mips/limit_mod_mips.cpp"; do
+        "$fx/coop-audit/apply_shade_npc_paks.cpp" "$fx/inline/facility_collapse.cpp" "$fx/eula-batch/make_eula.cpp" "$fx/wall-emblem/make_emblem.cpp" "$fx/dctools/lab_reg.cpp" "$fx/borneo/borneo_fixes.cpp" "$fx/world-levels/world_levels.cpp" "$fx/london/apply_london.cpp" "$fx/map-lighting/apply_map_lighting.cpp" "$fx/map-colors/apply_mapcolor.cpp" "$fx/map-colors2/apply_mapcolor2.cpp" "$fx/hud-mod-mips/limit_mod_mips.cpp"; do
         o=$dir/${s//\//_}.o
         "${CXX[@]}" "${flags[@]}" -c "$s" -o "$o"
         objs+=("$o")

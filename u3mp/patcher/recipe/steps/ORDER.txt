@@ -32,7 +32,6 @@ eula-pages
 actor-materials
 coop-desc-fix
 hat-colour
-outdoor-jacket
 airport-igc2
 enemy-stall-option-defaults
 coop-audit-option-defaults

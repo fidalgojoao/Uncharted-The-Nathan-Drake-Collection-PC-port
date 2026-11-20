@@ -4,7 +4,9 @@
 //                [--apply] [--overlays port,r2,r3,mp] [--only name,...] [--allow-equivalent] [--jobs N]
 //
 // jobs.tsv: overlay, name, sha256, status, method, toolset (ignored: the current converter always), PS3 source, retail
-// template, mode, texture cap, env (json, PS4ACTOR_*), post. A file already at its sha256 is left alone; a 'base' row
+// template (a PS3 cut-out map on a template without a cut-out material: actor::transparency_template picks another),
+// mode, texture cap (only for textures a retail texture dictionary streams), env (json, PS4ACTOR_*), post. A file
+// already at its sha256 is left alone; a 'base' row
 // never replaces an existing file (a later step owns it); other statuses need --allow-equivalent. A build whose sha256
 // differs from an identical / base row is reported (DIFF) and not installed. Replaced files are backed up once to
 // work/backup-actor33/. Lab rows (no Lab maps on PC) and rows hidden by a higher overlay are not built.
@@ -34,12 +36,9 @@ std::string a_here, a_ps4, a_disc, a_update, a_data2;
 fs::path a_tmp;
 std::mutex a_extract_lock;
 
-// Paks still converted with the pre-2026-11-13 PS3 vertex decoder, which stopped at attribute 0x15 (the blend factor)
-// and so also lost the normal / tangent after it. The Hunter jacket: the outdoor-jacket step rebuilds that basis and
-// pins its inputs (repair_hunter_jacket.py SOURCE_SHA256 / DONOR_SHA256), so its chain stays byte-identical.
-const std::set<std::string> LEGACY_ATTR15 = {"mp-kit-hunter-torso-jacket-a.pak"};
-
 std::string ret() { return a_ps4 + "/u3data/build/main/actor33/ps4"; }
+// the retail texture dictionaries' table: the textures it streams are the only ones that lose top mips to the cap
+fs::path texdict() { return upath(a_ps4 + "/u3data/build/main/texturedict1/ps4/TextureDictionaries.csv"); }
 
 // PS3 sources: source key -> archive
 std::map<std::string, std::string> ps3_archives() {
@@ -188,7 +187,7 @@ Bytes build(const Job &r) {
         prefetch_read(upath(ret()) / upath(r.at("name")));
         for (const std::string &sk : skins) prefetch_read(upath(ret()) / upath(sk + ".pak"));
         Bytes d = mats::wpnmods(upath(ret()) / upath(r.at("name")), extract(r.at("source"), r.at("name")), t.substr(b1 + 1, b2 - b1 - 1), skins,
-                                std::stoi(r.at("cap")), 2);
+                                std::stoi(r.at("cap")), 2, texdict());
         if (r.at("post").find("cb3fix") != std::string::npos) d = actor::cb3fix(d);
         return d;
     }
@@ -220,10 +219,9 @@ Bytes build(const Job &r) {
         kw.match_streams = kwj.get("match_streams") != nullptr;
         kw.graft = kwj.get("graft") != nullptr;
         kw.own_skel = kwj.get("own_skel") != nullptr;
-        // a PS3 prop on its own skeleton (vehicles, tanks, buildings, luggage) keeps every PS3 mip: it has no PS4 texture
-        // stream to bring the top mips back, and the cap drew the Warzone Fiat body (1024 on PS3) at 64x64. A prop map
-        // grows a level by at most 3.3 MB (Village, Fort)
-        kw.max_tex = kw.own_skel ? 0 : std::stoi(r.at("cap"));
+        // (the cap only applies to textures a retail dictionary streams: o.texdict)
+        kw.max_tex = std::stoi(r.at("cap"));
+        o.texdict = texdict();
         const std::string &es = r.at("env");
         if (es != "" && es != "-" && es != "{}") {
             json::Value e;
@@ -259,8 +257,10 @@ Bytes build(const Job &r) {
             }
             else throw Stop("unknown actor setting " + k);
         }
-        o.stop_at_blend = LEGACY_ATTR15.count(r.at("name")) != 0;
-        d = actor::convert(ps3, template_pak(r.at("template"), r.at("post").find("|solo") != std::string::npos), kw, o);
+        // a PS3 material that cuts out or blends on a template without such a material: the retail actor on the same
+        // skeleton that has one (actor::transparency_template)
+        const fs::path tp = actor::transparency_template(ps3, upath(ret()) / upath(r.at("template") + ".pak"), upath(ret()), kw.own_skel, kw.skel_tmpl);
+        d = actor::convert(ps3, template_pak(utf8(tp.stem()), r.at("post").find("|solo") != std::string::npos), kw, o);
     }
     // post passes: cubefix (PS3 cube maps on retail-copied descs), cb3fix (prototype scope-3 cbuffer capacity),
     // flatfix (the generated flat-color texture sRGB), cubetype (retail cube descs type 2)
@@ -560,13 +560,13 @@ int rebuild_am(const std::vector<std::string> &argv) {
         if (kind == "am" && r.src == "retail") {   // the retail template renamed (mkretail)
             d = actor::cb3fix(actor::rename(tpl0, r.tmpl, r.name));
         } else {
-            const fs::path p3 = newest(r.name), tpl = tpl0;
+            const fs::path p3 = newest(r.name), tpl = actor::transparency_template(p3, tpl0, upath(ret()), false);
             actor::Kw kw;
             kw.max_tex = std::stoi(r.cap);
             actor::Options o;
+            o.texdict = texdict();
             o.am = true;
             o.mat_choice = actor::am_choice(p3, tpl, kind != "am", kind == "igc2" || (kind == "hats" && r.opts.find("no-overlay-filter") == std::string::npos));
-            o.stop_at_blend = LEGACY_ATTR15.count(r.name + ".pak") != 0;
             d = actor::cb3fix(stage::cubefix_pak(actor::convert(p3, tpl, kw, o), p3));
         }
         return d;
@@ -656,7 +656,7 @@ int install_am(const std::vector<std::string> &argv) {
     };
     if (kind == "igc2") {
         const fs::path bak = work / "backup-igc2";
-        const std::vector<std::pair<std::string, std::string>> files = {{"mp-hero-flynn-coop.pak", "06fecdabbafe63de33a0ced618c6c7f1bb228cd1ecf4e37db85bc1cdff345163"}};
+        const std::vector<std::pair<std::string, std::string>> files = {{"mp-hero-flynn-coop.pak", "1225c5bacb9e92d3c78ddfd9de4d7930a88a8efeb181f8d1ac264a8160008998"}};
         for (const auto &[n, want] : files) {
             const fs::path s = src / n, d = dst / n, b = bak / n;
             if (a.has("--restore")) {

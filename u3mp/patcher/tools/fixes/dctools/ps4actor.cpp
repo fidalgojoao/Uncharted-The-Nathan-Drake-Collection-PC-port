@@ -258,9 +258,9 @@ const std::vector<std::pair<std::string, std::vector<std::string>>> &tex_kinds(b
         {"-normal", {"g_tNdFetchNormal1Map", "g_tNdFetchNormal2Map"}},
         {"-color", {"g_tNdFetchColor1Map", "g_tNdFetchColor2Map"}},
         {"-shift", {"g_tNdFetchNoiseMap"}},     // hair anisotropic shift
-        {"-trans", {"g_tNdFetchHairAlphaMap"}}};   // hair alpha (often missing on PS3: see donors)
+        {"-trans", {"g_tNdFetchHairAlphaMap", "g_tNdFetchTransparencyMap"}}};   // hair alpha (often missing on PS3: see donors), cut-out
     static const std::vector<std::pair<std::string, std::vector<std::string>>> KA = {
-        {"-trans", {"g_tNdFetchHairAlphaMap"}},
+        {"-trans", {"g_tNdFetchHairAlphaMap", "g_tNdFetchTransparencyMap"}},
         {"-detail-normal", {"g_tNdFetchDetail3Map", "g_tNdFetchDetail1Map", "g_tNdFetchDetail2Map"}},
         {"-spec-mask", {"g_tNdFetchMask4Map"}},
         {"-tint-mask", {"g_tNdFetchColorTintMask1Map"}},
@@ -279,6 +279,11 @@ std::optional<std::string> tex_kind(const std::string &shrt, bool am = false) {
         // as the colour map it drew the Sanctuary railings plain white
         if ((has(base, suf + "-") || has(base, suf + "_")) && !ends_with(base, "-mask")) return suf;
     }
+    // a cut-out map under another name ('vulture-alpha.tga', 'war-car-a-glass-transparency.tga')
+    if (const size_t d = base.rfind('-'); d != std::string::npos) {
+        const std::string last = base.substr(d + 1);
+        if (last.rfind("trans", 0) == 0 || last == "alpha" || last == "opacity") return "-trans";
+    }
     if (am && (ends_with(base, "_c") || ends_with(base, "_clr"))) return "-color";
     if (am && (ends_with(base, "_n") || ends_with(base, "_nmt"))) return "-normal";
     return std::nullopt;
@@ -288,6 +293,54 @@ std::optional<std::string> tex_kind(const std::string &shrt, bool am = false) {
 std::string rsplit1_last(const std::string &s) {   // s.rsplit('/', 1)[-1]
     const size_t k = s.rfind('/');
     return k == std::string::npos ? s : s.substr(k + 1);
+}
+
+// ------------------------------------------------------------------------------------------------ transparency
+bool tmat_feat(const TMat &m, const char *part) {
+    for (const std::string &f : m.feats)
+        if (has(f, part)) return true;
+    return false;
+}
+// a template material that cuts out or blends (a transparency or hair alpha feature)
+bool tmat_transparent(const TMat &m) { return tmat_feat(m, "TRANSPARENCY") || tmat_feat(m, "HAIR_ALPHA"); }
+// ... with a slot for a cut-out map (transparency map, hair alpha map)
+bool tmat_cutout(const TMat &m) {
+    if (!tmat_transparent(m)) return false;
+    for (const auto &b : m.binds)
+        if (b.pname == "g_tNdFetchTransparencyMap" || b.pname == "g_tNdFetchHairAlphaMap") return true;
+    return false;
+}
+bool tmat_hair(const TMat &m) { return tmat_feat(m, "HAIR"); }
+// a template material that reads another UV set than the first (the converted meshes bring only that one)
+bool tmat_extra_uv(const TMat &m) {
+    return tmat_feat(m, "UV2") || tmat_feat(m, "UV3") || tmat_feat(m, "UV4") || tmat_feat(m, "UV_3") || tmat_feat(m, "OVERLAY");
+}
+// the PS3 materials with a cut-out map (-trans, -alpha, -opacity). (An alpha test or blend in the render state alone
+// reads the colour map's alpha; the PS4 templates take cut-outs from a map, so those stay as they are.)
+std::set<std::string> ps3_transparent(const Pak &p) {
+    std::vector<bg::Material3> ms;
+    std::vector<bg::Texture3> ts;
+    try {
+        bg::read_materials(p, ms, ts);
+    } catch (const std::exception &) {
+        return {};
+    }
+    std::set<std::string> out;
+    for (const bg::Material3 &m : ms) {
+        bool t = false;
+        for (uint32_t i : m.textures)
+            if (i < ts.size() && !has(ts[i].name, "missingtexture") && tex_kind(ts[i].name) == "-trans") t = true;
+        if (t && !has(m.name, "shadowblocker")) out.insert(m.name);
+    }
+    return out;
+}
+// the flat texture of a slot outside tex_kinds that no PS3 texture fills, by the slot's name
+std::string neutral_kind(const std::string &pname) {
+    if (has(pname, "Normal")) return "-normal";
+    if (has(pname, "Transparency") || has(pname, "HairAlpha") || has(pname, "AmbientOcclusion") || has(pname, "AoMap")) return "-white";
+    if (has(pname, "Overlay")) return "-clear";
+    if (has(pname, "Blend") || has(pname, "Mask") || has(pname, "Translucency") || has(pname, "Incandescence")) return "-black";
+    return "-grey";
 }
 
 // ------------------------------------------------------------------------------------------------ am helpers
@@ -504,16 +557,16 @@ std::vector<const TMat *> am_pool(const std::vector<TMat> &tmats, const std::str
 }  // namespace
 
 // BC1 texels (PS3 linear order, all mips) of a constant colour
-std::pair<Bytes, uint32_t> bc1_flat(uint32_t w, uint32_t h, const uint32_t rgb[3]) {
+std::pair<Bytes, uint32_t> bc1_flat(uint32_t w, uint32_t h, const uint32_t rgb[3], bool clear) {
     const uint32_t c = ((rgb[0] >> 3) << 11) | ((rgb[1] >> 2) << 5) | (rgb[2] >> 3);
     Bytes out;
     uint32_t mips = 0;
     while (true) {
         const uint32_t bw = std::max(1u, (w + 3) / 4), bh = std::max(1u, (h + 3) / 4);
-        for (uint32_t i = 0; i < bw * bh; i++) {
+        for (uint32_t i = 0; i < bw * bh; i++) {   // clear: equal end points select the 3-colour mode, index 3 is transparent
             put16(out, c);
             put16(out, c);
-            put32(out, 0);
+            put32(out, clear ? 0xffffffffu : 0);
         }
         mips++;
         if (w == 1 && h == 1) break;
@@ -800,7 +853,7 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
         if (!info) throw Stop("IndexError: list index out of range");
         const std::vector<std::string> mnames = ps3_block_materials(src, *pr);
         std::vector<bg::FgBlock> blocks;
-        for (const Ref &b : info->blocks) blocks.push_back(bg::decode_fg_block(src, b.first, b.second, true, opt.stop_at_blend));
+        for (const Ref &b : info->blocks) blocks.push_back(bg::decode_fg_block(src, b.first, b.second, true));
         if (!opt.basis_targets.empty())
             for (bg::FgBlock &b : blocks) rebuild_basis(b, opt.basis_targets, basis_seen);
         std::vector<Sub> subs;
@@ -880,9 +933,12 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
         if (!f3 || !f3->compressed) continue;
         Bytes texels = src.vram_bytes(t.vramOffset, t.vramSize);
         uint32_t tw = t.width, th = t.height, tm = t.mips;
-        // PS4 kit parts keep only small resident mips: a PS3 texture is fully resident, so drop its top mips to max_tex
-        // (am: 2D textures only)
-        while (kw.max_tex && (!opt.am || t.type == 1) && std::max(tw, th) > uint32_t(kw.max_tex) && tm > 1) {
+        // PS4 kit parts keep only small resident mips and stream the top ones from a texture dictionary, so a texture a
+        // retail dictionary streams drops its top mips to max_tex (am: 2D textures only). Any other texture (every PS3
+        // cook: its hash is not a PS4 one) keeps all of them: nothing would bring them back, and mp-hero-bandana's 512
+        // colour map was drawn at 256, the 2048 mb-head-skin at 256
+        const bool streamed = kw.max_tex && texdict_streams(opt.texdict, cook_prefix() + shrt);
+        while (streamed && (!opt.am || t.type == 1) && std::max(tw, th) > uint32_t(kw.max_tex) && tm > 1) {
             const auto [bw, bh] = tc::blocks(tw, th, true);
             texels.erase(texels.begin(), texels.begin() + std::ptrdiff_t(std::min<uint64_t>(uint64_t(bw) * bh * f3->bpb, texels.size())));
             tw = std::max(1u, tw >> 1);
@@ -914,12 +970,14 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
     std::map<std::string, TexP> flat_cache;
     auto flat_texture = [&](const std::string &kind) -> TexP {
         if (auto it = flat_cache.find(kind); it != flat_cache.end()) return it->second;
+        // the neutral values: cut-out (-trans) and occlusion (-white) opaque / none, -black and -clear (transparent black:
+        // an overlay texture whose alpha masks it) off, -grey and -shift mid
         static const std::map<std::string, std::array<uint32_t, 3>> RGB = {
-            {"-spec-mask", {40, 40, 40}}, {"-normal", {128, 128, 255}}, {"-color", {128, 128, 128}}, {"-tint-mask", {0, 0, 0}}, {"-detail-normal", {128, 128, 255}}};
+            {"-spec-mask", {40, 40, 40}}, {"-normal", {128, 128, 255}}, {"-color", {128, 128, 128}}, {"-tint-mask", {0, 0, 0}}, {"-detail-normal", {128, 128, 255}},
+            {"-trans", {255, 255, 255}}, {"-white", {255, 255, 255}}, {"-black", {0, 0, 0}}, {"-clear", {0, 0, 0}}, {"-grey", {128, 128, 128}}, {"-shift", {128, 128, 128}}};
         auto rgb = RGB.find(kind);
-        static const std::array<uint32_t, 3> WHITE = {255, 255, 255};   // am: the hair alpha
-        if (rgb == RGB.end() && !(opt.am && kind == "-trans")) throw Stop("KeyError: '" + kind + "'");
-        const auto [lin, mips] = bc1_flat(64, 64, rgb == RGB.end() ? WHITE.data() : rgb->second.data());
+        if (rgb == RGB.end()) throw Stop("KeyError: '" + kind + "'");
+        const auto [lin, mips] = bc1_flat(64, 64, rgb->second.data(), kind == "-clear");
         const Bytes tiled = tc::ps3_to_ps4_texels(lin, 64, 64, mips, 8);
         const std::string shrt = "art/generated/u3mp/flat" + kind + ".tga/" + u3::fmt("%016llX", (unsigned long long)sidu(kind)) + ".ndb";
         TexP e = add_texture(shrt, sidu(shrt), opt.am && kind == "-color" ? 0x48 : 0x47, 64, 64, mips, tiled, std::nullopt, std::nullopt);   // am: colour sRGB
@@ -986,12 +1044,26 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
     auto has_mattex = [&](const std::string &mn) { auto it = mattex.find(mn); return it != mattex.end() && !it->second.empty(); };
     // PS3 props on their own skeleton: the same table, used when no texture carries the material's name (below)
     std::map<std::string, std::vector<uint32_t>> own_tex;   // material -> texture hashes in table order
-    if (!opt.am && kw.own_skel) try {
-            const AmTable t = am_read_materials(src);
-            for (const auto &[name, idx] : t.mats)
-                for (uint32_t i : idx) own_tex[name].push_back(t.texs.at(i).first);
-        } catch (const std::exception &) {
-        }
+    std::map<std::string, std::set<uint32_t>> table_tex;    // material -> texture hashes (every material)
+    try {
+        const AmTable t = am_read_materials(src);
+        for (const auto &[name, idx] : t.mats)
+            for (uint32_t i : idx) {
+                if (!opt.am && kw.own_skel) own_tex[name].push_back(t.texs.at(i).first);
+                table_tex[name].insert(t.texs.at(i).first);
+            }
+    } catch (const std::exception &) {
+    }
+    // the PS3 materials that cut out or blend, and the template materials that do (those without a second UV set first)
+    const std::set<std::string> ps3_tr = ps3_transparent(src);
+    auto needs_tr = [&](const std::string &mn) { return ps3_tr.count(mn) != 0; };
+    std::vector<const TMat *> tr_tmpl, opaque_tmpl;
+    for (const TMat *m : main_tmpl)
+        if (tmat_cutout(*m) && !tmat_extra_uv(*m)) tr_tmpl.push_back(m);
+    for (const TMat *m : main_tmpl)
+        if (tmat_cutout(*m) && tmat_extra_uv(*m)) tr_tmpl.push_back(m);
+    for (const TMat *m : main_tmpl)
+        if (!tmat_transparent(*m)) opaque_tmpl.push_back(m);
     auto pick_template = [&](const std::string &mname) -> const TMat * {
         const std::string key = ps4key(mname);
         for (const TMat &m : tmats)
@@ -1003,6 +1075,17 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
                     if (has(m.name, c->second)) return &m;
                 throw Stop("IndexError: list index out of range");
             }
+        // a PS3 material that cuts out or blends needs a template material that does (the vulture's wings, Eddie's
+        // sunglasses, rotor blurs, windows): the same object's, else hair alpha for hair, else the first
+        if (needs_tr(mname) && !tr_tmpl.empty()) {
+            if (kw.mat_by_file)
+                for (const TMat *m : tr_tmpl)
+                    if (before(m->name, ":") == rsplit1_head(mname)) return m;
+            const bool hair = has(lower(mname), "hair");
+            for (const TMat *m : tr_tmpl)
+                if (tmat_hair(*m) == hair) return m;
+            return tr_tmpl[0];
+        }
         if (kw.mat_by_file)
             for (const TMat *m : main_tmpl)
                 if (before(m->name, ":") == rsplit1_head(mname)) return m;
@@ -1018,13 +1101,34 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
             seg = a2 == std::string::npos ? mname.substr(0, a) : mname.substr(a2 + 1, a - a2 - 1);
             if (has(lower(seg), "hair")) {
                 if (!hair.empty()) return hair[0];
-            } else if (!other.empty())
+            } else if (!other.empty()) {
+                for (const TMat *m : other)   // (one that neither cuts out nor blends first)
+                    if (!tmat_transparent(*m)) return m;
                 return other[0];
+            }
         }
         if (main_tmpl.empty()) throw Stop("IndexError: list index out of range");
-        return main_tmpl[0];
+        return opaque_tmpl.empty() ? main_tmpl[0] : opaque_tmpl[0];   // an opaque PS3 material stays off the cut-out ones
     };
-    auto textures_for = [&](const std::string &mname) {   // the PS3 textures of a material
+    // one cook per texture: a pak can hold two cooks of one source (mp-kit-pirate-arms-gloves-b-00-color at 4x4 and at
+    // 256x256, and its colour slot got the 4x4 one): the cook in the material's own table (by hash) wins, of two there the
+    // larger
+    auto better_cook = [&](const Ps3Tex *a, const Ps3Tex *b, const std::optional<std::string> &mn) {
+        const auto it = mn ? table_tex.find(*mn) : table_tex.end();
+        const bool ia = it != table_tex.end() && it->second.count(a->hash), ib = it != table_tex.end() && it->second.count(b->hash);
+        if (ia != ib) return ia;
+        return uint64_t(a->w) * a->h > uint64_t(b->w) * b->h;
+    };
+    auto one_cook = [&](const std::vector<Ps3Tex *> &v, const std::string &mn) {
+        std::vector<Ps3Tex *> out;
+        for (Ps3Tex *x : v) {
+            auto it = std::find_if(out.begin(), out.end(), [&](const Ps3Tex *y) { return rsplit1_head(y->shrt) == rsplit1_head(x->shrt); });
+            if (it == out.end()) out.push_back(x);
+            else if (better_cook(x, *it, mn)) *it = x;
+        }
+        return out;
+    };
+    auto textures_all = [&](const std::string &mname) {   // the PS3 textures of a material
         std::vector<Ps3Tex *> own;
         if (opt.am)
             if (auto mt = mattex.find(mname); mt != mattex.end()) {
@@ -1078,7 +1182,8 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
         }
         return own;
     };
-    // one material per template material, in the template's order (the copied effects belong to them by position);
+    auto textures_for = [&](const std::string &mname) { return one_cook(textures_all(mname), mname); };
+    // one material per template material, in the template's order, then one per further PS3 material of a shared slot;
     // am: one material per PS3 material
     std::map<std::string, size_t> slot_of;
     if (!opt.am)
@@ -1090,16 +1195,28 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
         std::vector<size_t> free;
         for (size_t i = 0; i < tmats.size(); i++)
             if (!has(tmats[i].name, "shadowblocker") && !usedslots.count(i)) free.push_back(i);
+        // (a free slot that cuts out or blends as the material does; an opaque one may take any free slot, one that needs
+        // transparency keeps its shared cut-out slot)
         for (const std::string &mn : used_mats) {
-            if (taken.count(slot_of[mn]) && !free.empty() && !has(mn, "shadowblocker")) {
-                slot_of[mn] = free.front();
-                free.erase(free.begin());
+            if (taken.count(slot_of[mn]) && !has(mn, "shadowblocker")) {
+                const bool tr = needs_tr(mn) && !tr_tmpl.empty();
+                auto pick = std::find_if(free.begin(), free.end(), [&](size_t i) { return tr ? tmat_cutout(tmats[i]) : !tmat_transparent(tmats[i]); });
+                if (pick == free.end() && !tr) pick = free.begin();
+                if (pick != free.end()) {
+                    slot_of[mn] = *pick;
+                    free.erase(pick);
+                }
             }
             taken.insert(slot_of[mn]);
         }
     }
-    std::map<std::string, Ps3Tex *> by_path;
-    for (Ps3Tex &x : ps3tex) by_path[rsplit1_head(x.shrt)] = &x;
+    // the PS3 texture of a short path (two cooks of it: as one_cook)
+    auto by_path = [&](const std::string &shrt, const std::optional<std::string> &mn) -> Ps3Tex * {
+        Ps3Tex *best = nullptr;
+        for (Ps3Tex &x : ps3tex)
+            if (rsplit1_head(x.shrt) == shrt && (!best || better_cook(&x, best, mn))) best = &x;
+        return best;
+    };
     struct MBind {
         std::string pname;
         TexP e;
@@ -1115,18 +1232,31 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
             for (const auto &[suf, ps] : tex_kinds(opt.am))
                 if (std::find(ps.begin(), ps.end(), b.pname) != ps.end()) want.push_back(suf);
             BindTex e;
-            if (exact || !mn) {   // the same material on PS4 (or a template material no PS3 mesh uses): its texture
+            // a slot the PS3 material has no texture for gets a neutral flat texture of its kind, never the template
+            // material's own (the pirate-leader helmet spec on Cutter's sunglasses, a rover's glass as the vulture's
+            // cut-out, Elena's hair alpha on Chloe's parts); generic defaults (art/general/textures/default/*) and
+            // environment / cornea maps stay
+            const bool generic = has(b.full, "art/general/textures/default/") || has(b.pname, "Environment") || has(b.pname, "Cornea");
+            const bool keep_tmpl = exact || generic;
+            if (!mn) {   // a template material no PS3 mesh uses is never drawn: flat textures (no copies of the template's)
+                e.e = generic ? tmpl_texture(b.full, nullptr, nullptr, true) : flat_texture(want.empty() ? neutral_kind(b.pname) : want[0]);
+                binds.push_back({b.pname, use(e), b.shrt, b.full});
+                continue;
+            }
+            if (exact) {   // the same material on PS4: its texture
                 e.e = tmpl_texture(b.full, nullptr, nullptr, false);
-                if (!e.e)
-                    if (auto it = by_path.find(b.shrt); it != by_path.end()) e.lazy = it->second;
+                if (!e.e) e.lazy = by_path(b.shrt, mn);
             }
             if (!e.none()) {
-            } else if (auto it = by_path.find(b.shrt); it != by_path.end())
-                e.lazy = it->second;
+            } else if (Ps3Tex *x = by_path(b.shrt, mn))
+                e.lazy = x;
             else if (!want.empty()) {
+                // the material's own map of the kind (named after it) before another one of its table: the Outdoor
+                // Jacket A drew the loading-menu cloth decay map as its colour map
+                const std::string mstem = lower(rsplit1_last(rsplit1_head(*mn)));
                 Ps3Tex *c = nullptr;
                 for (Ps3Tex *x : own)
-                    if (x->kind == want[0]) { c = x; break; }
+                    if (x->kind == want[0] && (!c || (has(lower(x->shrt), mstem) && !has(lower(c->shrt), mstem)))) c = x;
                 // a colour slot of a material with no '-color' texture: its base map is the texture whose name carries no
                 // role at all (the MP kit hunter shirts' 'shirt-jollyroger.tga'): without this the slot kept the template's
                 // texture, another shirt's ('shirt-pogo-color', pink) on all of them. Made sRGB like every colour map.
@@ -1151,11 +1281,13 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
                 else {
                     // am: a material with known PS3 textures does not borrow another character's map for a kind it lacks
                     e.e = opt.am && mn && has_mattex(*mn) ? flat_texture(want[0]) : de;
-                    if (!e.e) e.e = tmpl_texture(b.full, nullptr, nullptr, false);
+                    if (!e.e && keep_tmpl) e.e = tmpl_texture(b.full, nullptr, nullptr, false);
                     if (!e.e) e.e = flat_texture(want[0]);
                 }
-            } else   // environment maps / cornea / hair noise etc.: the template's texture
+            } else if (keep_tmpl)   // environment maps / cornea etc.: the template's texture
                 e.e = tmpl_texture(b.full, nullptr, nullptr, true);
+            else
+                e.e = flat_texture(neutral_kind(b.pname));
             binds.push_back({b.pname, use(e), b.shrt, b.full});
         }
         return binds;
@@ -1174,6 +1306,19 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
             const std::string name = ps4key(mn) + "," + u3::fmt("00000000-0000-0000-0000-%012x", sidu(mn)) + "," + tm.shader;
             mat_recs.push_back({ren(name), &tm, std::move(binds), mn});
         }
+    auto ps4name_of = [&](const std::optional<std::string> &mn, const TMat &tm) {
+        const std::string tpath = before(tm.name, ",");
+        const std::string up = mn ? ps4key(*mn) : tpath;
+        if (rnames->count(up) && up != tpath) {
+            const std::string &rn = rnames->at(up);
+            return rn.substr(0, rn.rfind(',')) + "," + tm.shader;
+        }
+        if (up == tpath || has(tpath, "lib-shadowblocker") || !mn) return tm.name;   // retail material GUIDs identify the material asset: the same path keeps it
+        const std::string k8 = u8(up);
+        const std::string hx = md5_hex(Bytes(k8.begin(), k8.end()));
+        return up + "," + hx.substr(0, 8) + "-" + hx.substr(8, 4) + "-" + hx.substr(12, 4) + "-" + hx.substr(16, 4) + "-" + hx.substr(20, 12) + "," + tm.shader;
+    };
+    std::vector<std::pair<size_t, std::string>> extra;   // (slot, PS3 material) of the further users of a slot
     for (size_t ti = 0; ti < (opt.am ? 0 : tmats.size()); ti++) {
         const TMat &tm = tmats[ti];
         std::vector<std::string> users;
@@ -1185,23 +1330,25 @@ Bytes convert(const fs::path &ps3_path, const fs::path &tmpl_path, const Kw &kw,
         });
         const std::optional<std::string> mn = users.empty() ? std::nullopt : std::optional<std::string>(users[0]);
         std::vector<MBind> binds = binds_for(mn, tm);
-        const std::string tpath = before(tm.name, ",");
-        const std::string up = mn ? ps4key(*mn) : tpath;
-        std::string ps4name;
-        if (rnames->count(up) && up != tpath) {
-            const std::string &rn = rnames->at(up);
-            ps4name = rn.substr(0, rn.rfind(',')) + "," + tm.shader;
-        } else if (up == tpath || has(tpath, "lib-shadowblocker") || !mn)
-            ps4name = tm.name;   // retail material GUIDs identify the material asset: the same path keeps it
-        else {
-            const std::string k8 = u8(up);
-            const std::string hx = md5_hex(Bytes(k8.begin(), k8.end()));
-            ps4name = up + "," + hx.substr(0, 8) + "-" + hx.substr(8, 4) + "-" + hx.substr(12, 4) + "-" + hx.substr(16, 4) + "-" + hx.substr(20, 12) + "," + tm.shader;
-        }
-        mat_recs.push_back({ps4name, &tm, std::move(binds), ""});
+        mat_recs.push_back({ps4name_of(mn, tm), &tm, std::move(binds), ""});
+        for (size_t k = 1; k < users.size(); k++)
+            if (!has(users[k], "shadowblocker")) extra.push_back({ti, users[k]});
+    }
+    // ... and each further one a copy of that template material with its own textures, after the template's (materials
+    // find their effect by the template material's hash, as the actor-materials rules' repeated template materials do):
+    // without it the Mi-24's windows and rotor blur drew with one texture set
+    std::map<std::string, size_t> extra_of;
+    for (const auto &[ti, mn] : extra) {
+        const TMat &tm = tmats[ti];
+        std::vector<MBind> binds = binds_for(mn, tm);
+        extra_of[mn] = mat_recs.size();
+        mat_recs.push_back({ps4name_of(mn, tm), &tm, std::move(binds), mn});
     }
     auto rec_of = [&](const std::string &mat) -> const MatRec & {   // the material record of a PS3 material
-        if (!opt.am) return mat_recs[slot_of[mat]];
+        if (!opt.am) {
+            const auto x = extra_of.find(mat);
+            return mat_recs[x != extra_of.end() ? x->second : slot_of[mat]];
+        }
         for (const MatRec &m : mat_recs)
             if (m.ps3 == mat) return m;
         throw Stop("IndexError: list index out of range");
@@ -1994,6 +2141,138 @@ Bytes rename(const fs::path &ps4, const std::string &old_name, const std::string
 }
 
 
+// ------------------------------------------------------------------------------------------------ texture streams
+bool texdict_streams(const fs::path &csv, const std::string &full) {
+    static std::mutex lock;
+    static std::map<std::string, std::set<std::string>> cache;   // csv -> its 'path' column, lower case
+    if (csv.empty()) return false;
+    std::set<std::string> *paths;
+    {
+        std::lock_guard<std::mutex> g(lock);
+        auto [it, fresh] = cache.try_emplace(utf8(csv));
+        paths = &it->second;
+        if (fresh && fs::exists(csv)) {
+            const Bytes d = read_file(csv);
+            size_t a = 0;
+            while (a < d.size()) {   // dictionary, path, source, ...
+                size_t e = a;
+                while (e < d.size() && d[e] != '\n') e++;
+                const std::string line(d.begin() + std::ptrdiff_t(a), d.begin() + std::ptrdiff_t(e));
+                a = e + 1;
+                const size_t c1 = line.find(','), c2 = c1 == std::string::npos ? c1 : line.find(',', c1 + 1);
+                if (c2 == std::string::npos) continue;
+                std::string p = line.substr(c1 + 1, c2 - c1 - 1);
+                while (!p.empty() && p.front() == ' ') p.erase(p.begin());
+                while (!p.empty() && (p.back() == ' ' || p.back() == '\r')) p.pop_back();
+                paths->insert(lower(p));
+            }
+        }
+    }
+    std::string k = lower(full);
+    if (ends_with(k, ".ndb")) k.resize(k.size() - 4);
+    return paths->count(k) != 0;
+}
+
+// ------------------------------------------------------------------------------------------------ transparency template
+namespace {
+struct RetailActor {
+    fs::path path;
+    std::string file;
+    uint32_t skel = 0, hier = 0;
+    std::vector<TMat> mats;
+};
+// every retail actor pak of a folder with a foreground section and materials, in name order
+std::shared_ptr<const std::vector<RetailActor>> retail_actors(const fs::path &dir) {
+    static std::mutex lock;
+    static std::map<std::string, std::shared_ptr<const std::vector<RetailActor>>> cache;
+    std::lock_guard<std::mutex> g(lock);
+    auto &v = cache[utf8(dir)];
+    if (v) return v;
+    std::vector<std::string> names;
+    for (const auto &e : fs::directory_iterator(dir))
+        if (ends_with(utf8(e.path().filename()), ".pak")) names.push_back(utf8(e.path().filename()));
+    std::sort(names.begin(), names.end());
+    auto out = std::make_shared<std::vector<RetailActor>>();
+    for (const std::string &fn : names) {
+        try {
+            const Pak q(dir / upath(fn));
+            const FgInfo f = tmpl_fg_info(q);
+            out->push_back({dir / upath(fn), fn, f.skel, f.hier, tmpl_materials(q)});
+        } catch (const std::exception &) {
+        }
+    }
+    v = out;
+    return v;
+}
+}  // namespace
+
+fs::path transparency_template(const fs::path &ps3, const fs::path &tmpl, const fs::path &retail_dir, bool own_skel,
+                               const std::optional<fs::path> &skel_tmpl) {
+    if (retail_dir.empty() || !fs::is_directory(retail_dir)) return tmpl;
+    const Pak src(ps3), T(tmpl);
+    const std::vector<TMat> tm = tmpl_materials(T);
+    std::set<std::string> keys;
+    for (const TMat &m : tm) keys.insert(before(m.name, ","));
+    const std::set<std::string> tr = ps3_transparent(src);
+    std::set<std::string> used;
+    for (const bg::FgProto &v : bg::fg_prototypes(src))
+        for (const std::string &m : ps3_block_materials(src, v.proto)) used.insert(m);
+    bool opaque = false, sb = false;
+    std::set<bool> need;   // hair (true) / other (false) materials with a cut-out map
+    for (const std::string &m : used) {
+        if (has(m, "shadowblocker")) sb = true;
+        else if (keys.count(ps4key(m))) continue;   // the same material on PS4: retail decides
+        else if (tr.count(m)) need.insert(has(lower(m), "hair"));
+        else opaque = true;
+    }
+    if (need.empty()) return tmpl;
+    auto usable = [](const TMat &m) { return !has(m.name, "shadowblocker") && tmat_cutout(m) && !tmat_extra_uv(m); };
+    for (const TMat &m : tm)
+        if (usable(m)) return tmpl;
+    // what the job's template gives the PS3 materials and the new one has to give too: an instance tint for tint masks
+    bool tint = false;
+    for (const TMat &m : tm) tint = tint || tmat_feat(m, "COLOR_1_APPLY_INSTANCE_TINT");
+    if (tint) {
+        bool mask = false;
+        for (const PakTexture &t : src.textures()) mask = mask || tex_kind(t.path) == "-tint-mask";
+        tint = mask;
+    }
+    const FgInfo fi = skel_tmpl ? tmpl_fg_info(Pak(*skel_tmpl)) : tmpl_fg_info(T);
+    const std::string self = utf8(tmpl.filename());
+    bool tsb = false;
+    std::set<std::string> thash;   // the job's template materials (their effects, by hash)
+    for (const TMat &m : tm) {
+        tsb = tsb || has(m.name, "shadowblocker");
+        thash.insert(m.hash);
+    }
+    const RetailActor *best = nullptr;
+    std::tuple<int, size_t, int, int, size_t> best_key;
+    for (const RetailActor &c : *retail_actors(retail_dir)) {
+        if (c.file == self || c.hier != fi.hier || (!own_skel && c.skel != fi.skel)) continue;
+        bool ok = false, has_tint = false, has_opaque = false, has_sb = false;
+        std::set<bool> cut;   // hair / other cut-out materials
+        std::set<std::string> chash;
+        for (const TMat &m : c.mats) {
+            if (usable(m)) ok = true, cut.insert(tmat_hair(m));
+            has_tint = has_tint || tmat_feat(m, "COLOR_1_APPLY_INSTANCE_TINT");
+            if (has(m.name, "shadowblocker")) has_sb = true;
+            else if (!tmat_transparent(m)) has_opaque = true;
+            chash.insert(m.hash);
+        }
+        if (!ok || (tint && !has_tint)) continue;
+        // a shadow blocker as the template had; the most of the template's materials (a torso stays on a torso's
+        // shaders); a cut-out material of the kind (hair / other) the PS3 ones are; an opaque material for opaque PS3
+        // ones; the fewest materials
+        size_t missing = 0;
+        for (const std::string &h : thash) missing += !chash.count(h);
+        int kinds = 0;
+        for (bool h : need) kinds += !cut.count(h);
+        const std::tuple<int, size_t, int, int, size_t> key{sb && tsb && !has_sb, missing, kinds, opaque && !has_opaque, c.mats.size()};
+        if (!best || key < best_key) best = &c, best_key = key;
+    }
+    return best ? best->path : tmpl;
+}
+
 // ------------------------------------------------------------------------------------------------ am material choice
 std::map<std::string, std::string> am_choice(const fs::path &ps3, const fs::path &tmpl, bool tint, bool overlay) {
     const Pak p(ps3), tq(tmpl);
@@ -2022,11 +2301,23 @@ std::map<std::string, std::string> am_choice(const fs::path &ps3, const fs::path
         return s;
     };
     auto feat = [](const TMat &m, const std::string &f) { return std::find(m.feats.begin(), m.feats.end(), f) != m.feats.end(); };
+    const std::set<std::string> trs = ps3_transparent(p);
     std::map<std::string, std::string> choice;
     for (const std::string &mn : used) {   // sorted
         if (has(mn, "shadowblocker") || keys.count(ps4key(mn))) continue;
         std::vector<const TMat *> c = am_pool(tm, am_role(mn));
         if (c.empty()) c = am_pool(tm, "cloth");
+        {   // a PS3 material that cuts out or blends gets a template material that does (of any role when its role has
+            // none), an opaque one one that does not
+            const bool want = trs.count(mn) != 0;
+            std::vector<const TMat *> f;
+            for (const TMat *m : c)
+                if (want ? tmat_cutout(*m) && !tmat_extra_uv(*m) : !tmat_transparent(*m)) f.push_back(m);
+            if (f.empty() && want)
+                for (const TMat &m : tm)
+                    if (!has(m.name, "shadowblocker") && tmat_cutout(m) && !tmat_extra_uv(m)) f.push_back(&m);
+            if (!f.empty()) c = f;
+        }
         const std::set<std::string> ks = kinds.count(mn) ? kinds[mn] : std::set<std::string>{};
         std::vector<const TMat *> c2 = c;
         if (tint) {   // the tint mask decides: a PS3 material with one gets a template that reads it, one without does not

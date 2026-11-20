@@ -75,7 +75,6 @@ int facility_collapse(const std::vector<std::string> &argv);   // tools/fixes/in
 std::string find_ffmpeg(const std::string &arg);         // --ffmpeg, RECIPE_FFMPEG, msys2, PATH (sound-banks/convert_banks.cpp)
 Bytes sound_bank_convert(const Bytes &ps3, const std::string &ffmpeg, const fs::path &adsr_env, std::string &note);   // one bank (the U2 import)
 int eula_pages(const std::vector<std::string> &argv);          // tools/fixes/eula-batch/make_eula.cpp
-int outdoor_jacket(const std::vector<std::string> &argv);        // tools/fixes/outdoor-jacket/apply_outdoor_jacket.cpp
 int lab_registration(const std::vector<std::string> &argv);      // tools/fixes/dctools/lab_reg.cpp
 bool net_is_ps3_order(const Dc &net, const std::string &net18);   // dctools/net_edits.cpp: netgame table in PS3 1.19 order
 int maps_batch_dc(const std::vector<std::string> &argv);         // tools/fixes/dctools/lab_reg.cpp

@@ -245,7 +245,7 @@ Bytes convert_net(const fs::path &ps3_path, const fs::path &ref_path, const NetO
 
 // ------------------------------------------------------------------------------------------------ weapon skins
 Bytes wpnmods(const fs::path &ps4, const fs::path &ps3, const std::string &src_skin, const std::vector<std::string> &skins, int max_tex,
-              int stream_flags) {
+              int stream_flags, const fs::path &texdict) {
     const Pak R(ps4), Sp(ps3);
     if (R.ps3 || !Sp.ps3) throw Stop("AssertionError: expected a PS4 pak and a PS3 pak");
     if (R.pages.size() != 2) throw Stop("AssertionError: expects a 2-page retail pak");
@@ -351,7 +351,9 @@ Bytes wpnmods(const fs::path &ps4, const fs::path &ps3, const std::string &src_s
         if (!f3) throw Stop("TypeError: cannot unpack non-iterable NoneType object");
         Bytes texels = Sp.vram_bytes(t.vramOffset, t.vramSize);
         uint32_t tw = t.width, th = t.height, tm = t.mips;
-        while (max_tex && std::max(tw, th) > uint32_t(max_tex) && tm > 1) {
+        // only a texture a retail dictionary streams drops its top mips (as in actor::convert)
+        const bool streamed = max_tex && actor::texdict_streams(texdict, cook_prefix() + shrt);
+        while (streamed && std::max(tw, th) > uint32_t(max_tex) && tm > 1) {
             const auto [bw, bh] = tc::blocks(tw, th, true);
             texels.erase(texels.begin(), texels.begin() + std::ptrdiff_t(std::min<uint64_t>(uint64_t(bw) * bh * f3->bpb, texels.size())));
             tw = std::max(1u, tw >> 1);

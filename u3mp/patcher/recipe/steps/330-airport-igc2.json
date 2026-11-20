@@ -40,10 +40,12 @@
  ],
  "status": "reproducible",
  "applied": "2026-11-02 01:04",
- "notes": "Byte-identical to the overlay (686e4260..., 2026-11-05). Lazarevic co-op is the actor-materials build. Since 2026-11-13 C++ (u3fix.exe rebuild-am / install-am igc2), byte-identical, no Python.",
+ "notes": "Byte-identical to the overlay (686e4260..., 2026-11-05). Lazarevic co-op is the actor-materials build. Since 2026-11-13 C++ (u3fix.exe rebuild-am / install-am igc2), byte-identical, no Python. 1.25.0: rebuilt with the converter rules of convert-actors-r3 1.25.0.",
  "recipe_version_added": "1.0.0",
+ "recipe_version_changed": "1.25.0",
  "with_jobs": [
   "actor-materials",
-  "airport-igc2"
+  "airport-igc2",
+  "dctools"
  ]
 }

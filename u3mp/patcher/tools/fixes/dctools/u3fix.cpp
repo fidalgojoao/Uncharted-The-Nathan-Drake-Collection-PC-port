@@ -81,7 +81,6 @@ int wmain(int argc, wchar_t **argv) {
         if (step == "shade-npc") return u3::shade_npc(a);
         if (step == "facility-collapse") return u3::facility_collapse(a);
         if (step == "eula-pages") return u3::eula_pages(a);
-        if (step == "outdoor-jacket") return u3::outdoor_jacket(a);
         if (step == "lab-registration") return u3::lab_registration(a);
         if (step == "maps-batch-dc") return u3::maps_batch_dc(a);
         if (step == "water-jitter") return u3::water_jitter(a);

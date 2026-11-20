@@ -44,6 +44,6 @@ struct NetOptions {
 
 Bytes convert_net(const fs::path &ps3, const fs::path &menu_ref, const NetOptions &o = {});
 Bytes wpnmods(const fs::path &ps4, const fs::path &ps3, const std::string &src_skin, const std::vector<std::string> &skins, int max_tex,
-              int stream_flags);
+              int stream_flags, const fs::path &texdict = {});
 
 }  // namespace u3::mats
