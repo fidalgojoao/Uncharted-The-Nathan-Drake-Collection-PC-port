@@ -272,6 +272,9 @@ Item {
             onSubmitted: backend.act(root.node.id, "enter")
             buttonText: root.node.button ? root.node.button.text : ""
             onButtonClicked: backend.act(root.node.button.id, "button")
+            // while typed in, new pages wait (backend.setEditing), so this box is not rebuilt after each letter
+            onEditingChanged: backend.setEditing(editing)
+            Component.onDestruction: if (editing) backend.setEditing(false)
         }
     }
     Component { id: logC; LogView { text: root.node.text } }

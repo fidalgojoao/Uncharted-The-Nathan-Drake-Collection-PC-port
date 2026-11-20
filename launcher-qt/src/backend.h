@@ -39,6 +39,9 @@ public:
     Q_INVOKABLE void capture(const QString &key, const QString &mouse);
     Q_INVOKABLE void close();
     Q_INVOKABLE QString fileUrl(const QString &path) const;
+    // a text box of the page has the focus (true) or lost it (false): while one has, a new page of the same tab
+    // waits, so the box being typed in is not rebuilt after each letter; it is shown when the box loses the focus
+    Q_INVOKABLE void setEditing(bool editing);
 
 signals:
     void chromeChanged();
@@ -92,6 +95,10 @@ private:
     PageFn m_unPage = nullptr;
     PageActFn m_unPageAct = nullptr;
     QString m_tab;
+    void showPage(const QString &tab, const QVariantList &page);   // the new page, or held while a box is edited
+    bool m_editing = false;
+    bool m_held = false;          // a page of the shown tab waits for the edit to end
+    QVariantList m_heldPage;
     bool m_ready = false;
     bool m_waiting = false;
     QString m_error;

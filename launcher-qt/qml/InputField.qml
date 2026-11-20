@@ -9,6 +9,8 @@ Rectangle {
     signal submitted()
     property string buttonText: ""          // a button inside the box, at the right (Add friend's ADD)
     signal buttonClicked()
+    // being typed in: the page holds its updates meanwhile (NodeView), so this box is not rebuilt after each letter
+    readonly property bool editing: input.activeFocus
     implicitWidth: 240
     implicitHeight: 36
     radius: Theme.radiusField
@@ -28,7 +30,8 @@ Rectangle {
         echoMode: field.secret ? TextInput.Password : TextInput.Normal
         clip: true
         onTextEdited: field.edited(text)
-        onAccepted: field.submitted()
+        // Enter: the action, then the box lets the focus go so the page shows what it did
+        onAccepted: { field.submitted(); input.focus = false }
         // the launcher's value, unless the user is typing in it
         Binding on text { value: field.text; when: !input.activeFocus }
     }
@@ -41,6 +44,6 @@ Rectangle {
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height - 10
-        onClicked: field.buttonClicked()
+        onClicked: { field.buttonClicked(); input.focus = false }
     }
 }

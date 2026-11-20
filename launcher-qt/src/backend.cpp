@@ -156,12 +156,30 @@ void Backend::handle(const QVariantMap &message)
         QVariantList page = data.value("page").toList();
         m_pythonPage = page;      // a native tab: its page from the DLL, then what the Python side still builds
         nativePage(tab, &page);   // (the Multiplayer tabs' online section)
-        if (page != m_page || tab != m_tab) {
-            m_page = page;
-            m_tab = tab;
-            emit pageChanged();
-        }
+        showPage(tab, page);
     }
+}
+
+void Backend::showPage(const QString &tab, const QVariantList &page)
+{
+    if (m_editing && tab == m_tab) {   // the box being typed in stays; the page follows when it loses the focus
+        m_heldPage = page;
+        m_held = page != m_page;
+        return;
+    }
+    m_held = false;
+    if (page != m_page || tab != m_tab) {
+        m_page = page;
+        m_tab = tab;
+        emit pageChanged();
+    }
+}
+
+void Backend::setEditing(bool editing)
+{
+    m_editing = editing;
+    if (!editing && m_held)
+        showPage(m_tab, m_heldPage);
 }
 
 void Backend::requestModel(bool force)
@@ -191,6 +209,11 @@ void Backend::fileDialog(int dialog, const QVariantMap &message)
 
 void Backend::act(const QString &id, const QString &kind, const QVariant &value)
 {
+    // typing holds new pages (the box stays); any other control shows what waits and its own result
+    if (kind == QLatin1String("entry"))
+        m_editing = true;
+    else if (m_editing)
+        setEditing(false);
     if (!nativeAct(id, kind, value))
         send({{"op", "act"}, {"id", id}, {"kind", kind}, {"value", value}});
     requestModel(true);
@@ -281,10 +304,8 @@ bool Backend::nativeAct(const QString &id, const QString &kind, const QVariant &
         if (ui != m_ui) {
             setUi(ui);
             QVariantList page;
-            if (nativePage(m_tab, &page) && page != m_page) {
-                m_page = page;
-                emit pageChanged();
-            }
+            if (nativePage(m_tab, &page))
+                showPage(m_tab, page);
         }
     }
     return true;
