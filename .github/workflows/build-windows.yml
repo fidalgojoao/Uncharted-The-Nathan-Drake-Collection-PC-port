@@ -58,7 +58,11 @@ jobs:
         id: msys2
         with:
           msystem: CLANG64
-          update: true
+          # No `update: true`: that ran two full `pacman -Syuu` system upgrades before installing anything,
+          # which was most of the 3-minute setup. The latest base release is already a consistent snapshot,
+          # and without a sync pacman installs the packages from that snapshot's own database.
+          # cache: true (the default) keeps pacman's downloaded packages between runs.
+          cache: true
           # ucrt64 binutils: GNU objdump for the Uncharted 3 import's Havok tables
           install: git patch curl make mingw-w64-ucrt-x86_64-binutils
           pacboy: >-
