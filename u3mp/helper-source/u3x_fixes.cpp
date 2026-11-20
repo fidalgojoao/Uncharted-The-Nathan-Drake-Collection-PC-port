@@ -43295,47 +43295,51 @@ U3X_FN int64_t u3x_onb_s16(void *, uint8_t *ss) {
 // extern "C" prototypes of the private groups' entries (defined in the private u3x_private.cpp) that public code calls.
 // ===== end of r2 private entries =====
 
-// ===== ring tint (v7.218): the colour of capture-zone rings and of tinted spawner rings (co-op checkpoints) =====
-// Replaces the C part's n033 / r01, written anew from this description of what has to happen:
-//  * A capture-zone ring or a co-op checkpoint ring wall is a geometry particle. The game puts its colour (particle colour
-//    x instance tint +0x50..+0x58 when the instance has tint flag 8 in byte +4) into the drawable's colour block (drawable
-//    +0x1f8 -> block, rgb at block +0x90), but the ring shader takes its colour from a pixel-shader constant: the PS user
-//    data registers (SET_SH_REG 0x0c / 0x0d) point to a table whose +8 is the constant buffer, colour at +0x148. So after
-//    such a draw is recorded, that constant's rgb becomes its original rgb x the block colour. An original component of 0
-//    counts as 1 (the tint is never lost). The original is kept per buffer (8 buffers) together with what was written, so
-//    a buffer that still holds our value is not multiplied twice and a buffer the game refilled is read anew.
-//  * Which draws are rings: the colour block's owner (block - 0x50) is the render object (+0x28) of
-//      - a particle of a live capture territory (territories registered in ext ea[128..143]; live = the first word is the
-//        territory class table at image +0x167fe30; 8 particle handles at +0x3b0, 16 bytes each: slot pointer, generation), or
-//      - a tinted particle instance the spawner hook registered (64 kept; a dead entry - its first word is no longer the
-//        registered generation - is reused first, so the checkpoint ring is not pushed out by other tinted particles).
-//  * Only pointers inside the game image or the guest heap are read (memory of a territory that ended may hold floats).
-// Switches (builder U3MP_N033): ea[122] bit 3 = the draw hook is in this image, bit 4 = apply the colour.
-// Entries: u3x_ring_reg (kind 244 sub 5), u3x_ring_draw (sub 3 before / sub 4 after the draw), u3x_ring_tick (per frame).
+// ===== ring tint (v7.222): the colour of the ring-type particle effects (capture-zone rings, co-op checkpoint rings) =====
+// Written from this description of what has to happen (static analysis of PS3 1.19 and PS4 1.02, 2026-11-20):
+//  * Both versions work out a geometry particle's colour the same way (particle colour x instance tint x fade). PS3 feeds
+//    it to every geometry-particle draw as the vertex colour input (one value for all vertices), so the rings show their
+//    checkpoint / team colour and fade.
+//  * PS4 copies it to the render object (+0xe0 = the drawable's colour block +0x90, block = drawable +0x1f8 during the
+//    drawable's update) and into the per-particle constant buffer (parameter hash 0x32d51dff). Most PS4 particle effects
+//    read that buffer. The ring-type effects (the u3parts/unique materials: territory rings, dust spiral, aurora, soft
+//    light beam) have no such buffer: their vertex shader takes the colour from vertex input 4, which comes from the mesh
+//    (all white). So they draw white.
+//  * The geometry-particle loop handles a drawable like this: its update (hook sub 3 before / sub 4 after; it only fills
+//    constant buffers), then for each submesh (array [drawable +0x168], 0x3a0 bytes each, count drawable +0x164) the
+//    vertex input table at submesh +0x140 (16 descriptors of 16 bytes, one per input) is made ready and the submesh is
+//    drawn (hook sub 6 before / sub 7 after that call; the draw copies the table by value).
+//  * So: at sub 3, a ring-type drawable (no 0x32d51dff parameter: count drawable +0x170, entries at [drawable +0x180],
+//    0x30 bytes each, hash at +0x20, as the game's own check) and its colour block are noted. At sub 6, for a submesh of
+//    that drawable, input 4 (submesh +0x180) is pointed at per-frame memory (the game's allocator 0xd9eae0: size,
+//    pointer to tag 0x46, alignment) that holds the particle colour (block +0x90, rgba) once per vertex, in the input's
+//    own layout (16-bit floats x 4, stride 8, as many records as the input had; any other layout is left alone). At
+//    sub 7 the input gets its previous descriptor back, so nothing outlives the draw.
+//  * Not reproduced: inputs 5 / 6 (user H / user F, texture scrolling); the PS4 port does not feed those either.
+//  * Only pointers inside the game image or the guest heap are read.
+// Switches (builder U3MP_N033): ea[122] bit 3 = the hooks are in this image, bit 4 = apply the colour.
+// Entries: u3x_ring_draw (kind 244 sub 3 / 4 around the drawable update, sub 6 / 7 around each submesh draw),
+// u3x_ring_reg (sub 5, the spawner tint hook: only counted), u3x_ring_tick (per frame: the boot.log line).
 namespace ring_tint {
 
-constexpr uintptr_t TERRITORY_CLASS = 0x167fe30, IMAGE_SIZE = 0x2214000, NET_GAME = 0x17d5c61;
-constexpr uint32_t F_ONE = 0x3f800000u;
-constexpr int SPAWNED = 64, BUFFERS = 8;
+constexpr uintptr_t IMAGE_SIZE = 0x2214000, NET_GAME = 0x17d5c61, FRAME_ALLOC = 0xd9eae0;
+constexpr uint32_t PARTICLE_BUFFER = 0x32d51dffu, FRAME_TAG = 0x46u;
+constexpr uint32_t SUBMESH_BYTES = 0x3a0, COLOUR_INPUT = 0x140 + 4 * 16;
+using FrameAllocFn = uint8_t *(*)(uint64_t size, const uint32_t *tag, uint32_t align);
 
-struct Buffer {
-    uint8_t *at;
-    uint32_t original[3], written[3];
-};
 struct State {
-    uint8_t *cmd, *block;   // the ring draw being recorded
-    uint32_t armed;         // 1 = ring draw, 2 = its instance is tinted
-    uintptr_t inst[SPAWNED];
-    uint32_t gen[SPAWNED];
-    uint32_t next;
-    Buffer buf[BUFFERS];
-    uint32_t buf_next;
-    uint32_t registered, draws, fixes, no_regs, frame, lines, last_draws, last_fixes;
+    const uint8_t *drawable;   // the ring-type drawable whose submeshes are drawn next (null: none)
+    const uint8_t *block;      // its colour block
+    uint8_t *patched;          // the submesh whose input 4 is ours during its draw (null: none)
+    uint32_t saved[4];         // that input's own descriptor
+    uint32_t registered, drawables, draws, fixes, skipped, frame, lines, last_drawables, last_draws, last_fixes;
+    uint32_t skip_d1, skip_d3;   // the last input-4 descriptor that was left alone (words 1 and 3)
 };
 U3X_BSS State st;
 
-U3X_RO const char t_ring[] = "U3MP ring: draws ", t_fix[] = " fixed ", t_reg[] = " registered ", t_live[] = " live ",
-                  t_nore[] = " no-regs ", t_off[] = " (colour switch off)";
+U3X_RO const char t_ring[] = "U3MP ring: ring-type drawables ", t_draw[] = " submesh draws ", t_fix[] = " coloured ",
+                  t_skip[] = " skipped ", t_reg[] = " spawner tints ", t_off[] = " (colour switch off)",
+                  t_last[] = " last skipped input ", t_sp[] = " ";
 
 [[gnu::always_inline]] inline bool readable(uintptr_t base, const void *p) {
     const uintptr_t v = reinterpret_cast<uintptr_t>(p);
@@ -43344,135 +43348,146 @@ U3X_RO const char t_ring[] = "U3MP ring: draws ", t_fix[] = " fixed ", t_reg[] =
     return v >= 0x1000000000ull && v < 0x800000000000ull;
 }
 
-// a tint that is not white: a part below 0.95 or above 1.05
-[[gnu::always_inline]] inline bool tinted(const uint8_t *in) {
-    for (int k = 0; k < 3; k++) {
-        const uint32_t f = rd<uint32_t>(in, 0x50 + 4 * k);
-        if (f_less(f, 0x3f733333u) || f_less(0x3f866666u, f)) return true;
-    }
+// whether the drawable has the per-particle constant buffer (parameter hash 0x32d51dff)
+U3X_FN bool has_particle_buffer(uintptr_t base, const uint8_t *drawable) {
+    const uint32_t n = rd<uint32_t>(drawable, 0x170);
+    const uint8_t *entry = rd<const uint8_t *>(drawable, 0x180);
+    if (n && !readable(base, entry)) return true;   // unreadable list: leave the draw alone
+    for (uint32_t i = 0; i < n; i++, entry += 0x30)
+        if (rd<uint32_t>(entry, 0x20) == PARTICLE_BUFFER) return true;
     return false;
 }
 
-[[gnu::always_inline]] inline bool alive(uintptr_t base, int k) {
-    const uint8_t *in = reinterpret_cast<const uint8_t *>(st.inst[k]);
-    return in && readable(base, in) && rd<uint32_t>(in, 0) == st.gen[k];
+// a 32-bit float (bit pattern) as a 16-bit float, rounded to nearest even
+[[gnu::always_inline]] inline uint32_t half_of(uint32_t f) {
+    const uint32_t sign = (f >> 16) & 0x8000u, mag = f & 0x7fffffffu;
+    if (mag >= 0x7f800000u) return sign | 0x7c00u | (mag > 0x7f800000u ? 0x200u : 0u);
+    if (mag >= 0x477ff000u) return sign | 0x7c00u;   // above the largest half: infinity
+    if (mag < 0x33000000u) return sign;              // below half the smallest subnormal: zero
+    const int32_t e = static_cast<int32_t>(mag >> 23) - 127;
+    uint32_t m = (mag & 0x7fffffu) | 0x800000u, shift = 13, out_exp = 0;
+    if (e < -14) shift = static_cast<uint32_t>(13 + (-14 - e));   // a subnormal half
+    else { out_exp = static_cast<uint32_t>(e + 15); m &= 0x7fffffu; }
+    uint32_t q = m >> shift;
+    const uint32_t rest = m & ((1u << shift) - 1u), halfway = 1u << (shift - 1u);
+    if (rest > halfway || (rest == halfway && (q & 1u))) q++;
+    return sign | ((out_exp << 10) + q);   // a carry out of the mantissa raises the exponent
 }
 
-// the particle instance a handle (slot pointer, generation) stands for, or null
-U3X_FN uint8_t *resolve(uintptr_t base, const uint8_t *handle) {
-    uint8_t *const *slot = rd<uint8_t *const *>(handle, 0);
-    const uint32_t generation = rd<uint32_t>(handle, 8);
-    if (!generation || !readable(base, slot)) return nullptr;
-    uint8_t *in = *slot;
-    return readable(base, in) && rd<uint32_t>(in, 0) == generation ? in : nullptr;
+// a 32-bit float (bit pattern) as an 8-bit unorm (0..1 -> 0..255, rounded)
+[[gnu::always_inline]] inline uint32_t unorm8_of(uint32_t f) {
+    if (f & 0x80000000u) return 0;          // negative (or -0)
+    if (f >= 0x3f800000u) return 255;       // 1.0 and above (NaN too)
+    const uint32_t e = f >> 23;             // biased exponent, below 127
+    if (e < 127 - 9) return 0;              // below 1/512: rounds to 0
+    const uint64_t m = (f & 0x7fffffu) | 0x800000u, x = m * 255u;
+    const uint32_t shift = 23 + (127 - e);  // value = m / 2^shift
+    return static_cast<uint32_t>((x + (1ull << (shift - 1))) >> shift);
 }
 
-// the ring instance whose render object is `object`, or null
-U3X_FN const uint8_t *ring_instance(uintptr_t base, const uint8_t *object) {
-    const uint64_t *territories = reinterpret_cast<const uint64_t *>(ext_ea() + 128);
-    for (int k = 0; k < 8; k++) {
-        const uint8_t *t = reinterpret_cast<const uint8_t *>(territories[k]);
-        if (!readable(base, t) || rd<uintptr_t>(t, 0) != base + TERRITORY_CLASS) continue;
-        for (int j = 0; j < 8; j++) {
-            const uint8_t *in = resolve(base, t + 0x3b0 + 16 * j);
-            if (in && rd<const uint8_t *>(in, 0x28) == object) return in;
-        }
-    }
-    for (int k = 0; k < SPAWNED; k++) {
-        if (!st.inst[k]) continue;
-        if (!alive(base, k)) { st.inst[k] = 0; continue; }
-        const uint8_t *in = reinterpret_cast<const uint8_t *>(st.inst[k]);
-        if (rd<const uint8_t *>(in, 0x28) == object) return (in[4] & 8u) && tinted(in) ? in : nullptr;
-    }
-    return nullptr;
-}
-
-U3X_FN void before_draw(uintptr_t base, const uint64_t *r) {
-    st.armed = 0;
+// sub 3: before a drawable's update (r[1] the drawable)
+U3X_FN void before_update(uintptr_t base, const uint64_t *r) {
+    st.drawable = nullptr;
     const uint8_t *drawable = reinterpret_cast<const uint8_t *>(r[1]);
-    uint8_t *cmd = reinterpret_cast<uint8_t *>(r[5]);
-    if (!readable(base, drawable) || !readable(base, cmd)) return;
-    uint8_t *block = rd<uint8_t *>(drawable, 0x1f8);
-    if (!readable(base, block)) return;
-    const uint8_t *in = ring_instance(base, block - 0x50);
-    if (!in) return;
-    st.draws++;
-    st.cmd = cmd;
+    if (!readable(base, drawable)) return;
+    const uint8_t *block = rd<const uint8_t *>(drawable, 0x1f8);
+    if (!readable(base, block) || has_particle_buffer(base, drawable)) return;
+    st.drawables++;
+    st.drawable = drawable;
     st.block = block;
-    st.armed = 1u | ((in[4] & 8u) ? 2u : 0u);
 }
 
-U3X_FN void after_draw(uintptr_t base) {
-    const uint32_t armed = st.armed;
-    st.armed = 0;
-    if (!(armed & 2u) || !(n32_switches() & 0x10u)) return;
-    // the PS user data in effect for the draw: the last values the command buffer set up to the draw's end
-    const uint32_t *end = rd<const uint32_t *>(st.cmd, 0x10);
-    uint32_t vlo = 0, vhi = 0, plo = 0, phi = 0;
-    if ((u3x_ring_state(st.cmd, end, &vlo, &vhi, &plo, &phi) & 12u) != 12u) { st.no_regs++; return; }
-    const uint8_t *table = reinterpret_cast<const uint8_t *>((uint64_t(phi) << 32) | plo);
-    if (!readable(base, table)) return;
-    uint8_t *at = rd<uint8_t *>(table, 8);
-    if (!readable(base, at)) return;
-    uint32_t *colour = reinterpret_cast<uint32_t *>(at + 0x148);
-    Buffer *b = nullptr;
-    for (int i = 0; i < BUFFERS; i++) if (st.buf[i].at == at) { b = &st.buf[i]; break; }
-    if (!b) { b = &st.buf[st.buf_next++ % BUFFERS]; b->at = at; b->written[0] = ~colour[0]; }
-    if (colour[0] != b->written[0] || colour[1] != b->written[1] || colour[2] != b->written[2])
-        for (int k = 0; k < 3; k++) b->original[k] = colour[k];   // the game wrote this buffer: its value is the original
-    for (int k = 0; k < 3; k++) {
-        const uint32_t o = (b->original[k] & 0x7fffffffu) ? b->original[k] : F_ONE;
-        b->written[k] = colour[k] = f_mul(o, rd<uint32_t>(st.block, 0x90 + 4 * k));
+// sub 6: before a submesh draw (r[1] the submesh)
+U3X_FN void before_draw(uintptr_t base, const uint64_t *r) {
+    st.patched = nullptr;
+    const uint8_t *drawable = st.drawable;
+    uint8_t *sm = reinterpret_cast<uint8_t *>(r[1]);
+    if (!drawable || !(n32_switches() & 0x10u) || !readable(base, sm)) return;
+    const uint8_t *first = rd<const uint8_t *>(drawable, 0x168);
+    const int32_t count = rd<int32_t>(drawable, 0x164);
+    if (sm < first || count <= 0 || uintptr_t(sm - first) >= uintptr_t(count) * SUBMESH_BYTES ||
+        uintptr_t(sm - first) % SUBMESH_BYTES)
+        return;   // not a submesh of the noted drawable
+    st.draws++;
+    const uint32_t d0 = rd<uint32_t>(sm, COLOUR_INPUT), d1 = rd<uint32_t>(sm, COLOUR_INPUT + 4),
+                   d2 = rd<uint32_t>(sm, COLOUR_INPUT + 8), d3 = rd<uint32_t>(sm, COLOUR_INPUT + 12);
+    const uint32_t stride = (d1 >> 16) & 0x3fffu, data_format = (d3 >> 15) & 0xfu, num_format = (d3 >> 12) & 7u;
+    // the colour of one vertex in the input's own layout: 16-bit floats x 4, 32-bit floats x 4 or 8-bit unorm x 4
+    uint32_t word[4], size;
+    const uint8_t *rgba = st.block + 0x90;
+    if (data_format == 12 && num_format == 7) {
+        size = 8;
+        word[0] = half_of(rd<uint32_t>(rgba, 0)) | (half_of(rd<uint32_t>(rgba, 4)) << 16);
+        word[1] = half_of(rd<uint32_t>(rgba, 8)) | (half_of(rd<uint32_t>(rgba, 12)) << 16);
+    } else if (data_format == 14 && num_format == 7) {
+        size = 16;
+        for (int k = 0; k < 4; k++) word[k] = rd<uint32_t>(rgba, 4 * k);
+    } else if (data_format == 10 && num_format == 0) {
+        size = 4;
+        word[0] = 0;
+        for (int k = 0; k < 4; k++) word[0] |= unorm8_of(rd<uint32_t>(rgba, 4 * k)) << (8 * k);
+    } else {
+        size = 0;
     }
+    if (!d0 || !size || stride < size || (stride & 3) || !d2 || d2 > 0x10000) {
+        st.skipped++;
+        st.skip_d1 = d1;
+        st.skip_d3 = d3;
+        return;
+    }
+    const uint32_t tag = FRAME_TAG;
+    uint8_t *mem = reinterpret_cast<FrameAllocFn>(base + FRAME_ALLOC)(uint64_t(d2) * stride, &tag, 16);
+    if (!readable(base, mem)) { st.skipped++; return; }
+    for (uint32_t v = 0; v < d2; v++)
+        for (uint32_t k = 0; k < size / 4; k++) at<uint32_t>(uintptr_t(mem) + uintptr_t(v) * stride + 4 * k) = word[k];
+    st.saved[0] = d0; st.saved[1] = d1; st.saved[2] = d2; st.saved[3] = d3;
+    const uint64_t a = reinterpret_cast<uintptr_t>(mem);
+    at<uint32_t>(uintptr_t(sm) + COLOUR_INPUT) = static_cast<uint32_t>(a);
+    at<uint32_t>(uintptr_t(sm) + COLOUR_INPUT + 4) = (d1 & 0xfffff000u) | static_cast<uint32_t>((a >> 32) & 0xfffu);
+    st.patched = sm;
     st.fixes++;
+}
+
+// sub 7: after the submesh draw: its own input 4 back
+U3X_FN void after_draw() {
+    uint8_t *sm = st.patched;
+    st.patched = nullptr;
+    if (!sm) return;
+    for (int k = 0; k < 4; k++) at<uint32_t>(uintptr_t(sm) + COLOUR_INPUT + 4 * k) = st.saved[k];
 }
 
 }  // namespace ring_tint
 
-// kind 244 sub 5: the spawner hook gave instance r[1] its tint
-extern "C" U3X_FN int u3x_ring_reg(uintptr_t base, const uint64_t *r) {
-    using namespace ring_tint;
-    st.registered++;
-    const uint8_t *in = reinterpret_cast<const uint8_t *>(r[1]);
-    if (!readable(base, in) || !tinted(in)) return 0;
-    const uint32_t g = rd<uint32_t>(in, 0);
-    int slot = -1;
-    for (int k = 0; k < SPAWNED; k++) {
-        if (st.inst[k] == reinterpret_cast<uintptr_t>(in)) { st.gen[k] = g; return 0; }
-        if (slot < 0 && !alive(base, k)) slot = k;
-    }
-    if (slot < 0) slot = static_cast<int>(st.next++ % SPAWNED);
-    st.inst[slot] = reinterpret_cast<uintptr_t>(in);
-    st.gen[slot] = g;
+// kind 244 sub 5: the spawner tint hook (the draw itself carries the colour, so it is only counted)
+extern "C" U3X_FN int u3x_ring_reg(uintptr_t, const uint64_t *) {
+    ring_tint::st.registered++;
     return 0;
 }
 
-// kind 244 sub 3 (before the geometry draw: r[1] the drawable, r[5] the command buffer) / sub 4 (after it)
+// kind 244 sub 3 / 4 (around the drawable update: r[1] the drawable), sub 6 / 7 (around a submesh draw: r[1] the submesh)
 extern "C" U3X_FN int u3x_ring_draw(uintptr_t base, const uint64_t *r) {
     using namespace ring_tint;
     if (!(n32_switches() & 8u)) return 0;
-    if (r[0] == 3) before_draw(base, r);
-    else after_draw(base);
+    if (r[0] == 3) before_update(base, r);
+    else if (r[0] == 6) before_draw(base, r);
+    else if (r[0] == 7) after_draw();
     return 0;
 }
 
-// once per frame: outside a net game the list is cleared; in one, a boot.log line every ~30 s when the counts changed
+// once per frame in a net game: a boot.log line every ~30 s when the counts changed (40 at most)
 extern "C" U3X_FN void u3x_ring_tick(uintptr_t base, Log log) {
     using namespace ring_tint;
-    if (!at<uint8_t>(base + NET_GAME)) {
-        for (int k = 0; k < SPAWNED; k++) st.inst[k] = 0;
-        st.armed = 0;
-        return;
-    }
+    if (!at<uint8_t>(base + NET_GAME)) return;
     if (!(n32_switches() & 8u) || ++st.frame % 1800u || st.lines >= 40 || !log) return;
-    if (st.draws == st.last_draws && st.fixes == st.last_fixes) return;
+    if (st.drawables == st.last_drawables && st.draws == st.last_draws && st.fixes == st.last_fixes) return;
+    st.last_drawables = st.drawables;
     st.last_draws = st.draws;
     st.last_fixes = st.fixes;
     st.lines++;
-    uint32_t live = 0;
-    for (int k = 0; k < SPAWNED; k++) live += alive(base, k) ? 1u : 0u;
     Line l;
-    l.s(t_ring).d(st.draws).s(t_fix).d(st.fixes).s(t_reg).d(st.registered).s(t_live).d(live).s(t_nore).d(st.no_regs);
+    l.s(t_ring).d(st.drawables).s(t_draw).d(st.draws).s(t_fix).d(st.fixes).s(t_skip).d(st.skipped).s(t_reg)
+        .d(st.registered);
+    if (st.skipped) l.s(t_last).x(st.skip_d1, 8).s(t_sp).x(st.skip_d3, 8);
     if (!(n32_switches() & 0x10u)) l.s(t_off);
     log(base, l.z());
 }

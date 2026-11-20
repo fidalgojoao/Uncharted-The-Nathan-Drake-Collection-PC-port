@@ -9988,7 +9988,7 @@ EXT static int n03_source(uintptr_t base,int32_t *event,ProfileState *s){
  *lan=keep;return done;}
 EXT static int n_kind(uintptr_t base,int kind,ProfileState *s,uint64_t *r){
  (void)s;if(!r||!base||kind!=244)return 0;
- if(r[0]==3||r[0]==4)return u3x_ring_draw(base,r);   /* v7.218 C++ ring tint (U3MP_N033=1/2 only) */
+ if(r[0]==3||r[0]==4||r[0]==6||r[0]==7)return u3x_ring_draw(base,r);   /* C++ ring tint: 3/4 around the drawable update, 6/7 around each submesh draw (v7.222) */
  if(r[0]==5)return u3x_ring_reg(base,r);   /* v7.218 C++ ring tint: particle spawner tint 0xec3b20 */
  if(r[0]==2){n21_log(base,r);return 0;}   /* fixer L n021 (diag, U3MP_LPROBE_LOG=1 only) */
  return n03_hdr(base,r);}
