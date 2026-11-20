@@ -202,7 +202,9 @@ int attach(uint8_t slot, uint32_t key, bool direct) {
         }
         field<uint32_t>(rec, 0x00) = key;
         field<uint8_t>(rec, 0x04) = 1;
-        field<uint8_t>(rec, 0x06) = direct ? 1 : 0;
+        // +0x0e is "relayed", not "direct": SendEvent 0x644ab0 queues to a record only when it is 0,
+        // else the player goes on the relay list that only the host's slot sends.
+        field<uint8_t>(rec, 0x06) = direct ? 0 : 1;
         field<uint32_t>(rec, 0x2c) = 0x0100007f;   // any non-zero address and port: the lag check needs them
         field<uint16_t>(rec, 0x30) = 1;
         field<int32_t>(rec, 0x34) = int32_t(key);
@@ -232,6 +234,7 @@ void detach(uint8_t slot) {
     fn.reset(reinterpret_cast<void *>(M));   // frees the queues, resets the sequence counters
     const uint64_t rec = record_address(i);
     field<uint8_t>(rec, 0x04) = 0;
+    field<uint8_t>(rec, 0x06) = 1;
     field<int32_t>(rec, 0x38) = 0;
     field<uint32_t>(rec, 0x00) = 0;
     peers[slot] = Peer{};
