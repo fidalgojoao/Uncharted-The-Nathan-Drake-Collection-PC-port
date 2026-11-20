@@ -283,19 +283,27 @@ long long resolution(std::string &data, int width, int height, bool move, std::s
     for (int i = 0; i < 4; ++i) packed_new += (char)((uint32_t)width >> (8 * i));
     for (int i = 0; i < 4; ++i) packed_new += (char)((uint32_t)height >> (8 * i));
     changed += replace_in(data, start, end, packed_old, packed_new);
-    // Uncharted 2 and 3 size their screen wipe from the render size; this makes the wipe use a fixed 1920x1080, the
-    // PS4's own size, so it still covers the screen.
-    std::vector<size_t> wipe = find_all(data, parse_pattern("48 8d 05 ???????? 8b 48 08 8b 40 0c c4 e1 fa 2a c0"), (size_t)-1);
-    if (wipe.size() == 1) {
-        std::string patch;
-        bytes_from_hex("b980070000b8380400000f1f00", patch);
-        data.replace(wipe[0], patch.size(), patch);
-        log += "Applied: screen wipe fixed at the PS4's 1920x1080 (at image offset " + hex_offset((long long)wipe[0]) +
-               ")\n";
-    } else if (!wipe.empty()) {
-        log += "Screen wipe fix NOT applied: its pattern occurs " + std::to_string(wipe.size()) +
-               " times in this game version\n";
-    }
+    // Code that reads the render size (lea rax,[settings]; mov ecx,[rax+8]; mov eax,[rax+0xc]) to size something on
+    // screen gets the PS4's own 1920x1080 instead (mov ecx,1920; mov eax,1080; nop): what it draws keeps its PS4 size
+    // at every render size. A pattern found more than once is left alone.
+    auto pin_ps4_size = [&](const char *pattern, const char *what) {
+        std::vector<size_t> at = find_all(data, parse_pattern(pattern), (size_t)-1);
+        if (at.size() == 1) {
+            std::string patch;
+            bytes_from_hex("b980070000b8380400000f1f00", patch);
+            data.replace(at[0], patch.size(), patch);
+            log += std::string("Applied: ") + what + " fixed at the PS4's 1920x1080 (at image offset " +
+                   hex_offset((long long)at[0]) + ")\n";
+        } else if (!at.empty()) {
+            log += std::string(what) + " fix NOT applied: its pattern occurs " + std::to_string(at.size()) +
+                   " times in this game version\n";
+        }
+    };
+    // Uncharted 2 and 3 size their screen wipe from the render size: it still covers the screen.
+    pin_ps4_size("48 8d 05 ???????? 8b 48 08 8b 40 0c c4 e1 fa 2a c0", "screen wipe");
+    // Uncharted 3 scales its aiming reticle by render size / 1920x1080 (exactly 1 on the PS4): it keeps one size.
+    pin_ps4_size("48 8d 05 ???????? 8b 48 08 8b 40 0c c5 f8 57 c0 c4 e1 fa 2a c9 c5 fa 10 15 ???????? c5 f2 59 ca c5 f2 5e 0d",
+                 "aiming reticle");
     const double factor = std::max(1.0, (double)((long long)width * height) / (double)(1920 * 1080));
     auto table_entry = [&](uint32_t id, uint32_t parent, uint64_t align, uint64_t min_size) {
         std::string key(8, '\0');
