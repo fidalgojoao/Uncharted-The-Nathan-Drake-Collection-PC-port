@@ -43315,6 +43315,9 @@ U3X_FN int64_t u3x_onb_s16(void *, uint8_t *ss) {
 namespace ring_tint {
 
 constexpr uintptr_t TERRITORY_CLASS = 0x167fe30, IMAGE_SIZE = 0x2214000, NET_GAME = 0x17d5c61;
+// The guest heap is what the runtime maps for the game: direct memory at 0x1000000000 and 0x1100000000, flexible memory
+// (stacks included) at 0x1200000000. A stale value above it (seen: 0x32460a8010) is not mapped and faults when read.
+constexpr uintptr_t HEAP_START = 0x1000000000ull, HEAP_END = 0x1300000000ull;
 constexpr uint32_t F_ONE = 0x3f800000u;
 constexpr int SPAWNED = 64, BUFFERS = 8;
 
@@ -43341,7 +43344,7 @@ U3X_RO const char t_ring[] = "U3MP ring: draws ", t_fix[] = " fixed ", t_reg[] =
     const uintptr_t v = reinterpret_cast<uintptr_t>(p);
     if (!v || (v & 7)) return false;
     if (base && v - base < IMAGE_SIZE) return true;
-    return v >= 0x1000000000ull && v < 0x800000000000ull;
+    return v >= HEAP_START && v < HEAP_END;
 }
 
 // a tint that is not white: a part below 0.95 or above 1.05
