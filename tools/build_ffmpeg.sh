@@ -16,13 +16,28 @@ version=8.1.1
 sha256=b6863adde98898f42602017462871b5f6333e65aec803fdd7a6308639c52edf3   # as MSYS2's recipe for 8.1.1
 # Windows form (C:/...): the .pc files carry it, and CLANG64's pkg-config and clang are Windows programs
 prefix=$(cygpath -m "$PWD/downloads/ffmpeg-$version-min")
-if [[ -f $prefix/bin/ffmpeg.exe && -f $prefix/lib/pkgconfig/libavcodec.pc ]] && grep -q "^prefix=$prefix\$" "$prefix/lib/pkgconfig/libavcodec.pc"; then
-    echo "$prefix/lib/pkgconfig"
-    exit 0
-fi
 msys=${MSYS2_ROOT:-/c/msys64}
 msys=${msys%/}
 [[ -d $msys/clang64/bin ]] && export PATH="$msys/clang64/bin:$msys/usr/bin:$PATH"
+
+# a kept build is used only while every DLL it loads still exists: its own, CLANG64's or Windows'. MSYS2 renamed
+# zlib's DLL (libz-1.dll -> zlib1.dll), and a build kept from before shipped without one (0.10.117)
+dlls_present() {
+    local file name
+    for file in "$prefix"/bin/ffmpeg.exe "$prefix"/bin/*.dll; do
+        while read -r name; do
+            [[ $name == api-ms-win-* || $name == ext-ms-win-* ]] && continue
+            [[ -f $prefix/bin/$name || -f $msys/clang64/bin/$name || -f /c/Windows/System32/$name ]] && continue
+            echo "the kept FFmpeg build needs $name, which is gone: building it again" >&2
+            return 1
+        done < <(llvm-objdump -p "$file" | sed -n 's/^ *DLL Name: //p' | tr -d '\r')
+    done
+}
+if [[ -f $prefix/bin/ffmpeg.exe && -f $prefix/lib/pkgconfig/libavcodec.pc ]] && grep -q "^prefix=$prefix\$" "$prefix/lib/pkgconfig/libavcodec.pc" &&
+    dlls_present; then
+    echo "$prefix/lib/pkgconfig"
+    exit 0
+fi
 
 source=downloads/ffmpeg-$version.tar.xz
 if [[ ! -s $source ]]; then
