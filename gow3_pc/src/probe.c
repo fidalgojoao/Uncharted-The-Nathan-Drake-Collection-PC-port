@@ -1612,7 +1612,21 @@ int main(int argc, char **argv) {
     }
 #endif
     protect(traps, round_page((import_count + 1) * 32), 5);
-    protect(image, round_page(size), 0);
+    /* gow3 21 Nov 2026: only the pages outside every segment become inaccessible. Making the whole image inaccessible
+     * first and then each segment accessible again left a moment in which a runtime thread already running (the GPU
+     * side) faulted on the game's data (a below-2-GiB start, read of image+0x1c0a480). */
+    for (uint64_t from = 0; from < round_page(size);) {
+        uint64_t next = round_page(size), end = 0;
+        int inside = 0;
+        for (uint64_t i = 0; i < ns; ++i) {
+            uint64_t a = segments[i].address, e = a + round_page(segments[i].size);
+            if (a <= from && from < e) { inside = 1; if (e > end) end = e; }
+            else if (a > from && a < next) next = a;
+        }
+        if (inside) { from = end; continue; }
+        protect(image + from, next - from, 0);
+        from = next;
+    }
     int executable_entry = 0;
     for (uint64_t i = 0; i < ns; ++i) {
         protect(image + segments[i].address, round_page(segments[i].size), (unsigned)segments[i].flags);

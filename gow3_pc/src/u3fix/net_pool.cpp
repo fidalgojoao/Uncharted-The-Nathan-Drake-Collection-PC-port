@@ -30,13 +30,17 @@ constexpr uint64_t kNewSize = 0x1000000;  // 16 MiB, as pool 0x14
 }  // namespace
 
 bool raise_net_process_pool(unsigned char *image, uint64_t size) {
-    // pool 0x14 (type 5, 16 MiB, align 0x80) followed by pool 0x15 (type 5, 343,040 bytes, align 0x80)
-    const PoolEntry want14{0x14, 5, 0x1000000, 0x80, 0}, want15{0x15, 5, kOldSize, 0x80, 0};
-    unsigned char pattern[64];
-    std::memcpy(pattern, &want14, 32);
-    std::memcpy(pattern + 32, &want15, 32);
-    for (uint64_t at = 0; at + sizeof(pattern) <= size; at += 8) {
-        if (std::memcmp(image + at, pattern, sizeof(pattern)) != 0) continue;
+    // pool 0x14 (type 5, 16 MiB, align 0x80) followed by pool 0x15 (type 5, 343,040 bytes, align 0x80). Only the first
+    // 24 bytes of each entry are compared: the last word is zero in the file but set when the image's relocations are
+    // applied, which happens before this runs (21 Nov 2026: compared with it, the pool was never found and never raised,
+    // and four-player matches ran out of it again)
+    auto is = [&](uint64_t at, uint32_t id, uint64_t bytes) {
+        PoolEntry e;
+        std::memcpy(&e, image + at, sizeof(e));
+        return e.id == id && e.type == 5 && e.size == bytes && e.align == 0x80;
+    };
+    for (uint64_t at = 0; at + 64 <= size; at += 8) {
+        if (!is(at, 0x14, 0x1000000) || !is(at + 32, 0x15, kOldSize)) continue;
         PoolEntry e;
         std::memcpy(&e, image + at + 32, sizeof(e));
         e.size = kNewSize;
