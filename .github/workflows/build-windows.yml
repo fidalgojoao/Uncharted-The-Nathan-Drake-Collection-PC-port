@@ -22,6 +22,12 @@ jobs:
         shell: msys2 {0}
     env:
       IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      # ccache reuses compiled objects in the launcher, the runtime and the importers. A new commit gets a new
+      # immutable cache entry (restore-keys picks the newest older one), so a stale cache can never win.
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_BASEDIR: ${{ github.workspace }}
+      CCACHE_COMPILERCHECK: content
+      CCACHE_MAXSIZE: 2G
     steps:
       # The sources keep their LF line endings (the runtime's patches are applied with git apply), and long paths
       # are allowed: some FidelityFX shader paths pass 260 characters inside the long checkout folder.
@@ -36,6 +42,17 @@ jobs:
         with:
           submodules: recursive
 
+      # Compiled objects shared by every C++ program in the package. The key is per commit, so a commit never
+      # overwrites another commit's cache; a new commit restores the newest older entry and ccache itself decides,
+      # from the compiler and the preprocessed source, which objects are still valid.
+      - name: Restore the compiler cache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: windows-clang64-ccache-v1-${{ github.sha }}
+          restore-keys: |
+            windows-clang64-ccache-v1-
+
       - name: MSYS2 CLANG64
         uses: msys2/setup-msys2@v2
         id: msys2
@@ -45,7 +62,7 @@ jobs:
           # ucrt64 binutils: GNU objdump for the Uncharted 3 import's Havok tables
           install: git patch curl make mingw-w64-ucrt-x86_64-binutils
           pacboy: >-
-            toolchain:p cmake:p ninja:p pkgconf:p python:p nasm:p
+            toolchain:p cmake:p ninja:p ccache:p pkgconf:p python:p nasm:p
             vulkan-headers:p vulkan-loader:p vulkan-memory-allocator:p glslang:p
             spirv-tools:p spirv-headers:p spirv-cross:p
             sdl3:p fmt:p boost:p robin-map:p xxhash:p zydis:p opus:p
@@ -57,6 +74,11 @@ jobs:
         with:
           path: downloads/ffmpeg-8.1.1-min
           key: ffmpeg-min-${{ hashFiles('tools/build_ffmpeg.sh') }}
+
+      - name: Compiler cache before the build
+        run: |
+          ccache --version
+          ccache --show-stats
 
       - name: Runtime
         run: |
@@ -92,7 +114,7 @@ jobs:
           files="$(cygpath -u "$RUNNER_TEMP")/private-files"
           git clone -q --depth 1 "https://x-access-token:${EXTRA_TOKEN}@github.com/${EXTRA_REPO}.git" "$files" > /dev/null 2>&1 ||
             { echo "::error::the private package files could not be fetched"; exit 1; }
-          clang++ -std=c++20 -O2 -municode -static "$files/apply.cpp" -lbcrypt -o "$files/apply.exe" > /dev/null 2>&1 ||
+          ccache clang++ -std=c++20 -O2 -municode -static "$files/apply.cpp" -lbcrypt -o "$files/apply.exe" > /dev/null 2>&1 ||
             { echo "::error::the private package files' apply program did not build"; exit 1; }
           "$files/apply.exe" "$(cygpath -w "$GITHUB_WORKSPACE")"
           rm -rf "$files"
@@ -101,6 +123,10 @@ jobs:
         run: |
           export MSYS2_ROOT=$(cygpath -u '${{ steps.msys2.outputs.msys2-location }}')
           tools/package_windows.sh
+
+      - name: Compiler cache after the build
+        if: always()
+        run: ccache --show-stats || true
 
       # A pull request from the owner or a collaborator (or a run started by hand): the package as a download on the
       # run's page for testing, kept 7 days. Other people's pull requests build but upload nothing. The trigger stays

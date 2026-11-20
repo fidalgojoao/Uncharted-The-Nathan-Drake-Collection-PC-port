@@ -24,6 +24,15 @@ msys=${MSYS2_ROOT:-/c/msys64}
 msys=${msys%/}   # MSYS2 at "/" (GitHub's runner) would otherwise make "//usr", a network path
 [[ -d $msys/clang64/bin ]] && export PATH="$msys/clang64/bin:$PATH"
 small_ffmpeg=downloads/ffmpeg-8.1.1-min/bin   # tools/build_ffmpeg.sh: the decoders the port uses, nothing else
+# ccache is optional: the CI installs it and restores .ccache, a local build without it compiles as before. The C++
+# programs compile one source at a time, so ccache can reuse the objects that did not change.
+CXX=(clang++)
+CMAKE_CACHE=()
+if command -v ccache >/dev/null; then
+    CXX=(ccache clang++)
+    CMAKE_CACHE=(-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache)
+fi
+obj=dist/stage/obj
 
 need() {   # need <file> <how to make it>
     [[ -f $1 ]] || { echo "Missing $1: $2" >&2; exit 1; }
@@ -78,14 +87,21 @@ u2_import() {   # Uncharted 2's importer and its list of what it makes (it reads
     # u2import.exe (u2mp/patcher/importer): the import, the menu overlay and the launcher's version check; it links the
     # Uncharted 3 importer's helpers and converters (from u3mp/patcher: the bank envelope table; u3mp/bin: ffmpeg, objdump)
     local fx=u3mp/patcher/tools/fixes im=u3mp/patcher/importer u2=u2mp/patcher/importer
-    clang++ -std=c++20 -O2 -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp -I"$u2" -I"$im" -I"$fx/dctools" -Ilauncher/native \
-        "$u2/u2import.cpp" "$u2/sources.cpp" "$u2/sound.cpp" "$u2/registry.cpp" "$u2/texts.cpp" "$u2/levels.cpp" "$u2/stage.cpp" \
+    local flags=(-std=c++20 -O2 -municode -I"$u2" -I"$im" -I"$fx/dctools" -Ilauncher/native)
+    local dir=$obj/u2import s o objs=()
+    mkdir -p "$dir"
+    for s in "$u2/u2import.cpp" "$u2/sources.cpp" "$u2/sound.cpp" "$u2/registry.cpp" "$u2/texts.cpp" "$u2/levels.cpp" "$u2/stage.cpp" \
         "$u2/netimg.cpp" "$u2/netpatch.cpp" "$u2/actor.cpp" "$u2/actorparts.cpp" "$u2/actors.cpp" "$u2/havok.cpp" "$u2/twin.cpp" \
         "$u2/overlay.cpp" "$u2/stagecheck.cpp" "$u2/validate.cpp" "$u2/devtools.cpp" "$im/common.cpp" "$fx/dctools/psarc.cpp" "$fx/dctools/dc.cpp" "$fx/dctools/proc.cpp" "$fx/dctools/fixlib.cpp" \
         "$fx/sound-banks/convert_banks.cpp" "$fx/dctools/ndpak.cpp" "$fx/dctools/ps4writer.cpp" "$fx/dctools/ps4ingame.cpp" \
         "$fx/dctools/ps4stage.cpp" "$fx/dctools/stageplan.cpp" "$fx/dctools/ps3bg.cpp" "$fx/dctools/visinfo.cpp" "$fx/dctools/collision.cpp" \
         "$fx/dctools/texcodec.cpp" "$fx/dctools/hkconvert.cpp" "$fx/dctools/ps3fp.cpp" "$fx/dctools/ps4mats.cpp" "$fx/dctools/ps4actor.cpp" \
-        "$fx/dctools/anim.cpp" "$fx/dctools/skel.cpp" "$fx/dctools/fgcoll.cpp" "$fx/dctools/dcconv.cpp" \
+        "$fx/dctools/anim.cpp" "$fx/dctools/skel.cpp" "$fx/dctools/fgcoll.cpp" "$fx/dctools/dcconv.cpp"; do
+        o=$dir/${s//\//_}.o
+        "${CXX[@]}" "${flags[@]}" -c "$s" -o "$o"
+        objs+=("$o")
+    done
+    "${CXX[@]}" -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp "${objs[@]}" \
         -lbcrypt -lshell32 -lole32 -luuid -ladvapi32 -o "$out/u2mp/bin/u2import.exe"
 }
 
@@ -115,8 +131,10 @@ u3_import() {   # Uncharted 3's importer, its recipe and tools, and the newest m
     # u3fix.exe: the recipe steps written in C++ (the list is in tools/fixes/dctools/u3fix.cpp); the steps run it from
     # u3mp/bin, which the importer puts on PATH. Static, no DLL of ours. Without it those steps fail: stop here.
     local fx=u3mp/patcher/tools/fixes
-    clang++ -std=c++20 -O2 -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp -I"$fx/dctools" -Ilauncher/native \
-        "$fx/dctools/u3fix.cpp" "$fx/dctools/fixlib.cpp" "$fx/dctools/dc.cpp" "$fx/dctools/eula_box.cpp" "$fx/no-lab/remove_lab.cpp" \
+    local flags=(-std=c++20 -O2 -municode -I"$fx/dctools" -Ilauncher/native)
+    local dir=$obj/u3fix s o objs=()
+    mkdir -p "$dir"
+    for s in "$fx/dctools/u3fix.cpp" "$fx/dctools/fixlib.cpp" "$fx/dctools/dc.cpp" "$fx/dctools/eula_box.cpp" "$fx/no-lab/remove_lab.cpp" \
         "$fx/no-rpcn-menu/remove_rpcn_page.cpp" "$fx/netgame-order/netgame_order.cpp" \
         "$fx/enemy-stall/apply_ss_option_defaults.cpp" \
         "$fx/coop-chars/apply_coop_desc_fix.cpp" "$fx/coop-tab/fix_vram_gap.cpp" "$fx/airport-igc3/airport_igc3.cpp" \
@@ -130,14 +148,26 @@ u3_import() {   # Uncharted 3's importer, its recipe and tools, and the newest m
         "$fx/dctools/dcconv.cpp" "$fx/dcconv/convert_dc1.cpp" "$fx/dcconv/apply_recipes.cpp" "$fx/sound-banks/convert_banks.cpp" \
         "$fx/part-emitters/build_part_modules.cpp" "$fx/audio-defs/audio_defs.cpp" "$fx/music-streams/copy_music.cpp" "$fx/actor33/actors_hk.cpp" "$fx/coop-vo/apply_vo.cpp" \
         "$fx/coop-voice2/apply_coop_vox.cpp" "$fx/dctools/net_edits.cpp" \
-        "$fx/coop-audit/apply_shade_npc_paks.cpp" "$fx/inline/facility_collapse.cpp" "$fx/eula-batch/make_eula.cpp" "$fx/wall-emblem/make_emblem.cpp" "$fx/outdoor-jacket/apply_outdoor_jacket.cpp" "$fx/dctools/lab_reg.cpp" "$fx/borneo/borneo_fixes.cpp" "$fx/world-levels/world_levels.cpp" "$fx/london/apply_london.cpp" "$fx/map-lighting/apply_map_lighting.cpp" "$fx/map-colors/apply_mapcolor.cpp" "$fx/map-colors2/apply_mapcolor2.cpp" "$fx/hud-mod-mips/limit_mod_mips.cpp" \
-        -o "$out/u3mp/bin/u3fix.exe"
+        "$fx/coop-audit/apply_shade_npc_paks.cpp" "$fx/inline/facility_collapse.cpp" "$fx/eula-batch/make_eula.cpp" "$fx/wall-emblem/make_emblem.cpp" "$fx/outdoor-jacket/apply_outdoor_jacket.cpp" "$fx/dctools/lab_reg.cpp" "$fx/borneo/borneo_fixes.cpp" "$fx/world-levels/world_levels.cpp" "$fx/london/apply_london.cpp" "$fx/map-lighting/apply_map_lighting.cpp" "$fx/map-colors/apply_mapcolor.cpp" "$fx/map-colors2/apply_mapcolor2.cpp" "$fx/hud-mod-mips/limit_mod_mips.cpp"; do
+        o=$dir/${s//\//_}.o
+        "${CXX[@]}" "${flags[@]}" -c "$s" -o "$o"
+        objs+=("$o")
+    done
+    "${CXX[@]}" -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp "${objs[@]}" -o "$out/u3mp/bin/u3fix.exe"
     # u3import.exe: the import the launcher runs (u3mp/patcher/importer: the image, the recipe driver, staged updates);
     # it links the launcher's own prepare / module link code for the base image
     local im=u3mp/patcher/importer
-    clang++ -std=c++20 -O2 -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp -I"$im" -I"$fx/dctools" -Ilauncher/native \
-        "$im/u3import.cpp" "$im/recipe.cpp" "$im/mpimage.cpp" "$im/ps3keep.cpp" "$im/common.cpp" "$fx/dctools/psarc.cpp" "$fx/dctools/dc.cpp" "$fx/dctools/fixlib.cpp" \
-        launcher/native/prepare.cpp launcher/native/link.cpp launcher/native/system.cpp \
+    flags=(-std=c++20 -O2 -municode -I"$im" -I"$fx/dctools" -Ilauncher/native)
+    dir=$obj/u3import
+    objs=()
+    mkdir -p "$dir"
+    for s in "$im/u3import.cpp" "$im/recipe.cpp" "$im/mpimage.cpp" "$im/ps3keep.cpp" "$im/common.cpp" "$fx/dctools/psarc.cpp" "$fx/dctools/dc.cpp" "$fx/dctools/fixlib.cpp" \
+        launcher/native/prepare.cpp launcher/native/link.cpp launcher/native/system.cpp; do
+        o=$dir/${s//\//_}.o
+        "${CXX[@]}" "${flags[@]}" -c "$s" -o "$o"
+        objs+=("$o")
+    done
+    "${CXX[@]}" -municode -static -s -Wl,--gc-sections -Wl,--no-insert-timestamp "${objs[@]}" \
         -lbcrypt -lshell32 -lole32 -luuid -ladvapi32 -o "$out/u3mp/bin/u3import.exe"
     # ffmpeg (the EULA pages) and, when installed, GNU objdump (the characters' Havok
     # tables; mingw-w64-ucrt-x86_64-binutils: without it the import skips that step)
@@ -179,7 +209,8 @@ launcher_core() {   # the launcher's native code: its core, the game starter, th
 
 starter() {   # Uncharted Launcher.exe with the launcher's icon
     windres tools/windows_starter/starter.rc -O coff -o dist/stage/starter.res.o
-    clang++ -O2 -std=c++17 -municode -mwindows -static -s tools/windows_starter/starter.cpp dist/stage/starter.res.o \
+    "${CXX[@]}" -O2 -std=c++17 -municode -c tools/windows_starter/starter.cpp -o dist/stage/starter.o
+    "${CXX[@]}" -municode -mwindows -static -s dist/stage/starter.o dist/stage/starter.res.o \
         -o "$out/Uncharted Launcher.exe"
 }
 
@@ -188,7 +219,7 @@ qt_window() {
     need "$msys/clang64/bin/windeployqt6.exe" 'install Qt 6 (pacman -S mingw-w64-clang-x86_64-qt6-declarative)'
     local build=dist/stage/qt-build win=$out/launcher-qt
     cmake -S launcher-qt -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ > /dev/null
+        -DCMAKE_CXX_COMPILER=clang++ "${CMAKE_CACHE[@]}" > /dev/null
     ninja -C "$build" UnchartedLauncher > "$build.log" 2>&1 || { tail -40 "$build.log" >&2; exit 1; }
     mkdir -p "$win"
     llvm-strip -o "$win/UnchartedLauncher.exe" "$build/UnchartedLauncher.exe"
@@ -340,7 +371,7 @@ nothing_from_games
 
 rm -rf dist/Uncharted-windows dist/Uncharted-windows.zip
 # the zip: tools/mkzip.cpp (zlib from CLANG64, linked statically), a build tool only: it does not ship
-clang++ -std=c++17 -O2 -municode -static -s -o dist/stage/mkzip.exe tools/mkzip.cpp -lz
+"${CXX[@]}" -std=c++17 -O2 -municode -static -s -o dist/stage/mkzip.exe tools/mkzip.cpp -lz
 dist/stage/mkzip.exe dist/Uncharted-windows.zip "$out"
 mv "$out" dist/Uncharted-windows
 du -sh dist/Uncharted-windows dist/Uncharted-windows.zip
