@@ -55,9 +55,32 @@ rm -rf -- dist/stage
 mkdir -p "$out/gow3_pc/out" "$out/tools" "$out/launcher/assets" "$out/launcher/native" \
     "$out/analysis/uncharted-user" "$lic"
 
-# the DLLs a program loads from MSYS2 or the small FFmpeg, as ldd lists them
+# the DLLs a program loads that Windows does not have: the small FFmpeg's own, every other one from CLANG64. By name,
+# not by the folder ldd found it in: ldd takes the first one in PATH, and 0.10.117 shipped without libz-1.dll (ffmpeg
+# and the runtime's avcodec need it) because the runner had UCRT64's first. A DLL that is in neither stops the package.
 shipped_dlls() {
-    ldd "$1" | awk '/clang64|ffmpeg-8\.1\.1-min\// {print $3}' | sort -u
+    local listed name
+    # those two first, so ldd also lists what their DLLs load (Windows' API sets have no file: ldd cannot find them)
+    listed=$(PATH="$small_ffmpeg:$msys/clang64/bin:$PATH" ldd "$1") || { echo "ldd failed on $1" >&2; return 1; }
+    if grep 'not found' <<< "$listed" | grep -qv '^\s*\(api\|ext\)-ms-win-'; then
+        echo "$1 needs DLLs that are not found:" >&2
+        grep 'not found' <<< "$listed" | grep -v '^\s*\(api\|ext\)-ms-win-' >&2
+        return 1
+    fi
+    while read -r name; do
+        if [[ -f $small_ffmpeg/$name ]]; then echo "$small_ffmpeg/$name"
+        elif [[ -f $msys/clang64/bin/$name ]]; then echo "$msys/clang64/bin/$name"
+        else echo "$1 needs $name, which is neither in the small FFmpeg nor in CLANG64" >&2; return 1
+        fi
+    done < <(awk '$2 == "=>" && tolower($3) !~ /^\/c\/windows\// && tolower($3) ~ /\.dll$/ && tolower($1) != "vulkan-1.dll" \
+                  {print $1}' <<< "$listed" | sort -u)   # Vulkan's loader is the graphics driver's, never ours
+}
+
+# copy_dlls <program> <folder>: shipped_dlls into the folder (a failure stops the package)
+copy_dlls() {
+    local dlls dll
+    dlls=$(shipped_dlls "$1")
+    while read -r dll; do [[ -n $dll ]] && cp "$dll" "$2/"; done <<< "$dlls"
 }
 
 # MSYS2 files that ship: licenses\ covers their packages (msys2_licenses at the end)
@@ -76,7 +99,7 @@ drop_caches() {
 runtime() {   # the game runtime, without debug information, and what it loads
     llvm-strip --strip-debug -o "$out/gow3_pc/out/gow3-probe.exe" gow3_pc/out/gow3-probe.exe
     local dll
-    while read -r dll; do cp "$dll" "$out/gow3_pc/out/"; done < <(shipped_dlls gow3_pc/out/gow3-probe.exe)
+    copy_dlls gow3_pc/out/gow3-probe.exe "$out/gow3_pc/out"
     for dll in "$out"/gow3_pc/out/*.dll; do note_msys_file clang64 "$dll"; done
 }
 
@@ -173,7 +196,7 @@ u3_import() {   # Uncharted 3's importer, its recipe and tools, and the newest m
     # tables; mingw-w64-ucrt-x86_64-binutils: without it the import skips that step)
     local dll
     cp "$small_ffmpeg/ffmpeg.exe" "$out/u3mp/bin/"
-    while read -r dll; do cp "$dll" "$out/u3mp/bin/"; done < <(shipped_dlls "$small_ffmpeg/ffmpeg.exe")
+    copy_dlls "$small_ffmpeg/ffmpeg.exe" "$out/u3mp/bin"
     for dll in "$out"/u3mp/bin/*.dll; do note_msys_file clang64 "$dll"; done
     local objdump=$msys/ucrt64/bin/objdump.exe
     if [[ -f $objdump ]]; then
