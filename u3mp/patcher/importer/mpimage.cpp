@@ -509,66 +509,38 @@ Bytes ps4_elf(const Bytes &raw) {
     return out;
 }
 
-// ------------------------------------------------------------------------------------------------ 3b. post-link fixes
-// Small fixes on top of the linked helper image, keyed to the release image they were made for (build.json
-// image_sha256). Each entry checks the bytes it replaces first, so a different helper build is never touched.
-// Offsets are guest image offsets (file offset = G3 image start + offset). The caves at 0x2052000/0x2052100 are free,
-// zero-filled space in the menu shell's R+X segment.
+// ------------------------------------------------------------------------------------------------ 3b. game-code fixes
+// Small fixes of the retail game's own code (below the helper, so they hold for every helper build), applied on top of
+// the linked image. Each entry checks the bytes it replaces first; any other bytes stop the build. Offsets are guest
+// image offsets (file offset = G3 image start + offset). The helper-code fixes made here for v7.217 (default-spawner
+// tag value at +8, the cash popup's position / local offset / binding, the ring-handle range check) are part of the
+// helper source since v7.218.
 namespace {
-struct PostLinkPatch {
+struct GameCodeFix {
     uint64_t at;
     const char *old_hex, *new_hex, *what;
 };
-const char *const POST_LINK_FOR = "a3ddf21851d0cc70bec269157ed0cff664e53854aa94dc3251f3cd4f68ea7290";   // v7.217
-const PostLinkPatch POST_LINK_PATCHES[] = {
-    // Coop Arena on Village crashed on load (read fault at 0x20adeeb): the default-spawner tag check read the tag's value
-    // pointer at entry +4 (PS3 layout); PS4 tag values hold it at +8 (the helper source reads +8 since 2026-11-20).
-    {0x20adee5, "04", "08", "default-spawner tag value pointer at +8"},
-    // Coop kill cash popup: the helper's ShowMoney copied the NPC bound frame's local translation into the HUD entry
-    // (+0x40), pushing the "$X" popup off screen. Zero the local offset.
-    {0x2087250, "44895b404489634444896b4844897b4c", "0f57c00f1143400f1f80000000006690", "cash popup: zero local offset"},
-    // ShowMoney: take the popup position from the attack info's victim position (+0x20) unless +0x10 is the victim's
-    // (its w repeats y and it is not zero), instead of always the killer's.
-    {0x2086ff6, "498d5720498d7f244983c728", "e905b0fcff90909090909090", "cash popup: jump to position select"},
-    {0x2052000, "00000000000000000000000000000000000000000000000000000000000000000000000000000000""00",
-     "418b7f14413b7f1c750e418b7f1085ff7406498d5710eb04498d5720488d7a044c8d7a08e9d94f0300", "cash popup: position select"},
+const GameCodeFix GAME_CODE_FIXES[] = {
     // Cash popup colour: the PS4 HUD draw maps colour byte 0 to green and byte 1 to blue, so the PS3 green 0x55ff55 came
     // out blue. Use 0x0055ff (the immediate of the HUD popup draw's colour load).
     {0xc3655d, "55ff55", "ff5500", "cash popup: green colour"},
-    // ShowMoney: do not bind the popup to the killer's object; the HUD re-reads a bound object's locator every frame,
-    // which made the popup follow the player.
-    {0x208720b, "8b55a08953088b55a489530c", "31d289530889530c0f1f4000", "cash popup: no object binding"},
-    // Crash at match / round start (read faults at 0x2100f1d and in this check at 0x2052100): the zone-ring colour fix
-    // (n033) resolves particle handles of territories that died at match or round start; their memory now holds floats
-    // (1.0 = 0x3f800000, -1.0 = 0xbf800000), read as the handle's slot pointer and then as the object pointer. Both
-    // levels are checked before they are read: 8-byte aligned and inside the game image (base taken from this code's
-    // own address) or the guest heap [0x1000000000, 0x800000000000); anything else = no object, the ring keeps its
-    // colour. In: rax = slot pointer, ecx = generation; returns the object or 0 (pops the caller's rbp).
-    {0x2100ef2, "488b104881", "e90912f5ff", "handle check: jump to range check"},
-    {0x2052100,
-     "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-     "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-     "4c8d05f9defafd4889c6e81d0000007517488b104889d6e810000000750a31c0390a480f44c25dc331c05dc340f6c60775314989f1"
-     "4d29c14981f900402102721e49ba00000000100000004c39d6721349ba00000000008000004c39d673044531c9c34183c901c3",
-     "handle check: range check of both pointers"},
 };
 
-// returns how many fixes were applied (0 when the image is not the release they were made for)
-int apply_post_link(Bytes &image, const std::string &release_sha, const LogFn &lg) {
-    if (release_sha != POST_LINK_FOR) return 0;
+// returns how many fixes were applied
+int apply_game_code_fixes(Bytes &image, const LogFn &lg) {
     const G3Layout p = parse_g3(image);
-    for (const PostLinkPatch &f : POST_LINK_PATCHES) {
+    for (const GameCodeFix &f : GAME_CODE_FIXES) {
         const Bytes old = unhex(f.old_hex), nw = unhex(f.new_hex);
         const size_t at = p.imagepos + size_t(f.at);
         if (old.size() != nw.size() || at + old.size() > image.size() || !std::equal(old.begin(), old.end(), image.begin() + std::ptrdiff_t(at)))
-            throw ImageError(fmt("post-link fix '%s': unexpected bytes at image offset %#llx", f.what, (unsigned long long)f.at));
+            throw ImageError(fmt("game-code fix '%s': unexpected bytes at image offset %#llx", f.what, (unsigned long long)f.at));
     }
-    for (const PostLinkPatch &f : POST_LINK_PATCHES) {
+    for (const GameCodeFix &f : GAME_CODE_FIXES) {
         const Bytes nw = unhex(f.new_hex);
         std::copy(nw.begin(), nw.end(), image.begin() + std::ptrdiff_t(p.imagepos + size_t(f.at)));
     }
-    lg(fmt("  post-link fixes: %d applied", int(std::size(POST_LINK_PATCHES))));
-    return int(std::size(POST_LINK_PATCHES));
+    lg(fmt("  game-code fixes: %d applied", int(std::size(GAME_CODE_FIXES))));
+    return int(std::size(GAME_CODE_FIXES));
 }
 }  // namespace
 
@@ -603,7 +575,7 @@ Value build_image(const fs::path &patcher, const fs::path &game, const fs::path 
     if (digest != text_of(b.info, "image_sha256"))
         throw ImageError(fmt("the linked image differs from the v%s release (sha256 %s..., expected %s...)", version.c_str(), digest.substr(0, 12).c_str(),
                              text_of(b.info, "image_sha256").substr(0, 12).c_str()));
-    apply_post_link(image, digest, lg);
+    apply_game_code_fixes(image, lg);
     const std::string k = with_keys(image, ps3_elf, out / "boot-linked.bin", lg);
     std::error_code ec;
     if (k == "none" && fs::is_regular_file(out / "boot-linked.bin", ec)) {

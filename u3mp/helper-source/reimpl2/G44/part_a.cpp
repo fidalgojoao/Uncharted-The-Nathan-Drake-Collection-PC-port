@@ -208,9 +208,17 @@ extern "C" U3X_FN void u3x_kill_popup(uintptr_t base, void *s, uint8_t *np, uint
     // the placement frame: the character's, at the kill position when moved, raised by 1.5
     uint32_t frame[g44a::FRAME_WORDS];
     for (int i = 0; i < g44a::FRAME_WORDS; i++) frame[i] = rd<uint32_t>(source, g44a::CHARACTER_FRAME + 4 * i);
-    if (moved)
-        for (int i = 0; i < 3; i++) frame[8 + i] = rd<uint32_t>(info, 0x20 + 4 * i);
+    if (moved) {
+        // v7.218 (from the v7.217 post-link fix): the victim's position is the attack info's +0x10 when that vector is
+        // the victim's (its w repeats its y and its x is not 0), else +0x20
+        const uintptr_t at_info = rd<uint32_t>(info, 0x14) == rd<uint32_t>(info, 0x1c) && rd<uint32_t>(info, 0x10) ? 0x10 : 0x20;
+        for (int i = 0; i < 3; i++) frame[8 + i] = rd<uint32_t>(info, at_info + 4 * i);
+    }
     frame[9] = f_add(frame[9], g44a::F_ONE_AND_HALF);
+    // v7.218 (from the v7.217 post-link fix): the popup is not bound to the character (words 2..3, which the HUD would
+    // follow every frame) and has no local offset (words 16..19, which pushed it off screen)
+    frame[2] = frame[3] = 0;
+    for (int i = 16; i < 20; i++) frame[i] = 0;
 
     for (int k = 0; k < g44a::POPUP_SLOT_COUNT; k++) {
         uint8_t *slot = owner + g44a::POPUP_SLOTS + g44a::POPUP_SLOT_SIZE * k;

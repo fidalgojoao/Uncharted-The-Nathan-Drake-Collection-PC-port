@@ -219,6 +219,45 @@ extern "C" U3X_FN void u3x_emblem_editor(uintptr_t b, void *s) {
     u3h_emb_bind(b, s);
 }
 
+// ---- port (v7.214): emblem life-cycle notes in boot.log ("U3MP online: custom game: emblem ...")
+
+extern "C" void u3h_cg_log(const char *text, int32_t value);
+extern "C" uint32_t *u3h_emb_wall_diag(void);
+U3X_RO const char emb_note_again[] = "emblem: menus without the editor emblem, asked again ";
+U3X_RO const char emb_note_mode[] = "emblem: manager mode (1 menus / editor, 0 match / players) ";
+U3X_RO const char emb_note_hand[] = "emblem: player emblems handed over so far ";
+U3X_RO const char emb_note_look[] = "emblem: character tables written so far ";
+U3X_RO const char emb_note_dds[] = "emblem: layer images that could not be read so far ";
+U3X_RO const char emb_note_wall[] = "emblem: wall objects filled so far ";
+U3X_RO const char emb_note_wallp[] = "emblem: wall objects given a player's emblem so far ";
+U3X_BSS uint32_t emb_notes_left;   // notes of the 'asked again' kind still allowed (set on each mode change)
+U3X_BSS uint8_t emb_mode_seen;     // the manager mode + 1 last seen, 0 = none yet
+
+U3X_FN void emblem_note(const char *text, int32_t value) {
+    if (text == emb_note_again) {
+        if (emb_notes_left == 0) return;
+        emb_notes_left -= 1;
+    }
+    u3h_cg_log(text, value);
+}
+
+// a change of the manager mode (the game's match setup 0x66b510 / match end 0x66b090) is noted with the counters of
+// the phase that ended, so a test log shows whether the match composed player emblems and filled tables
+U3X_FN void emblem_mode_watch(uintptr_t b) {
+    using namespace g58b;
+    const uint8_t mode = fld<uint8_t>(b + IMG_EM + EM_MODE);
+    if (emb_mode_seen == static_cast<uint8_t>(mode + 1)) return;
+    emb_mode_seen = static_cast<uint8_t>(mode + 1);
+    emb_notes_left = 4;
+    const uint32_t *ew = u3h_emb_wall_diag();
+    u3h_cg_log(emb_note_mode, mode);
+    u3h_cg_log(emb_note_hand, static_cast<int32_t>(ec()[121]));
+    u3h_cg_log(emb_note_look, static_cast<int32_t>(ec()[119]));
+    u3h_cg_log(emb_note_dds, static_cast<int32_t>(ec()[123]));
+    u3h_cg_log(emb_note_wall, static_cast<int32_t>(ew[1]));
+    u3h_cg_log(emb_note_wallp, static_cast<int32_t>(ec()[147]));
+}
+
 // ---- per-frame update (spec 4.8)
 
 extern "C" U3X_FN void u3x_emblem_update(uintptr_t b, void *s) {
@@ -241,7 +280,15 @@ extern "C" U3X_FN void u3x_emblem_update(uintptr_t b, void *s) {
         u3x_emblem_editor(b, s);
     }
     set_flag(0);
-    if (fld<uint64_t>(em + EM_ED_SLOTS) == 0) return;
+    if (fld<uint64_t>(em + EM_ED_SLOTS) == 0) {
+        // port (v7.214): back in the menus after a match the editor records are gone (NetShutdown freed them, the
+        // match setup emptied the slots) and nothing asks again: the PS3 menu pages ask on their event 9, which the PS4
+        // lobby does not send. Ask for the editor emblem again (the countdown first, so the request is a fresh one).
+        fld<int32_t>(em + EM_COUNTDOWN) = 0;
+        u3x_emblem_editor(b, s);
+        emblem_note(emb_note_again, 0);
+        return;
+    }
 
     int32_t count = fld<int32_t>(em + EM_COUNTDOWN);
     if (count > 0) fld<int32_t>(em + EM_COUNTDOWN) = --count;
@@ -310,6 +357,7 @@ extern "C" U3X_FN void u3x_emblem_tick(uintptr_t b, void *s) {
     u3h_emb_frame_parts(b, s, 1);
     u3x_emblem_sweep(b);
     if (fld<uint8_t>(b + IMG_MP_ACTIVE) == 0) return;
+    emblem_mode_watch(b);
     u3x_emblem_update(b, s);
     u3h_emb_frame_parts(b, s, 2);
     ec()[126] += 1;

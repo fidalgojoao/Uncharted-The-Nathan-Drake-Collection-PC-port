@@ -136,6 +136,20 @@ extern "C" U3X_FN int u3x_emblem_look(uintptr_t b, const uint64_t *regs) {
     if (ec[0] & 0x4000u) return 0;   // emblems switched off
     const uint8_t *obj = reinterpret_cast<const uint8_t *>(regs[5]);
     if (!obj) return 1;
+    {
+        const uint32_t cls = rd<uint32_t>(obj, 0x30);
+        if ((cls == 0x2db62a42u || cls == 0xb95beddbu) && at<int32_t>(b + NET_STATE) == 2) {
+            // port (v7.217): in a match, a wall-emblem actor (NdSimpleObject). The wall walk (G57 part B) fills its
+            // table with the PS3 choice (walls +0x7f0, boards +0x7e8). What PS3 does per filled instance texture
+            // (f_854140: the object's instance-texture count +0x194 + 1 after the last table) is done here: the game set
+            // obj+0x258 to 0 just before this call and copies it into every render instance's +0xd4 right after it; at 0
+            // the overlay in the table is not drawn. Characters get theirs from the game's own tint step. In the menus
+            // these classes take the editor pair below like before (the lobby banner is one; v7.216 left it blank).
+            const uint8_t *t0 = rd<const uint8_t *>(obj, 0x240);
+            if (t0 && rd<uint64_t>(t0, 8) != 0) *reinterpret_cast<uint32_t *>(const_cast<uint8_t *>(obj) + 0x258) += 1;
+            return 1;
+        }
+    }
 
     // the records for tables 0..3
     const uint8_t *em = reinterpret_cast<const uint8_t *>(b + EM);
