@@ -12,7 +12,9 @@
 //     its scalar fields are then overwritten with the converted PS3 values: the match rules are PS3's (score / time
 //     limits, Classic / Hardcore flags and loadouts: Hardcore stays Hardcore as on PS3).
 //   * a netgame the PC lacks is converted from PS3 (scalars by the field map, the +0x74 hero records as
-//     f0670de8 -> 3 x 8b617b51); any other pointer field stops the step.
+//     f0670de8 -> 3 x 8b617b51). When it has other sub-structures (wave lists, tuning: the same mode on another map),
+//     a netgame the PC has whose PS3 sub-structures hold the same data (followed through their pointers) gives the
+//     start of its PS4 record, so the PS4 sub-structures are shared; without such a netgame the step stops.
 //   * PC-only netgames (old PS4-retail Hardcore, the lab-custom-* TDM entries, old Lab Dodgeball, ...) are dropped.
 //   * a PS3 map the map list lacks gets a map-list entry: +0x94 = 1 (not listed) when the PC has no paks for it (its
 //     main level is not in overlay-r3's pak23_ps4.txt), else 0; its netgames keep their PS3 indices. PS3's +0x14
@@ -121,6 +123,38 @@ struct LabInfo {
     std::set<uint32_t> names;
 };
 
+// whether two objects of one DC module hold the same data: same size and type word, equal values, pointers followed
+// (an object ends where the next object - a symbol value or pointer target - begins)
+class SameData {
+public:
+    explicit SameData(const Dc &c) : c_(c) {
+        std::set<uint64_t> s;
+        for (const Sym &y : c.syms) s.insert(y.off);
+        for (uint64_t p : c.ptrs) s.insert(c.ptr(p));
+        starts_.assign(s.begin(), s.end());
+    }
+    bool operator()(uint64_t x, uint64_t y, int depth = 0) const {
+        if (x == y) return true;
+        if (depth > 16 || x < 4 || y < 4 || c_.u32(x - 4) != c_.u32(y - 4)) return false;
+        const uint64_t nx = end(x) - x, ny = end(y) - y;
+        if (nx != ny) return false;
+        for (uint64_t k = 0; k + 4 <= nx; k += 4) {
+            const bool px = c_.isptr(x + k), py = c_.isptr(y + k);
+            if (px != py) return false;
+            if (px ? !(*this)(c_.ptr(x + k), c_.ptr(y + k), depth + 1) : c_.u32(x + k) != c_.u32(y + k)) return false;
+        }
+        return true;
+    }
+
+private:
+    uint64_t end(uint64_t o) const {
+        auto it = std::upper_bound(starts_.begin(), starts_.end(), o);
+        return std::min<uint64_t>(it == starts_.end() ? c_.reloc : *it - 4, c_.reloc);
+    }
+    const Dc &c_;
+    std::vector<uint64_t> starts_;
+};
+
 // the Lab maps of net18 b's map list and of the PC table c, the PS3 netgames on them and their names
 LabInfo lab_netgames(const Dc &b, const Dc &c) {
     LabInfo L;
@@ -162,9 +196,13 @@ Items playlist_list(const Dc &b, uint64_t m3) {
 }
 
 // PS3's netgame list of playlist m3 without the Lab netgames; hidden = it had netgames and none is left
+// (and without entries naming a netgame the table does not have: the server removed the netgame but kept the entry)
 Items pc_playlist_list(const Dc &b, uint64_t m3, const std::set<uint32_t> &lab_names, bool &hidden) {
     Items L3 = playlist_list(b, m3), L;
-    for (const auto &x : L3) if (!lab_names.count(x.first)) L.push_back(x);
+    std::set<uint32_t> have;
+    const Table t = table(b);
+    for (uint32_t i = 0; i < t.n; i++) have.insert(b.u32(t.arr + i * NG3));
+    for (const auto &x : L3) if (!lab_names.count(x.first) && have.count(x.first)) L.push_back(x);
     hidden = !L3.empty() && L.empty();
     return L;
 }
@@ -589,6 +627,8 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
     }
     uint64_t na = e.alloc(NG4 * plan.size(), 16);
     int n_pc = 0, n_conv = 0;
+    const SameData same3(b);
+    J shared = J::arr();   // converted netgames whose sub-structures are shared with a PC netgame of the same data
     std::map<std::string, int> changed;
     for (size_t j = 0; j < plan.size(); j++) {
         uint64_t g = na + NG4 * j, src = t3.arr + plan[j].i3 * NG3;
@@ -612,9 +652,29 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
         } else {
             bool other = false;
             for (const Pair &p : PTRS) if (p.k3 != 0x74 && b.isptr(src + p.k3)) other = true;
-            if (!b.isptr(src + 0x74) || other)
-                throw Stop(fmt("PS3 netgame %u (%08x) is not on the PC and has pointers other than the +0x74 hero records: "
-                               "needs a sub-structure converter", plan[j].i3, b.u32(src)));
+            if (!b.isptr(src + 0x74))
+                throw Stop(fmt("PS3 netgame %u (%08x) is not on the PC and has no +0x74 hero records", plan[j].i3, b.u32(src)));
+            if (other) {
+                // its other sub-structures (wave lists, tuning) hold the same data as those of a netgame the PC has (the
+                // same mode on another map): its PS4 record starts as a copy of that one, sharing the PS4 sub-structures
+                int64_t donor = -1;
+                for (size_t q = 0; q < plan.size() && donor < 0; q++) {
+                    if (!plan[q].pc) continue;
+                    const uint64_t s2 = t3.arr + plan[q].i3 * NG3;
+                    bool ok = true;
+                    for (const Pair &p : PTRS) {
+                        if (p.k3 == 0x74) continue;
+                        const bool x = b.isptr(src + p.k3), y = b.isptr(s2 + p.k3);
+                        if (x != y || (x && !same3(b.ptr(src + p.k3), b.ptr(s2 + p.k3)))) { ok = false; break; }
+                    }
+                    if (ok) donor = int64_t(q);
+                }
+                if (donor < 0)
+                    throw Stop(fmt("PS3 netgame %u (%08x) is not on the PC and no netgame on the PC has the same sub-structures "
+                                   "(other than the +0x74 hero records): needs a sub-structure converter", plan[j].i3, b.u32(src)));
+                e.copy_words(t4.arr + plan[size_t(donor)].i4 * NG4, g, NG4);
+                shared.push(J::latin1(fmt("%u:%08x from %08x", plan[j].i3, b.u32(src), b.u32(t3.arr + plan[size_t(donor)].i3 * NG3))));
+            }
             for (const Pair &p : MAP) if (p.k4 != NONE) put(g + p.k4, b.u32(src + p.k3));
             uint64_t tt = b.ptr(src + 0x74);
             if (b.u32(tt - 4) != NG_OBJ) throw Stop(fmt("PS3 netgame %08x: +0x74 object type %08x", b.u32(src), b.u32(tt - 4)));
@@ -644,7 +704,7 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
     for (const auto &kv : changed) chg.add(kv.first, J::num(kv.second));
     log.add("netgames", J::obj().add("total", J::num(plan.size())).add("ps3", J::num(t3.n)).add("pc_before", J::num(t4.n))
                             .add("copied_from_pc", J::num(n_pc)).add("converted", J::num(n_conv)).add("pc_only_dropped", J::num(n_dropped)));
-    log.add("ps3_values_changed_fields", chg).add("pc_only_dropped", dropped).add("converted", converted)
+    log.add("ps3_values_changed_fields", chg).add("pc_only_dropped", dropped).add("converted", converted).add("converted_sharing", shared)
         .add("indices_over_255", J::num(plan.size() > 256 ? plan.size() - 256 : 0));
 
     // ---------------------------------------------------------------- playlists in PS3 order
@@ -657,6 +717,7 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
     J plog = J::arr();
     int removed_total = 0;
     J hidden_ids = J::arr();
+    J missing_entries = J::arr();   // "playlist:netgame,..." entries naming netgames the table does not have
     for (uint32_t j = 0; j < tp3.n; j++) {
         uint64_t m3 = tp3.arr + j * PL3, m = npl + PL4 * j;
         uint32_t pid = b.u32(m3);
@@ -683,6 +744,14 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
         Items items3 = playlist_list(b, m3);
         bool hidden;
         Items items = pc_playlist_list(b, m3, L.names, hidden);
+        // entries naming a netgame the table does not have never get played: pc_playlist_list left them out; logged
+        std::string missing;
+        for (const auto &x : items3)
+            if (!names.count(x.first)) missing += (missing.empty() ? "" : ",") + hex8(x.first);
+        if (!missing.empty()) {
+            std::erase_if(items3, [&](const auto &x) { return !names.count(x.first); });
+            missing_entries.push(J::latin1(hex8(pid) + ":" + missing));
+        }
         uint32_t pack = a.u32(tpl + PL_PACK);
         if (hidden) put(m + PL_PACK, HIDDEN_PACK);
         else if (pack == HIDDEN_PACK) put(m + PL_PACK, 1);
@@ -707,10 +776,6 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
             e.ptrs.erase(m + 0x40);
             wr64le(&e.d[m + 0x40], 0);
         }
-        std::string missing;
-        for (const auto &x : items3)
-            if (!names.count(x.first)) missing += (missing.empty() ? "'" : ", '") + hex8(x.first) + "'";
-        if (!missing.empty()) throw Stop(fmt("PS3 playlist %08x names netgames PS3 does not have: [%s]", pid, missing.c_str()));
         J removed = J::arr();
         long long w3 = 0, w = 0;
         for (const auto &x : items3) { w3 += x.second; if (L.names.count(x.first)) { removed.push(J::latin1(hex8(x.first))); removed_total++; } }
@@ -731,7 +796,7 @@ Bytes build(const fs::path &net, const Dc &b, const fs::path &registry, J &log) 
     long long hidden_maps = (long long)lab_hidden.a.size();
     for (const J &x : maps_added.a) if (x.get("lab")->b) hidden_maps++;
     log.add("lab", J::obj().add("maps", labmaps).add("netgames_kept_unlisted", labng).add("maps_hidden", J::num(hidden_maps))
-                       .add("playlist_entries_removed", J::num(removed_total)).add("playlists_hidden", hidden_ids));
+                       .add("playlist_entries_removed", J::num(removed_total)).add("playlists_hidden", hidden_ids).add("entries_without_netgame", missing_entries));
 
     Bytes out = e.build();
     // nothing but the table headers (and the reloc offset) may differ in the original part

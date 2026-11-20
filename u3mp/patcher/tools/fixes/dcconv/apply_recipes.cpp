@@ -8,7 +8,8 @@
 // 32-bit swap / h 16-bit halves swap / o script opcodes renumbered, offset, length), zero runs, a few literal bytes and
 // the pointer slots (the relocation bitmap is recomputed from them); the sources are checked by sha256 and every
 // rebuilt file must have the recorded sha256. net18-versions.json: other accepted versions of the server's net18.bin
-// (their newer values land in the same copied slots, so only the size is checked). schema-oldconv.json: the opcode map.
+// (their newer values land in the same copied slots, so only the size is checked), and for versions with another layout
+// the offset runs that rebuild the reference layout from them ("remap"). schema-oldconv.json: the opcode map.
 // Dry run by default; files already at the recorded hash are left alone.
 #include "inflate.h"
 #include "json.h"
@@ -16,6 +17,7 @@
 #include "psarc.hpp"
 #include "u3fix.hpp"
 
+#include <array>
 namespace u3 {
 namespace {
 
@@ -117,17 +119,53 @@ int dc_recipes(const std::vector<std::string> &argv) {
         if (const json::Value *o = s.get("opmap"))
             for (const auto &[k, v] : o->fields) opmap[std::stoi(k)] = int(v.i);
     }
-    // other accepted versions of the server's net18.bin (hashes only)
+    // other accepted versions of the server's net18.bin (hashes only), and for newer versions whose layout differs
+    // (the server added or removed entries) the offset runs that put their bytes back in the reference layout: the
+    // recipes then read the reference layout with the server's newer values (net18-versions.json "remap": per sha256
+    // the reference size, runs [reference offset, offset in that version, length] and header words [offset, value])
+    const std::string data2_net = "ps3/data2:dc1/ps4/net.bin";
     std::map<std::string, std::set<std::string>> accepted;
+    struct Remap {
+        uint64_t size = 0;
+        std::vector<std::array<uint64_t, 3>> runs;
+        std::vector<std::pair<uint64_t, uint32_t>> words;
+    };
+    std::map<std::string, Remap> remaps;
     if (fs::exists(dd / "net18-versions.json")) {
         json::Value v;
         if (!json::parse(text_file(dd / "net18-versions.json"), v)) throw Stop("net18-versions.json is not JSON");
         if (const json::Value *acc = v.get("accepted")) {
-            auto &s = accepted["ps3/data2:dc1/ps4/net.bin"];
+            auto &s = accepted[data2_net];
             for (const auto &[h, x] : acc->fields) s.insert(h);
             for (const json::Value &h : acc->items) s.insert(h.s);
         }
+        if (const json::Value *rm = v.get("remap"))
+            for (const auto &[h, r] : rm->fields) {
+                Remap m;
+                m.size = uint64_t(r.get("size")->i);
+                for (const json::Value &x : r.get("runs")->items)
+                    m.runs.push_back({uint64_t(x.items.at(0).i), uint64_t(x.items.at(1).i), uint64_t(x.items.at(2).i)});
+                for (const json::Value &x : r.get("words")->items) m.words.push_back({uint64_t(x.items.at(0).i), uint32_t(x.items.at(1).i)});
+                remaps[h] = std::move(m);
+            }
     }
+    // a newer layout of the server's net18.bin rebuilt in the reference layout (unmapped bytes stay zero: entries the
+    // server removed)
+    auto to_reference_layout = [&](const Bytes &d) -> std::optional<Bytes> {
+        auto f = remaps.find(sha256_hex(d));
+        if (f == remaps.end()) return std::nullopt;
+        const Remap &m = f->second;
+        Bytes out(m.size, 0);
+        for (const auto &r : m.runs) {
+            if (r[0] + r[2] > out.size() || r[1] + r[2] > d.size()) throw Stop("net18-versions.json: a remap run is out of range");
+            std::copy(d.begin() + std::ptrdiff_t(r[1]), d.begin() + std::ptrdiff_t(r[1] + r[2]), out.begin() + std::ptrdiff_t(r[0]));
+        }
+        for (const auto &[o, w] : m.words) {
+            if (o + 4 > out.size()) throw Stop("net18-versions.json: a remap word is out of range");
+            for (int k = 0; k < 4; k++) out[o + k] = uint8_t(w >> (24 - 8 * k));
+        }
+        return out;
+    };
     Ps3Index idx(a.get("--ps3-disc", ""), a.get("--ps3-update", ""), a.get("--ps3-data2", ""));
     std::map<std::string, std::optional<Bytes>> cache;
     auto src = [&](const std::string &name) -> std::optional<Bytes> {
@@ -141,6 +179,12 @@ int dc_recipes(const std::vector<std::string> &argv) {
             d = read_file(upath(main4 + rel));
         } else
             d = idx.read(rel, kind.substr(kind.find('/') + 1));
+        if (d && name == data2_net)
+            if (std::optional<Bytes> r = to_reference_layout(*d)) {
+                std::printf("the server's net18.bin %s has a newer layout: rebuilt in the reference layout\n", sha256_hex(*d).substr(0, 16).c_str());
+                accepted[data2_net].insert(sha256_hex(*r));
+                d = std::move(r);
+            }
         cache[name] = d;
         return d;
     };
