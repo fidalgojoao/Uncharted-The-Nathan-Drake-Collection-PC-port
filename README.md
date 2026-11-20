@@ -60,7 +60,7 @@ Competitive, co-op and LAN party modes are restored through the **MULTIPLAYER** 
 - **Executable:** Your Uncharted 2 decrypted 1.10 `EBOOT.elf` and Uncharted 3 decrypted 1.19 `EBOOT.elf`.
 - **Storage:** About **14 GB free**.
 
-Press **IMPORT** and follow the progress log. Conversion takes hours and resumes if the launcher is closed. Map and character conversions are still being completed; failed steps appear in the log.
+Press **IMPORT** and follow the progress log.  Conversion takes approximately 12 minutes, depending on the type of drive (SSD or HDD), and resumes if the launcher is closed. Map and character conversions are still being completed; failed steps appear in the log.
 
 ## Legal status
 
