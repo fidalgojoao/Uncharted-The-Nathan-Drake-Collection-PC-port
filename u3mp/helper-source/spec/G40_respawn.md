@@ -183,8 +183,8 @@ the table's end node, which is not an object.
 A spawner (and any level entity) has at +0x68 a pointer to its tag table, or null: pointer D at +0 to the entries,
 u32 count at +8. Entry = 16 bytes: u32 tag id at +0, pointer to the value at +8. The entries are sorted by tag id,
 ascending, unsigned; a tag id may occur several times in a row. A value starts with a 16-bit type and has an
-8-byte pointer at +4. Types used: 1 (the pointer at +4 leads to a u32), 5 (the pointer at +4 is a text), 0xd (the
-pointer at +4 leads to a u32 id). Tags used: 0x5bfae217 (marks a default spawner), 0x38a0841f (a level the
+8-byte pointer at +8 (PS4 layout; +4 is padding, the PS3 layout had it at +4). Types used: 1 (the pointer at +8 leads to a u32), 5 (the pointer at +8 is a text), 0xd (the
+pointer at +8 leads to a u32 id). Tags used: 0x5bfae217 (marks a default spawner), 0x38a0841f (a level the
 spawner needs).
 
 The level object returned by 0x72fb00 has at +0x190 a pointer to the spawner list, or null: pointer at list + 8 to
@@ -281,7 +281,7 @@ Tells whether the match's level has a usable spawner marked as default. In this 
    returns a zero byte, or when its tag table pointer or the table's entry pointer D is null. Otherwise search
    tag 0x5bfae217 (4.3, with the table's count); when the index found is below the count and that entry's tag id
    is 0x5bfae217, look at its value pointer: result 1 when the value pointer is not null, the value's type (u16)
-   is 1, the pointer at value + 4 is not null and the u32 it leads to is not 0. Only the first entry of that tag
+   is 1, the pointer at value + 8 is not null and the u32 it leads to is not 0. Only the first entry of that tag
    is looked at.
 5. Result 0.
 
@@ -531,7 +531,7 @@ before the spawn; the body disappearing after the delay; the out-of-bounds kill;
 2. `u3x_spawn_levels_ready`: with more than 32 pending levels the slots behind the kept names are compared again
    (stale pointers), and the levels past the 32nd count as pending without being looked at; an empty pending name
    "matches" a tag entry whose value is null or of another type (both ids 0); a value of type 0xd with a null
-   pointer at +4 is read without a test.
+   pointer at +8 is read without a test.
 3. `u3x_default_spawner_exists`: the answer is 1 when the game function or the filter stub is not recognised, but
    0 when the level or list is missing; the filter-stub bytes are tested only after the level call.
 4. `u3x_spawn_region_request` asks the locator of spawn point 0, not of the player's spawn index, and calls
@@ -564,11 +564,11 @@ before the spawn; the body disappearing after the delay; the out-of-bounds kill;
 Facts confirmed by the tester's differential test against v7.212 (2026-11-14). Where a point corrects the text
 above, this section holds.
 
-1. **Tag values of type 5 (3.6, 4.8 step 6) - correction.** The 8-byte pointer at value + 4 does not point at the
+1. **Tag values of type 5 (3.6, 4.8 step 6) - correction.** The 8-byte pointer at value + 8 does not point at the
    text: it leads to an 8-byte TEXT POINTER (the stored value, as it leads to the stored u32 for types 1 and 0xd),
    and the level name is the text that second pointer points at. N of such an entry = the id of that text: 0
    without a call when the text pointer is null or the text is empty, else one call of the string id function
-   with that text. The pointer at value + 4 itself is not tested for null (as for type 0xd).
+   with that text. The pointer at value + 8 itself is not tested for null (as for type 0xd).
 2. **Pending level count (4.8).** It is unsigned in every step. With a count of 2^31 or more the first 32 names
    are looked at, C' = kept + C - 32 (32-bit unsigned), rs[8] and rs2[5] hold the raw count, and min(C', 32) slots
    are compared.

@@ -522,7 +522,7 @@ struct PostLinkPatch {
 const char *const POST_LINK_FOR = "a3ddf21851d0cc70bec269157ed0cff664e53854aa94dc3251f3cd4f68ea7290";   // v7.217
 const PostLinkPatch POST_LINK_PATCHES[] = {
     // Coop Arena on Village crashed on load (read fault at 0x20adeeb): the default-spawner tag check read the tag's value
-    // pointer at entry +4 (PS3 layout); PS4 tag entries hold it at +8 (as u3x marked_default / tag_value already do).
+    // pointer at entry +4 (PS3 layout); PS4 tag values hold it at +8 (the helper source reads +8 since 2026-11-20).
     {0x20adee5, "04", "08", "default-spawner tag value pointer at +8"},
     // Coop kill cash popup: the helper's ShowMoney copied the NPC bound frame's local translation into the HUD entry
     // (+0x40), pushing the "$X" popup off screen. Zero the local offset.
@@ -538,13 +538,19 @@ const PostLinkPatch POST_LINK_PATCHES[] = {
     // ShowMoney: do not bind the popup to the killer's object; the HUD re-reads a bound object's locator every frame,
     // which made the popup follow the player.
     {0x208720b, "8b55a08953088b55a489530c", "31d289530889530c0f1f4000", "cash popup: no object binding"},
-    // Mid-match crash (read fault at 0x2100f1d): the net player handle check accepted a slot holding a float (1.0 =
-    // 0x3f800000) as an object pointer. Only accept objects inside the game image or the heap; anything else = no object.
+    // Crash at match / round start (read faults at 0x2100f1d and in this check at 0x2052100): the zone-ring colour fix
+    // (n033) resolves particle handles of territories that died at match or round start; their memory now holds floats
+    // (1.0 = 0x3f800000, -1.0 = 0xbf800000), read as the handle's slot pointer and then as the object pointer. Both
+    // levels are checked before they are read: 8-byte aligned and inside the game image (base taken from this code's
+    // own address) or the guest heap [0x1000000000, 0x800000000000); anything else = no object, the ring keeps its
+    // colour. In: rax = slot pointer, ecx = generation; returns the object or 0 (pops the caller's rbp).
     {0x2100ef2, "488b104881", "e90912f5ff", "handle check: jump to range check"},
     {0x2052100,
-     "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-     "488b10f6c2077538488db20000c0f54881fe00402102721e48be00000000100000004839f2721948be00000000008000004839f2730a31c0390a480f44c25dc331c05dc3",
-     "handle check: range check"},
+     "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+     "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "4c8d05f9defafd4889c6e81d0000007517488b104889d6e810000000750a31c0390a480f44c25dc331c05dc340f6c60775314989f1"
+     "4d29c14981f900402102721e49ba00000000100000004c39d6721349ba00000000008000004c39d673044531c9c34183c901c3",
+     "handle check: range check of both pointers"},
 };
 
 // returns how many fixes were applied (0 when the image is not the release they were made for)

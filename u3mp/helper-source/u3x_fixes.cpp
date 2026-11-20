@@ -33219,7 +33219,7 @@ U3X_FN uint32_t tag_search(cptr entries, uint32_t count, uint32_t tag) {
     if (i >= count || tag_id(entries, i) != TAG_DEFAULT_SPAWNER) return false;
     const cptr value = tag_value(entries, i);
     if (!value || rd<uint16_t>(value, 0) != 1) return false;
-    const cptr flag = ptr_at(value, 4);
+    const cptr flag = ptr_at(value, 8);   // PS4 tag value: u16 type, pad, the pointer at +8
     return flag && rd<uint32_t>(flag, 0) != 0;
 }
 
@@ -33443,9 +33443,9 @@ extern "C" U3X_FN int u3x_spawn_levels_ready(uintptr_t base, void *s, uint32_t s
             uint32_t named = 0;
             if (value) {
                 const int16_t type = rd<int16_t>(value, 0);
-                // type 5: the pointer at +4 leads to a text pointer cell; the level name is the text it holds
-                if (type == 5) named = id_of(rd<const char *>(ptr_at(value, 4), 0));
-                else if (type == 0xd) named = rd<uint32_t>(ptr_at(value, 4), 0);
+                // type 5: the pointer at +8 (PS4 layout) leads to a text pointer cell; the level name is the text it holds
+                if (type == 5) named = id_of(rd<const char *>(ptr_at(value, 8), 0));
+                else if (type == 0xd) named = rd<uint32_t>(ptr_at(value, 8), 0);
             }
             if (named == wanted) return 1;
         }
