@@ -4,7 +4,9 @@
 //   1. Wait until the launcher process given by --wait-pid has ended.
 //   2. For every top-level program item in the package (anything but analysis\), move the installed one aside into
 //      update\old and copy the new one into the root. Inside analysis\uncharted-user only the runtime's defaults file
-//      is overwritten; the shader cache, logs, settings and saves are left alone.
+//      is overwritten; the shader cache, logs, settings and saves are left alone. A folder that Windows will not move
+//      (a File Explorer window showing it or a folder inside it, GitHub #67) is updated file by file instead: each
+//      file the package brings is set aside into update\old and replaced, and the player's files never move.
 //   3. If anything fails, move every item that was set aside back again so the previous version still runs.
 //   4. Bring across, into the fresh folders, whatever the old folders held that the package does not ship. That covers
 //      the player's own additions: ReShade (ReShade.ini, presets, reshade-shaders\ beside Uncharted.exe), a game folder
@@ -379,6 +381,50 @@ bool prune(const std::wstring &path, const std::wstring &rel, const std::wstring
     }
 }
 
+// One step of a folder updated file by file: `rel` (root-relative, "\" between folders) was put in place by the update;
+// `replaced` means the installed one it took the place of waits at the same path under update\old.
+struct Swap {
+    std::wstring rel;
+    bool replaced;
+};
+
+// Puts the package folder `source` into the installed program folder `target` without moving `target` itself (used
+// when Windows refuses to move the whole folder, GitHub #67). Folders on both sides are walked; every other item of the
+// package is copied in, and an installed item in its way is first moved aside into update\old. Each step is recorded in
+// `journal` before it can leave anything behind, so undo() can take it back.
+void merge_into(const std::wstring &source, const std::wstring &target, const std::wstring &rel, const std::wstring &old,
+                std::vector<Swap> &journal) {
+    for (const std::wstring &n : entries(source)) {
+        const std::wstring from = join(source, n), to = join(target, n), r = join(rel, n);
+        if (is_dir(from) && is_dir(to) && !is_link(to)) {
+            merge_into(from, to, r, old, journal);
+            continue;
+        }
+        if (exists(to) || is_link(to)) {
+            const std::wstring aside = join(old, r);
+            make_dirs(aside.substr(0, aside.find_last_of(L'\\')));
+            retry([&] { rename(to, aside); }, 5);
+            journal.push_back({r, true});
+        } else {
+            journal.push_back({r, false});
+        }
+        copy_item(from, to);
+    }
+}
+
+// Takes back the steps of merge_into, newest first; what cannot be taken back is added to `stuck`.
+void undo(const std::vector<Swap> &journal, const std::wstring &old, std::vector<std::wstring> &stuck) {
+    for (auto it = journal.rbegin(); it != journal.rend(); ++it) {
+        const std::wstring here = join(g_root, it->rel);
+        try {
+            retry([&] { remove_item(here); });
+            if (it->replaced) retry([&] { rename(join(old, it->rel), here); });
+        } catch (const Error &e) {
+            stuck.push_back(it->rel + L" (could not restore: " + e.message + L")");
+        }
+    }
+}
+
 std::wstring timestamp() {
     SYSTEMTIME t;
     GetLocalTime(&t);
@@ -412,18 +458,29 @@ void apply() {
     for (const std::wstring &n : entries(g_staged))
         if (n != L"analysis" && n != L"update") items.push_back(n);
     std::sort(items.begin(), items.end());   // plain string order, so upper and lower case differ
-    std::vector<std::wstring> moved, added;
+    std::vector<std::wstring> moved, added, merged;
+    std::vector<Swap> journal;
     try {
         for (const std::wstring &name : items) {
             status(L"Copying " + name + L"...");
-            const std::wstring current = join(g_root, name);
+            const std::wstring current = join(g_root, name), source = join(g_staged, name);
             if (exists(current)) {
-                retry([&] { rename(current, join(old, name)); });
+                try {
+                    retry([&] { rename(current, join(old, name)); }, 3);
+                } catch (const Error &) {
+                    // A File Explorer window inside this folder (or a program with it as its current folder) keeps
+                    // Windows from moving it, but not from replacing the files in it.
+                    if (!is_dir(current) || is_link(current) || !is_dir(source)) throw;
+                    status(L"Copying " + name + L" file by file (the folder is open in another program)...");
+                    merged.push_back(name);
+                    merge_into(source, current, name, old, journal);
+                    continue;
+                }
                 moved.push_back(name);
             } else {
                 added.push_back(name);
             }
-            copy_item(join(g_staged, name), current);
+            copy_item(source, current);
         }
         for (const wchar_t *relative : DEFAULTS) {
             const std::wstring rel = native_rel(relative), source = join(g_staged, rel);
@@ -441,6 +498,7 @@ void apply() {
         // Each undo step runs even if one before it failed (a virus scanner may be holding a file). Giving up partway
         // would strand folders in update\old and leave an install that does not start.
         std::vector<std::wstring> stuck;
+        undo(journal, old, stuck);
         std::vector<std::wstring> both = moved;
         both.insert(both.end(), added.begin(), added.end());
         for (const std::wstring &name : both) {
@@ -502,9 +560,17 @@ void apply() {
         for (size_t k = 0; k < left_in_old.size(); ++k) list += (k ? L", " : L"") + left_in_old[k];
         status(L"A few of your old files are left in " + preserve(old) + L": " + list);
     }
+    // Folders updated file by file still hold the previous package's files that the new one no longer ships; they go
+    // to update\old, as they would have with the whole folder swapped. The player's files stay where they are.
+    std::vector<std::wstring> problems;
+    for (const std::wstring &name : merged)
+        for (const std::wstring &n : entries(join(g_root, name))) {
+            const std::wstring path = join(join(g_root, name), n), rel = name + L"/" + n;
+            if (dropped.count(rel) || holds_dropped(dropped, rel) || (is_dir(path) && python_cache(n)))
+                prune(path, rel, old, dropped, problems);
+        }
     // Clean up top-level items that are not in the new package any more (e.g. python\ after the launcher stopped
     // needing Python): remove what the previous package shipped there, keep what the player put there.
-    std::vector<std::wstring> problems;
     for (const std::wstring &name : entries(g_root)) {
         if (name == L"analysis" || name == L"update" || name.rfind(L"update-kept-", 0) == 0) continue;
         if (std::find(items.begin(), items.end(), name) != items.end()) continue;
@@ -579,7 +645,8 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
     } catch (const Error &e) {
         ok = false;
         const std::wstring message = L"The update failed to install; the previous version stays in place.\n\n" + e.message +
-                                     L"\n\nIf the game is running, close it and try once more, or get the new version from the "
+                                     L"\n\nIf the game is running, or a launcher file is open in another program, close "
+                                     L"it and try once more, or get the new version from the "
                                      L"releases page.";
         write_std(STD_ERROR_HANDLE, message);
         if (g_window) MessageBoxW(g_window, message.c_str(), TITLE, MB_OK | MB_ICONERROR);
