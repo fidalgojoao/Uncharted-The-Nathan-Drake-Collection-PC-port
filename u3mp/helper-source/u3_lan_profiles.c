@@ -729,7 +729,7 @@ __attribute__((visibility("hidden"))) void u3x_stream_assert(uintptr_t base);
 __attribute__((visibility("hidden"))) void u3x_invite_blob_swap(uint8_t *blob);
 __attribute__((visibility("hidden"))) uint32_t u3x_session_member_count(const uint8_t *session);
 __attribute__((visibility("hidden"))) uint32_t u3x_menu_user(uintptr_t base);
-__attribute__((visibility("hidden"))) void u3x_splitscreen_dialog(uintptr_t base,void *s);
+__attribute__((visibility("hidden"))) void u3x_splitscreen_row(uintptr_t base,void *s);
 __attribute__((visibility("hidden"))) void u3x_net_state_set(uintptr_t base,uint32_t state);
 __attribute__((visibility("hidden"))) int u3x_net_deadline_due(uintptr_t base);
 __attribute__((visibility("hidden"))) uint32_t u3x_kr_statw(uintptr_t base,uint32_t index);
@@ -2461,8 +2461,10 @@ EXT static void catch_all(uintptr_t base,int32_t *event,ProfileState *s){
 /* PS3 0x28dbf8 case 0xcd127c29 (Splitscreen): with no second user available (splitscreen manager
  * 0x125ef1c +0x24 clear) and splitscreen not active (f_383ff8), it shows dialog 0x7c31f4d0 with
  * title 0xc6467f2d. PS4 has no splitscreen manager or second-user selection ("Select Second User"
- * is absent), so that is the branch a single-user PS4 build takes. */
-static void splitscreen(uintptr_t base,ProfileState*s){u3x_splitscreen_dialog(base,s);}   /* r2 S09 C++ */
+ * is absent), so that is the branch a single-user PS4 build takes. Issue 31: the PS4 build keeps the
+ * second-user record (0x17f2f98) and its splitscreen code; with the runtime's second player pad
+ * connected the row signs a second local player in (or out), see u3x_splitscreen_row. */
+static void splitscreen(uintptr_t base,ProfileState*s){u3x_splitscreen_row(base,s);}   /* r2 S09 C++; issue 31: second player joins/leaves */
 /* PS3 0x28dbf8 case 0x7d593924: mode 2 (custom game), refresh NetMenuHost, select net game 0
  * with mode 0xc, select the first game type and open PAGE_LOBBY. The party broadcast (message
  * 0x110 to party members) is skipped: a LAN host starts alone. */

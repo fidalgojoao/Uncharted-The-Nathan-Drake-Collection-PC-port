@@ -25581,8 +25581,20 @@ extern "C" void u3h_show_dialog(uintptr_t base, void *s, uint32_t body, uint32_t
                                 uint32_t extra, uint32_t close);
 extern "C" int32_t u3x_net_clock(uintptr_t base);
 extern "C" uint32_t u3x_weapon_for_stat(const uint32_t *fixed, const uint32_t *extra, uint32_t number);
+extern "C" void u3h_so_note(const char *a, const char *name, int32_t v, const char *b);
 
 namespace s09a {
+
+// the second local player (issue 31): the game's second-user record (an NpId of 0x24 bytes: name at +0, at most 16
+// characters; signed-in byte +0x24; state +0x28, 3 = second local player present), the player's own NpId, the
+// game's scePadGetControllerInformation import and the runtime's second player pad (RUNTIME_PAD2_HANDLE)
+constexpr uintptr_t SECOND_USER = 0x17f2f98, SECOND_SIGNED_IN = 0x24, SECOND_STATE = 0x28, OWN_ID = 0x17d6010;
+constexpr uintptr_t PAD_INFO = 0x139dd70;
+constexpr int32_t SECOND_PAD = 2, PRESENT = 3;
+constexpr uint32_t ID_BYTES = 0x24, NAME_MAX = 16, PAD_CONNECTED = 0xc;
+U3X_RO const char second_tag[] = "(2)";
+U3X_RO const char note_in[] = "splitscreen: player 2 in as ";
+U3X_RO const char note_out[] = "splitscreen: player 2 out";
 
 // film bit-stream reader assert (3.1): condition, source file, function name, line
 constexpr uintptr_t ASSERT_COND = 0x14b92fc;
@@ -25651,10 +25663,36 @@ extern "C" U3X_FN uint32_t u3x_menu_user(uintptr_t base) {
     return at<uint32_t>(base + MENU_USER);
 }
 
-// 4.6: Splitscreen menu action without a second user: the game's notice dialog
-extern "C" U3X_FN void u3x_splitscreen_dialog(uintptr_t base, void *s) {
+// 4.6 (issue 31): the lobby's Splitscreen row. While a second local player is present, choosing it lets them leave.
+// Otherwise, when the runtime's second player pad is connected (a second controller, or the keyboard and mouse beside
+// player 1's controller), a second local player joins: the game's second-user record gets the player's own id with
+// the name "<name>(2)", signed in, state 3, and from then on the game's own splitscreen code (local player count 2,
+// party members, pad port 1) takes over. Without a second pad: the game's notice dialog, as before.
+extern "C" U3X_FN [[clang::minsize]] void u3x_splitscreen_row(uintptr_t base, void *s) {
     using namespace s09a;
-    u3h_show_dialog(base, s, SPLIT_BODY, SPLIT_TITLE, 0, 0, 0, 0);
+    uint8_t *user = &at<uint8_t>(base + SECOND_USER);
+    volatile int32_t &state = at<volatile int32_t>(base + SECOND_USER + SECOND_STATE);
+    const bool join = state != PRESENT;
+    if (join) {
+        uint8_t info[28];   // OrbisPadControllerInformation
+        for (uint32_t i = 0; i < sizeof info; ++i) info[i] = 0;
+        if (game_call<int32_t>(base + PAD_INFO, SECOND_PAD, info) != 0 || !info[PAD_CONNECTED]) {
+            u3h_show_dialog(base, s, SPLIT_BODY, SPLIT_TITLE, 0, 0, 0, 0);
+            return;
+        }
+    }
+    // joining: the player's own id, renamed "<name>(2)"; leaving: an empty id
+    const uint8_t *own = &at<uint8_t>(base + OWN_ID);
+    for (uint32_t i = 0; i < ID_BYTES; ++i) user[i] = join ? own[i] : 0;
+    if (join) {
+        uint32_t n = 0;
+        while (n < NAME_MAX - (sizeof second_tag - 1) && own[n]) ++n;
+        for (uint32_t i = 0; second_tag[i]; ++i) user[n++] = static_cast<uint8_t>(second_tag[i]);
+        while (n <= NAME_MAX) user[n++] = 0;
+    }
+    user[SECOND_SIGNED_IN] = join;
+    state = join ? PRESENT : 0;
+    u3h_so_note(join ? note_in : note_out, join ? reinterpret_cast<const char *>(user) : nullptr, -1, nullptr);
 }
 
 // 4.7: enter a net state: state first, then the game clock at that moment
