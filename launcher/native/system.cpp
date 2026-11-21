@@ -142,8 +142,8 @@ Value tables() {
          "(Xbox: left stick click + Start; keyboard: Left Shift + Esc) or the touchpad for the Quick Menu (Xbox: "
          "left stick click + Back; keyboard: Left Shift + Tab); the same again closes it. The Quick Menu's Give "
          "Player Weapon hands you any weapon (the retail games keep no weapon names: Uncharted 3 lists them as "
-         "codes, Uncharted 2 without names). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted 2 reads it "
-         "from a second controller). Uncharted 2 and 3 only; single player.",
+         "codes, Uncharted 2 without names). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted 1 and 2 read "
+         "it from a second controller). Works in all three games; single player.",
          "debug"}};
     Value c;
     c.kind = Value::Array;

@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 /* image: the guest image base (still writable); size: its size. Does nothing unless the launcher's debug mode is on
- * (UNCHARTED_CHEATS lists "debug") and the image is the Uncharted 2 or 3 1.02 build. Returns 1 when installed. */
+ * (UNCHARTED_CHEATS lists "debug") and the image is the Uncharted 1, 2 or 3 1.02 build. Returns 1 when installed. */
 int debug_menus_install(unsigned char *image, uint64_t size);
 
 #ifdef __cplusplus

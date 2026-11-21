@@ -1,4 +1,5 @@
-// Uncharted 2 and 3 1.02, 21 Nov 2026 (issue 70): the debug mode's Dev Menu and Quick Menu open from a PC controller.
+// Uncharted 1, 2 and 3 1.02, 21 Nov 2026 (issue 70): the debug mode's Dev Menu and Quick Menu open from a PC
+// controller.
 //
 // With the launcher's debug mode on (the games' own debug-mode byte held at 1, launcher/native/runtime_env.cpp), the
 // games' menu manager opens the Dev Menu or the Quick Menu once per frame when a "debug combo" byte of the active
@@ -13,7 +14,7 @@
 // menu or the touchpad action. Nothing else changes: with debug mode off the hook is not installed, and the game's
 // own byte is kept (or-ed in). Uncharted 3: joypad = the active joypad (state + 0x7e0 + index * 0x1d8: buttons
 // newly pressed at +0x94, held at +0x9c, the combo byte at +0xad); Uncharted 2: the first joypad (0x1116180 + 0x7d0,
-// the same layout). Found by their bytes.
+// the same layout); Uncharted 1: the first joypad (0xa66f10 + 0x608, the same layout). Found by their bytes.
 #include "debug_menus.h"
 #include "u3fix/u3fix_hook.h"
 
@@ -24,7 +25,7 @@
 namespace {
 
 // both combos' state at the previous check (bit 4 Dev Menu, bit 8 Quick Menu), one byte per game
-unsigned char held_before[2];
+unsigned char held_before[3];
 
 // U3: imul r15,rax,0x1d8; mov al,[r12+r15+0x88d]; mov dl,1; mov sil,1; test al,4
 constexpr unsigned char kSite3[] = {0x4c, 0x69, 0xf8, 0xd8, 0x01, 0x00, 0x00, 0x43, 0x8a, 0x84, 0x3c, 0x8d,
@@ -102,6 +103,46 @@ constexpr unsigned char kStub2[] = {
     0xff, 0x25, 0, 0, 0, 0};                                           // jmp [rip] (back follows)
 constexpr unsigned kHeld2 = 0x31;
 
+// U1: lea r12,[rip+0x97de81] (0xa66f10); mov cl,[r12+0x6b5]; lea rbx,[rip+0x86f16a] (0x958208);
+//     mov al,[rbx+0x4844]; test cl,4
+constexpr unsigned char kSite1[] = {0x4c, 0x8d, 0x25, 0x81, 0xde, 0x97, 0x00, 0x41, 0x8a, 0x8c, 0x24, 0xb5, 0x06,
+                                    0x00, 0x00, 0x48, 0x8d, 0x1d, 0x6a, 0xf1, 0x86, 0x00, 0x8a, 0x83, 0x44, 0x48,
+                                    0x00, 0x00, 0xf6, 0xc1, 0x04};
+constexpr unsigned kAt1 = 22, kLength1 = 6;
+
+// r12 = joypad state, rbx = engine settings (+0x4844 debug mode), cl = the combo byte; al = debug mode (rdx, rsi, r8
+// kept)
+constexpr unsigned char kStub1[] = {
+    0x8a, 0x83, 0x44, 0x48, 0x00, 0x00,                                // mov al,[rbx+0x4844]      debug mode
+    0x84, 0xc0,                                                        // test al,al               off?
+    0x74, 0x65,                                                        // je done
+    0x52, 0x56, 0x41, 0x50,                                            // push rdx, rsi, r8
+    0x41, 0x8b, 0x94, 0x24, 0xa4, 0x06, 0x00, 0x00,                    // mov edx,[r12+0x6a4]      held
+    0x31, 0xf6,                                                        // xor esi,esi
+    0xf6, 0xc2, 0x02,                                                  // test dl,2                L3
+    0x74, 0x13,                                                        // je edge
+    0xf6, 0xc2, 0x08,                                                  // test dl,8                Options
+    0x74, 0x03,                                                        // je +3
+    0x83, 0xce, 0x04,                                                  // or esi,4
+    0xf7, 0xc2, 0x00, 0x00, 0x10, 0x00,                                // test edx,0x100000        touchpad
+    0x74, 0x03,                                                        // je edge
+    0x83, 0xce, 0x08,                                                  // or esi,8
+    0x48, 0xba, 0, 0, 0, 0, 0, 0, 0, 0,                                // edge: mov rdx,held_before + 2
+    0x44, 0x0f, 0xb6, 0x02,                                            // movzx r8d,byte [rdx]
+    0x40, 0x88, 0x32,                                                  // mov [rdx],sil
+    0x41, 0xf7, 0xd0,                                                  // not r8d
+    0x44, 0x21, 0xc6,                                                  // and esi,r8d              newly held
+    0x40, 0x08, 0xf1,                                                  // or cl,sil
+    0x40, 0xf6, 0xc6, 0x04,                                            // test sil,4
+    0x74, 0x09,                                                        // je +9
+    0x41, 0x83, 0xa4, 0x24, 0x9c, 0x06, 0x00, 0x00, 0xf7,              // and dword [r12+0x69c],~8
+    0x40, 0xf6, 0xc6, 0x08,                                            // test sil,8
+    0x74, 0x0c,                                                        // je pop
+    0x41, 0x81, 0xa4, 0x24, 0x9c, 0x06, 0x00, 0x00, 0xff, 0xff, 0xef, 0xff,   // and dword [..+0x69c],~0x100000
+    0x41, 0x58, 0x5e, 0x5a,                                            // pop: pop r8, rsi, rdx
+    0xff, 0x25, 0, 0, 0, 0};                                           // done: jmp [rip] (back follows)
+constexpr unsigned kHeld1 = 0x32;
+
 bool debug_mode_wanted() {
     const char *list = std::getenv("UNCHARTED_CHEATS");
     if (!list) return false;
@@ -137,6 +178,8 @@ extern "C" int debug_menus_install(unsigned char *image, uint64_t size) {
         game = "Uncharted 3";
     else if (install(image, size, kSite2, sizeof kSite2, kAt2, kLength2, kStub2, sizeof kStub2, kHeld2, &held_before[1]))
         game = "Uncharted 2";
+    else if (install(image, size, kSite1, sizeof kSite1, kAt1, kLength1, kStub1, sizeof kStub1, kHeld1, &held_before[2]))
+        game = "Uncharted 1";
     if (!game) return 0;
     std::printf("%s: debug mode menus on L3 + Options (Dev Menu) and L3 + touchpad (Quick Menu)\n", game);
     std::fflush(stdout);
