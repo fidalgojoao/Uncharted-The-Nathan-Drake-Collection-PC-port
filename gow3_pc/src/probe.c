@@ -9,6 +9,7 @@
 #include "runtime.h"
 #include "u2mp/u2mp.h"
 #include "u3fix/u3fix.h"
+#include "pokes.h"
 #include "cpu_check.h"
 #include "orb_hook.h"
 #include "cheat_hook.h"
@@ -342,54 +343,6 @@ static void poll_exec_watch_file(void) {
     InterlockedExchange(&exec_watch_armed_count,0);
     printf("Exec watch: %d watches from %s: %s\n",count,exec_watch_file,text);
     fflush(stdout);
-}
-/* GOW3_POKE=<entry>[,<entry>...]: bytes the runtime keeps set in guest memory, rewritten every
- * 250 ms (launcher cheats: the games' own debug-menu switches, tools/probe_uncharted.py CHEATS).
- * An entry is <offset>[=<value>] (hex guest image offset, value 1 by default) or
- * *<offset>+<add>[=<value>] (the byte <add> past the pointer stored at <offset>). Reads and
- * writes go through Read/WriteProcessMemory: an address not mapped (yet) is skipped. */
-typedef struct { int deref; uint64_t offset, add; unsigned char value; } Poke;
-static Poke pokes[16];
-static int poke_count;
-static DWORD WINAPI poke_thread(LPVOID unused) {
-    (void)unused;
-    const HANDLE self=GetCurrentProcess();
-    for (;;) {
-        for (int i=0;i<poke_count;++i) {
-            uintptr_t address=(uintptr_t)image+(uintptr_t)pokes[i].offset;
-            SIZE_T got=0;
-            if (pokes[i].deref) {
-                uint64_t pointer=0;
-                if (!ReadProcessMemory(self,(LPCVOID)address,&pointer,sizeof(pointer),&got) || got!=sizeof(pointer) || !pointer) continue;
-                address=(uintptr_t)pointer+(uintptr_t)pokes[i].add;
-            }
-            unsigned char current=0;
-            if (ReadProcessMemory(self,(LPCVOID)address,&current,1,&got) && got==1 && current!=pokes[i].value)
-                WriteProcessMemory(self,(LPVOID)address,&pokes[i].value,1,NULL);
-        }
-        Sleep(250);
-    }
-    return 0;
-}
-static void start_pokes(void) {
-    const char *env=getenv("GOW3_POKE");
-    if (!env || !*env || !image) return;
-    const char *p=env;
-    while (*p && poke_count<16) {
-        Poke k={0};
-        char *end;
-        if (*p=='*') { k.deref=1; ++p; }
-        k.offset=strtoull(p,&end,16);
-        p=end;
-        if (k.deref && *p=='+') { k.add=strtoull(p+1,&end,16); p=end; }
-        k.value=1;
-        if (*p=='=') { k.value=(unsigned char)strtoul(p+1,&end,16); p=end; }
-        pokes[poke_count++]=k;
-        while (*p && *p!=',') ++p;
-        if (*p==',') ++p;
-    }
-    printf("Runtime: %d memory switches kept set (GOW3_POKE: %s)\n",poke_count,env);
-    CloseHandle(CreateThread(NULL,0,poke_thread,NULL,0,NULL));
 }
 static void start_exec_watch(void) {
     const char *env=getenv("GOW3_EXEC_WATCH");
@@ -1659,7 +1612,7 @@ int main(int argc, char **argv) {
     printf("Entering original x86-64 code at guest offset 0x%" PRIx64 "\n", entry);
 #ifdef _WIN32
     start_exec_watch();
-    start_pokes();
+    pokes_start(image);   /* src/pokes.cpp (C++): GOW3_POKE, the launcher's cheats and debug switches */
 #endif
     entered_game=1;
     struct { uint64_t argc; const char *argv[17]; } params = {(uint64_t)guest_argc, {NULL}};

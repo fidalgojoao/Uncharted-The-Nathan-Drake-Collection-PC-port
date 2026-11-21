@@ -199,7 +199,7 @@ if (WIN32)
     add_library(atrac9 STATIC ${GOW3_ATRAC9})
     target_compile_options(atrac9 PRIVATE -w)
     set_target_properties(atrac9 PROPERTIES C_STANDARD 99 INTERPROCEDURAL_OPTIMIZATION OFF)
-    add_executable(gow3-probe ../src/probe.c ${GOW3_RUNTIME} ${GOW3_U2MP} ${GOW3_U3FIX} ../src/compat_win.c ../src/cpu_check.c ../src/vulkan_smoke.c
+    add_executable(gow3-probe ../src/probe.c ${GOW3_RUNTIME} ${GOW3_U2MP} ${GOW3_U3FIX} ../src/pokes.cpp ../src/compat_win.c ../src/cpu_check.c ../src/vulkan_smoke.c
         ../packaging/windows/gow3-probe.rc)
     set_target_properties(gow3-probe PROPERTIES C_STANDARD 11 C_EXTENSIONS OFF)
     target_compile_options(gow3-probe PRIVATE $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Werror>)
@@ -227,6 +227,10 @@ if (WIN32)
     # u2mp net-event serializer test (no game needed): ninja -C out/gpu u2mp-events-test
     add_executable(u2mp-events-test EXCLUDE_FROM_ALL ../tests/test_u2mp_events.cpp ../src/u2mp/events.cpp)
     target_compile_options(u2mp-events-test PRIVATE -Wall -Wextra -Werror)
+    # GOW3_POKE parser test (no game needed): ninja -C out/gpu pokes-test
+    add_executable(pokes-test EXCLUDE_FROM_ALL ../tests/test_pokes.cpp ../src/pokes.cpp)
+    target_compile_options(pokes-test PRIVATE -UNDEBUG -Wall -Wextra -Werror)
+    target_include_directories(pokes-test PRIVATE ../src)
     # u2mp cinema file store test (no game needed): ninja -C out/gpu u2mp-cinema-test
     add_executable(u2mp-cinema-test EXCLUDE_FROM_ALL ../tests/test_u2mp_cinema.cpp ../src/u2mp/cinema_store.cpp)
     target_compile_options(u2mp-cinema-test PRIVATE -Wall -Wextra -Werror)
