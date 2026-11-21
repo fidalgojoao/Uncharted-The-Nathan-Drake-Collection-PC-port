@@ -405,10 +405,11 @@ bool g_window_ready;
 
 // gow3 20 Oct 2026 (idle CPU): the window thread pumped events every 2 ms forever (500 passes a
 // second, each taking the text-input and overlay locks and running SDL's event pump). While the
-// window has the focus it still does (mouse look, keyboard, pad). Without the focus SDL drops
-// the pad's and the keyboard's input anyway (SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS is not
-// set) and the mouse is released: it then pumps every 8 ms, every 16 ms while minimized, and a
+// window has the focus it still does (mouse look, keyboard, pad). Without the focus the keyboard
+// and the mouse do nothing: it then pumps every 8 ms, every 16 ms while minimized, and a
 // request for the window thread (the text input dialog) wakes it at once.
+// gow3 21 Nov 2026: the controller plays the game without the focus too (window.cpp), so with a
+// controller connected and the window not minimized it pumps every 2 ms as with the focus.
 // GOW3_WINDOW_IDLE_BACKOFF=0: every 2 ms always.
 std::mutex g_window_wake_mutex;
 std::condition_variable g_window_wake_cv;
@@ -434,7 +435,7 @@ void WindowThreadIdle(SDL_Window* window) {
         return on;
     }();
     const SDL_WindowFlags flags = backoff ? SDL_GetWindowFlags(window) : 0;
-    if (!backoff || ((flags & SDL_WINDOW_INPUT_FOCUS) && !(flags & SDL_WINDOW_MINIMIZED))) {
+    if (!backoff || (((flags & SDL_WINDOW_INPUT_FOCUS) || SDL_HasGamepad()) && !(flags & SDL_WINDOW_MINIMIZED))) {
         SDL_Delay(2);
         return;
     }

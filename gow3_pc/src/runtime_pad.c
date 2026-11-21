@@ -121,7 +121,7 @@ static void play_click(PadData *d) {
 static void apply_light_bar(SDL_Gamepad *g);
 /* GOW3_PAD_INDEX=<n> (gow3 25 Oct 2026, local co-op: two game windows on one PC, one controller
  * each): this game reads only the n-th controller SDL lists (1 = the first), none while fewer are
- * connected; window.cpp then lets controller input in without the focus. Unset: the first one. */
+ * connected. Unset: the first one. */
 static int pad_index(void) {
     static int index=-1;
     if (index<0) { const char *e=getenv("GOW3_PAD_INDEX"); index=e && atoi(e)>0 ? atoi(e) : 0; }
@@ -635,11 +635,8 @@ static void sample_host(PadData *d) {
     publish_pad_prompts(g);
     int keyboard_used=0, gamepad_used=0;
     const unsigned long long taps=__atomic_exchange_n(&pad_taps,0ull,__ATOMIC_RELAXED);
-    /* window.cpp lets SDL pass gamepad events while the window is in the background, so the pad
-     * counts only while the game window is in front; a window given its own controller
-     * (GOW3_PAD_INDEX, local co-op with one controller per window) always reads it. */
-    const int pad_live=g && (pad_index() || gow3gpu_window_foreground());
-    if (pad_live) {
+    /* The controller counts whichever window is in front (window.cpp: background events). */
+    if (g) {
         /* Buttons and triggers through the map: L2/R2 take the strongest of their sources (a
          * trigger's travel, a button fully); any source past 30 of 255 presses its PS4 button. */
         uint8_t l2=0, r2=0;

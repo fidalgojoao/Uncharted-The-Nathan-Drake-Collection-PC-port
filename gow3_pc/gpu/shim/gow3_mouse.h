@@ -1,7 +1,8 @@
 #pragma once
 // Mouse input for the pad (runtime_pad.c turns it into the right stick and PS4 buttons). The
 // window thread feeds SDL's mouse events here and captures the mouse (relative mode) while the
-// game window has the focus and no menu is open; Alt+Tab or the in-game menu releases it.
+// game window has the focus and no menu is open; Alt+Tab or the in-game menu releases it, and so
+// does using the controller (a click in the game window or the focus coming back takes it again).
 // The settings' mouse switch turns it off (GOW3_MOUSE=0 at start).
 
 #include <SDL3/SDL.h>
@@ -11,7 +12,8 @@ namespace Gow3Mouse {
 bool Enabled();
 // Window thread: whether the mouse should be captured now, and capturing/releasing it.
 void Update(SDL_Window* window, bool may_capture);
-// Window thread: a mouse event; true when it was used (the mouse is captured).
+// Window thread: every SDL event (mouse, controller, focus); true when it was used (the mouse is
+// captured and it is a mouse event).
 bool OnEvent(const SDL_Event& event);
 
 } // namespace Gow3Mouse

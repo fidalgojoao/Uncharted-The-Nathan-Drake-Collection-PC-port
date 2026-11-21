@@ -1,5 +1,4 @@
 // gow3: SDL3 window for the Vulkan swapchain (X11 or Wayland).
-#include <atomic> // game_in_front, shared with the pad thread
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -64,53 +63,6 @@ const Placement& WindowPlacement() {
     }();
     return placement;
 }
-// gow3 24 Oct 2026: true while this game window counts as the one in front. RefreshInFront sets it
-// from Windows on every PollEvents(); runtime_pad.c only reads the controller while it is true
-// (through gow3gpu_window_foreground below). Off Windows it keeps its initial true.
-std::atomic<bool> game_in_front{true};
-
-// gow3 27 Oct 2026 (reported: in exclusive fullscreen the keyboard worked and the controller did
-// not): Windows may name some other window as the foreground one, such as a window the game owns
-// or an overlay, while the game is still the one getting input. A foreground window whose root
-// owner is the game window counts as the game, and so does SDL's keyboard focus on it. Two
-// diagnostics go to the log: the class of such another window (first time only), and each start
-// of a stretch where the game is in front without SDL's keyboard focus (the state that used to
-// stop the controller).
-void RefreshInFront(SDL_Window* window) {
-#ifdef _WIN32
-    const HWND own = static_cast<HWND>(SDL_GetPointerProperty(
-        SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr));
-    const HWND top = GetForegroundWindow();
-    const bool windows_agrees =
-        own == nullptr || top == own || GetAncestor(top, GA_ROOTOWNER) == own;
-    const bool sdl_focused = SDL_GetKeyboardFocus() == window;
-    const bool in_front = windows_agrees || sdl_focused;
-    game_in_front = in_front;
-
-    static bool other_window_logged = false;
-    if (in_front && !windows_agrees && !other_window_logged) {
-        other_window_logged = true;
-        char class_name[128] = {};
-        GetClassNameA(top, class_name, sizeof(class_name));
-        std::printf("Input: another window is in front (class '%s') while the game has the keyboard "
-                    "focus; the controller works\n",
-                    class_name);
-        std::fflush(stdout);
-    }
-
-    static bool focus_gap_logged = false;
-    const bool focus_gap = in_front && !sdl_focused;
-    if (focus_gap && !focus_gap_logged) {
-        std::printf("Input: the window is in front but SDL has no keyboard focus; the controller "
-                    "keeps working\n");
-        std::fflush(stdout);
-    }
-    focus_gap_logged = focus_gap;
-#else
-    (void)window;
-#endif
-}
-
 // gow3 21 Nov 2026: the whole window black at once, so nothing else shows before the first game
 // frame (Windows; SDL clears only on its first paint, and nothing paints between that and the
 // first frame). Window thread, before the swapchain exists.
@@ -156,10 +108,15 @@ WindowSDL::WindowSDL(s32 width_, s32 height_, const char* title) : width{width_}
     // gow3 24 Oct 2026 (reported: the controller went dead until some key was pressed): SDL
     // discards gamepad events whenever it believes no window holds the keyboard focus, and it
     // can lose track of that focus with the game window still in front (a key press fixes it).
-    // Background events are therefore always on, and "is the game in front" comes from Windows
-    // (game_in_front). With GOW3_PAD_INDEX (local co-op) each window keeps its own controller
-    // even while the other window is in front.
-    SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+    // Background events are therefore always on.
+    // gow3 21 Nov 2026 (owner: keep playing with the controller while the mouse works in another
+    // window): the controller drives the game whichever window is in front. The keyboard and the
+    // mouse still only act while the game window has the focus (SDL sends their events to the
+    // focused window only; Gow3Mouse captures only then). A GOW3_WINDOW_BACKGROUND=1 test window
+    // leaves the player's controller alone unless GOW3_PAD_INDEX gives it one: SDL then drops
+    // controller input while that window has no focus.
+    const bool own_pad = std::getenv("GOW3_PAD_INDEX") && std::atoi(std::getenv("GOW3_PAD_INDEX")) > 0;
+    SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, Background() && !own_pad ? "0" : "1");
     if (!SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
         UNREACHABLE_MSG("Failed to initialize SDL video: {}", SDL_GetError());
     }
@@ -318,7 +275,6 @@ void WindowSDL::UpdateTextTitle() {
 }
 
 bool WindowSDL::PollEvents() {
-    RefreshInFront(window); // before anything else in the poll, as the pad gate depends on it
     {
         std::scoped_lock lock{text_mutex};
         if (text_requested) { // SDL text input must be toggled from the window thread
@@ -414,9 +370,3 @@ bool WindowSDL::PollEvents() {
 }
 
 } // namespace Frontend
-
-// C entry for runtime_pad.c (declared in gow3gpu.h): 1 while the game window counts as in front.
-extern "C" int gow3gpu_window_foreground() {
-    const bool in_front = Frontend::game_in_front.load(std::memory_order_relaxed);
-    return in_front ? 1 : 0;
-}

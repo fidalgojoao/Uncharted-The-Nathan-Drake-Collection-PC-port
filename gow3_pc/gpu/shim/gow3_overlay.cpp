@@ -1085,7 +1085,8 @@ void ControlsTab() {
             s.mouse = mouse;
             changed = true;
         }
-        Help("The mouse turns the camera and presses its buttons' actions. Off: the mouse is left alone.");
+        Help("The mouse turns the camera and presses its buttons' actions. Using the controller lets the "
+             "mouse go to other windows; a click in the game takes it back. Off: the mouse is left alone.");
         ImGui::PopID();
         ImGui::BeginDisabled(!s.mouse);
         changed |= PercentRow("Mouse sensitivity", s.mouse_sens, 25, 1000, "How far the camera turns per mouse movement.");

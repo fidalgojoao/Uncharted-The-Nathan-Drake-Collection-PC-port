@@ -618,7 +618,7 @@ Value page_display(const State &state) {
     std::vector<Value> picture;
     picture.push_back(row(p + "row:display_mode", "Display mode",
                           "Play in a regular window, in a borderless window (fast to Alt+Tab out of) or in "
-                          "fullscreen.",
+                          "fullscreen. The controller keeps playing while the mouse is used in another window.",
                           choice(p + "display_mode", ini_choice_value(state, "display_mode"), DISPLAY_MODES, "")));
     picture.push_back(row(p + "row:vsync", "VSync", "Keep on to avoid tearing, where the image splits along a line "
                                                     "while the camera turns.",

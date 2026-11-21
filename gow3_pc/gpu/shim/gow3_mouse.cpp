@@ -20,6 +20,7 @@ bool injected = false;
 unsigned held = 0; // bits 0-4: SDL buttons 1-5
 std::chrono::steady_clock::time_point wheel_until[2];
 bool captured = false;
+bool pad_in_use = false; ///< the controller was used last: the mouse stays free (window thread)
 
 constexpr unsigned WheelUp = 1u << 5, WheelDown = 1u << 6;
 
@@ -32,7 +33,7 @@ bool Enabled() {
 
 void Update(SDL_Window* window, bool may_capture) {
     const bool focused = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
-    const bool want = Enabled() && may_capture && focused;
+    const bool want = Enabled() && may_capture && focused && !pad_in_use;
     if (want == captured) {
         return;
     }
@@ -55,6 +56,30 @@ void Update(SDL_Window* window, bool may_capture) {
 }
 
 bool OnEvent(const SDL_Event& event) {
+    // gow3 21 Nov 2026 (owner: with the controller, the mouse must be free for other windows and
+    // screens): using the controller (a button, or a stick or trigger past half way) lets the
+    // mouse go; a click in the game window or the window getting the focus back (a click on it,
+    // Alt+Tab) takes it for mouse look again. Only noted here: the events go on as before.
+    switch (event.type) {
+    case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+        pad_in_use = true;
+        return false;
+    case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+        if (event.gaxis.value > 16384 || event.gaxis.value < -16384) {
+            pad_in_use = true;
+        }
+        return false;
+    case SDL_EVENT_WINDOW_FOCUS_GAINED:
+        pad_in_use = false;
+        return false;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        if (!captured) {
+            pad_in_use = false;
+        }
+        break;
+    default:
+        break;
+    }
     if (!captured) {
         return false;
     }
