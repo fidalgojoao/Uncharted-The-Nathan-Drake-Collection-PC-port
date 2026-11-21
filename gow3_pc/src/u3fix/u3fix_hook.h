@@ -35,8 +35,6 @@ bool install_audio_mix_direct(unsigned char *image, uint64_t size);
 bool install_cmdbuf_borrow(unsigned char *image, uint64_t size);
 // the game's script and animation error messages printed into the runtime log (script_errors_log.cpp)
 bool install_script_errors_log(unsigned char *image, uint64_t size);
-// names without debug memory are shown as their 32-bit ids (sid_names.cpp)
-bool install_sid_names(unsigned char *image, uint64_t size);
 // each skeleton-to-skeleton animation mapping the game looks up is printed once, found or missing (retarget_log.cpp)
 bool install_retarget_log(unsigned char *image, uint64_t size);
 // skeleton retargets switch to their multiplayer settings while a net game runs, as on PS3 (retarget_mode.cpp)

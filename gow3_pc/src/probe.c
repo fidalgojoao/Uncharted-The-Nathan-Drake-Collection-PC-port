@@ -11,6 +11,7 @@
 #include "u3fix/u3fix.h"
 #include "pokes.h"
 #include "debug_menus.h"
+#include "sid_names.h"
 #include "cpu_check.h"
 #include "orb_hook.h"
 #include "cheat_hook.h"
@@ -1529,6 +1530,7 @@ int main(int argc, char **argv) {
     install_u3_anim_guard(segments, ns, size);
     u3fix_install(image, size);   /* src/u3fix (C++): Uncharted 3 fixes found by their bytes */
     debug_menus_install(image, size);   /* src/debug_menus.cpp (C++): U2/U3 debug mode menu combos */
+    sid_names_install(image, size);   /* src/sid_names.cpp (C++): U2/U3 names for ids from the game data files */
     runtime_gamesettings_set_image(image, size);
     if (gpu_enabled && game_hooks) {
         install_orb_multiplier(segments, ns, size);
