@@ -23,6 +23,9 @@
 #define U3_PLAT_PC_INC
 #define WSF __attribute__((ms_abi))
 #define WSA __attribute__((force_align_arg_pointer))
+/* v7.228 (#81): the Windows glue up to plat_tls.inc lives in region A (region B, .text.ext, had no room left for the
+ * voice chat); plat_tls.inc and what follows it stay in region B. */
+#pragma clang section text=".text.platpc" rodata=".rodata.platpc"
 typedef struct { uint16_t family,port; uint32_t addr; uint8_t zero[8]; } WinSa;
 static struct {
  int (WSF *startup)(uint16_t,void*); int (WSF *lasterr)(void); uint64_t (WSF *socket_)(int,int,int); int (WSF *bind_)(uint64_t,const void*,int);
@@ -183,6 +186,10 @@ static int plat_sys_bind(void){
  if(r)*(void**)&pc_f.rand_=G(r,"SystemFunction036");                                /* RtlGenRandom; without it plat_tls falls back to rdtsc mixing */
  *(void**)&pc_f.getproc=gp;*(void**)&pc_f.loadlib=ll;return 1;}
 static int plat_thread_ready(void){return pc_f.cthread!=0;}
+/* v7.228 #81: the voice chat table of the PC runtime (gow3_pc u3voice.h), from the game executable's export
+ * uncharted_u3_voice (PEB ImageBaseAddress); null when the runtime has none. */
+static const char pc_voice_export[]="uncharted_u3_voice";
+__attribute__((visibility("hidden"),noinline)) void *u3h_voice_api(void){uint8_t *peb;__asm__ volatile("mov %%gs:0x60,%0":"=r"(peb));void *f=peb?pc_exp(*(uint8_t**)(peb+0x10),pc_voice_export):0;return f?((void*(WSF*)(void))f)():0;}
 static int plat_resolve(const char *host,uint32_t *addr){if(!plat_sys_bind())return -1;uint8_t *he=(uint8_t*)pc_f.ghbn(host);uint8_t **al=he?*(uint8_t***)(he+0x18):0;if(!al||!al[0])return -1;copy(addr,al[0],4);return 0;}
 static void *plat_alloc(uint64_t bytes){if(!plat_sys_bind())return 0;return pc_f.valloc(0,bytes,0x3000,4);}   /* v7.102: bind on first use (LAN had none) */   /* MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE */
 static int plat_thread(plat_thread_fn fn,void *arg,uint64_t stack){uint32_t tid;if(!plat_sys_bind())return -1;return pc_f.cthread(0,stack,(void*)fn,arg,0,&tid)?0:-1;}
@@ -190,6 +197,7 @@ static void plat_sleep_ms(uint32_t ms){if(pc_f.sleep_)pc_f.sleep_(ms);}
 static int plat_utc(uint16_t st[8]){if(!pc_f.gettime)return -1;pc_f.gettime(st);return 0;}
 
 static int plat_random(void *b,uint32_t n){if(!pc_f.rand_)return -1;return pc_f.rand_(b,n)?0:-1;}
+#pragma clang section text=".text.ext" rodata=".rodata.ext"   /* back to region B for plat_tls.inc (BearSSL) */
 #include "plat_tls.inc"
 #pragma clang section text=".text.ext" rodata=".rodata.ext"
 

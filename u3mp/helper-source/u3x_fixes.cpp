@@ -40674,6 +40674,237 @@ extern "C" U3X_FN int64_t u3x_lnb_s12(void *be, uint8_t *ss, const uint8_t *data
 }
 // ===== r2 end G10/part_b.cpp =====
 }  // namespace r2_G10
+
+// ===== v7.228 (#81): voice chat between PC players =====
+// PS3 1.19 carried its voice (cellVoice) inside the type-0 data packets: after the game payload one bit "has voice",
+// then a 3-bit count and the frames. Voice from a connection lights its talking timer; a muted player is neither heard
+// nor sent to, and the player list's voice row reads "Unmute" for a muted player, else "Mute" (one action toggles it).
+// The PS4 game has no voice code left. On PC the runtime does the audio (gow3_pc u3voice: microphone, Opus, playback,
+// reached through the game executable's export uncharted_u3_voice, u3h_voice_api); this part carries its frames
+// between PC helpers in the same data packets, after the payload:
+//   1 bit    has voice: always 0 (PS3 / RPCS3 and older helpers stop reading here, so they never see the rest)
+//   16 bits  VC_TAG: the sender is a PC helper with the voice runtime (written only then; this is the capability)
+//   4 bits   n frames (0..8); when n > 0: 16 bits the first frame's sequence, then per frame 8 bits size s, s bytes
+// Frames go only to connections that sent VC_TAG and are not muted, each frame once: a ring of the last 16 frames and,
+// per connection, the sequence it was sent up to. Mute is by player name (party list and in-match player list), both
+// ways. Region B had no room left: plat_pc.inc's Windows glue moved to region A to make it (v7.228).
+
+extern "C" U3H_IMPORT void *u3h_voice_api(void);   // plat_pc.inc: the runtime's table (or null); plat_ps4.inc: null
+
+namespace vc {
+namespace {
+
+// the runtime's table (gow3_pc/src/u3voice/u3voice.h, version 1); the two float entries are not called from here
+struct Api {
+    uint32_t version;
+    int (*take)(uint8_t *out, int cap, uint16_t *first_sequence);
+    void (*put)(int peer, uint16_t first_sequence, const uint8_t *data, int size, int count);
+    void (*set_muted)(int peer, int on);
+    int (*muted)(int peer);
+    void (*reset)(int peer);
+    int (*talking)(int peer);
+    uintptr_t volume, set_volume;
+    void (*stop)();
+};
+static_assert(__builtin_offsetof(Api, take) == 8 && __builtin_offsetof(Api, reset) == 40 &&
+              __builtin_offsetof(Api, stop) == 72, "u3voice table layout");
+
+struct Peer { uint32_t name; uint16_t sent; uint8_t capable, pad; };   // per connection entry
+
+constexpr uint32_t PEERS = 32, RING = 16, FRAME = 256, MAX_FRAMES = 8, MUTES = 16, IDLE_FRAMES = 600, TAG = 0x7663;
+constexpr uintptr_t MENU = 0x17bd080, QA_COPY = 0x14f8, QA_WIDGETS = 0x14b0, SELECTED_ID = 0x17c3871, ENTRY_NAME = 7;
+constexpr uint32_t TEXT_MUTE = 0xffbbac12u, TEXT_UNMUTE = 0xfa9c4838u;
+constexpr uint32_t ACT_PARTY_VOICE = 0x6547d63cu, ACT_LIST_VOICE = 0x7273924cu;   // party list / in-match player list
+
+U3X_RO const char t_capable[] = "voice chat: PC voice on connection ";
+
+U3X_BSS const Api *api;
+U3X_BSS uint8_t looked, open;          // table looked up; take / put may have opened the audio
+U3X_BSS uint8_t wanted;                // a connection took frames in the last send round
+U3X_BSS uint16_t head;                 // sequence one past the newest frame in the ring
+U3X_BSS uint32_t idle;                 // frames without voice traffic (the audio closes after IDLE_FRAMES)
+U3X_BSS Peer peers[PEERS];
+U3X_BSS uint32_t muted_names[MUTES];   // name hashes of the muted players, 0 = free
+U3X_BSS uint8_t ring[RING][FRAME];     // by sequence % RING: size byte + Opus packet
+U3X_BSS uint8_t frames[MAX_FRAMES * FRAME];   // take() output / put() input
+
+U3X_FN [[clang::minsize]] const Api *table() {
+    if (!looked) {
+        looked = 1;
+        const Api *a = static_cast<const Api *>(u3h_voice_api());
+        if (ptr_ok(a) && a->version >= 1) api = a;
+    }
+    return api;
+}
+
+// a player name (16 characters at most) as a 32-bit FNV-1a hash, never 0
+U3X_FN [[clang::minsize]] uint32_t name_hash(const uint8_t *n) {
+    uint32_t h = 0x811c9dc5u;
+    for (int i = 0; i < 16 && n[i]; i++) h = (h ^ n[i]) * 0x01000193u;
+    return h ? h : 1;
+}
+
+U3X_FN [[clang::minsize]] int mute_slot(uint32_t hash) {
+    for (uint32_t i = 0; i < MUTES; i++)
+        if (muted_names[i] == hash) return static_cast<int>(i);
+    return -1;
+}
+
+U3X_FN [[clang::minsize]] bool selected_muted(uintptr_t base) { return mute_slot(name_hash(&at<uint8_t>(base + SELECTED_ID))) >= 0; }
+
+// the record of connection `index`; another player on the entry starts it again (and the runtime forgets the old one)
+U3X_FN [[clang::minsize]] Peer *peer(const Api *a, uint32_t index, const uint8_t *entry) {
+    Peer *p = &peers[index];
+    const uint32_t h = name_hash(entry + ENTRY_NAME);
+    if (p->name != h) {
+        p->name = h;
+        p->capable = 0;
+        p->sent = head;
+        a->reset(static_cast<int>(index));
+    }
+    return p;
+}
+
+// the voice row of the quick-action list on screen (the game's in-match list or the helper's party list) says
+// "Unmute" for a muted player, as on PS3; the menu keeps the shown list at +0x14f8 and its row widgets at +0x14b0
+U3X_FN [[clang::minsize]] void fix_texts(uintptr_t base) {
+    uint8_t *menu = &at<uint8_t>(base + MENU);
+    const int32_t count = rd<int32_t>(menu, QA_COPY + 8);
+    for (int32_t k = 0; k < count && k < 8; k++) {
+        const uint32_t action = rd<uint32_t>(menu, QA_COPY + 0x10 + 8 * k);
+        if (action != ACT_PARTY_VOICE && action != ACT_LIST_VOICE) continue;
+        const uint32_t text = selected_muted(base) ? TEXT_UNMUTE : TEXT_MUTE;
+        *reinterpret_cast<uint32_t *>(menu + QA_COPY + 0xc + 8 * k) = text;
+        uint8_t *row = rd<uint8_t *>(menu, QA_WIDGETS + 8 * k);
+        if (ptr_ok(row)) *reinterpret_cast<uint32_t *>(row + 8) = text;
+    }
+}
+
+}  // namespace
+}  // namespace vc
+
+extern "C" {
+
+// every frame (helper kind 16): the Mute / Unmute text; the audio closes after 10 s without voice traffic
+U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_frame(uintptr_t base) {
+    using namespace vc;
+    const Api *a = table();
+    if (!a) return;
+    fix_texts(base);
+    if (open && ++idle > IDLE_FRAMES) {
+        a->stop();
+        open = 0;
+    }
+}
+
+// a menu action (the catch-all, every action): the voice row of the party list or of the in-match player list mutes
+// or unmutes the selected player
+U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_action(uintptr_t base, const int32_t *ev) {
+    using namespace vc;
+    const uint32_t action = static_cast<uint32_t>(ev[0]);
+    if ((action != ACT_PARTY_VOICE && action != ACT_LIST_VOICE) || !table()) return;
+    const uint32_t h = name_hash(&at<uint8_t>(base + SELECTED_ID));
+    const int slot = mute_slot(h);
+    if (slot >= 0) {
+        muted_names[slot] = 0;
+    } else {
+        const int free_slot = mute_slot(0);
+        if (free_slot >= 0) muted_names[free_slot] = h;
+    }
+    fix_texts(base);
+}
+
+// start of a send round (G11 send_all): the microphone's new frames into the ring, while a connection takes them
+U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_tick() {
+    using namespace vc;
+    const Api *a = table();
+    if (!a || !wanted) return;
+    wanted = 0;
+    open = 1;
+    idle = 0;
+    uint16_t first = 0;
+    const int n = a->take(frames, static_cast<int>(sizeof frames), &first);
+    if (n <= 0 || n > static_cast<int>(MAX_FRAMES)) return;
+    if (first != head)
+        for (Peer &p : peers) p.sent = first;
+    uint32_t from = 0;
+    for (int i = 0; i < n; i++) {
+        uint8_t *slot = ring[static_cast<uint16_t>(first + i) % RING];
+        const uint32_t size = frames[from];
+        for (uint32_t k = 0; k <= size; k++) slot[k] = frames[from + k];
+        from += 1 + size;
+    }
+    head = static_cast<uint16_t>(first + n);
+}
+
+// 1 when connection `index` has frames to be sent (a data packet then goes out even without game data); a voice
+// connection that is not muted keeps the microphone's frames coming (u3x_vc_tick)
+U3X_FN [[clang::minsize]] int u3x_vc_due(uint32_t index) {
+    using namespace vc;
+    const Peer &p = peers[index];
+    if (!api || !p.capable || mute_slot(p.name) >= 0) return 0;
+    wanted = 1;
+    return p.sent != head;
+}
+
+// after a data packet's payload: "has voice" 0, then (this PC has the voice runtime) the PC voice block
+U3X_FN [[clang::minsize]] void u3x_vc_write(uint32_t index, const uint8_t *entry, GtStream *out) {
+    using namespace vc;
+    u3x_gt_write(out, 0, 1);
+    const Api *a = api;
+    if (!a) return;
+    u3x_gt_write(out, TAG, 16);
+    Peer *p = peer(a, index, entry);
+    uint32_t n = 0;
+    if (p->capable && mute_slot(p->name) < 0) {
+        wanted = 1;
+        n = static_cast<uint16_t>(head - p->sent);
+        if (n > MAX_FRAMES) {
+            n = MAX_FRAMES;
+            p->sent = static_cast<uint16_t>(head - MAX_FRAMES);
+        }
+    }
+    u3x_gt_write(out, n, 4);
+    if (!n) return;
+    u3x_gt_write(out, p->sent, 16);
+    for (; p->sent != head; p->sent++) {
+        const uint8_t *f = ring[p->sent % RING];
+        for (uint32_t k = 0; k <= f[0]; k++) u3x_gt_write(out, f[k], 8);
+    }
+}
+
+// after a fresh data packet's payload (G11 receive_all): a PC voice block marks the connection voice-capable and its
+// frames go to the runtime; PS3 voice (bit 1) and packets without the block are left alone
+U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_read(uintptr_t base, uint32_t index, const uint8_t *entry, GtStream *in, Log log) {
+    using namespace vc;
+    const Api *a = table();
+    if (!a || in->pos > in->max || in->max - in->pos < 21) return;
+    if (u3x_gt_read(in, 1) || u3x_gt_read(in, 16) != TAG) return;
+    Peer *p = peer(a, index, entry);
+    if (!p->capable) {
+        p->capable = 1;
+        p->sent = head;
+        Line l;
+        log(base, l.s(t_capable).d(index).z());
+    }
+    const uint32_t n = u3x_gt_read(in, 4);
+    if (!n || n > MAX_FRAMES || in->max - in->pos < 16) return;
+    const uint16_t first = static_cast<uint16_t>(u3x_gt_read(in, 16));
+    uint32_t size = 0, count = 0;
+    for (; count < n && in->max - in->pos >= 8; count++) {
+        const uint32_t s = u3x_gt_read(in, 8);
+        if (!s || in->max - in->pos < 8 * s) break;
+        frames[size++] = static_cast<uint8_t>(s);
+        for (uint32_t k = 0; k < s; k++) frames[size++] = static_cast<uint8_t>(u3x_gt_read(in, 8));
+    }
+    if (!count || mute_slot(p->name) >= 0) return;
+    open = 1;
+    idle = 0;
+    a->put(static_cast<int>(index), first, frames, static_cast<int>(size), static_cast<int>(count));
+}
+
+}  // extern "C"
+
 namespace r2_G11 {
 // ===== r2 begin G11/part.cpp =====
 // G11: game sockets, packet pump, net clock block, time sync.
@@ -40722,6 +40953,11 @@ void u3x_gt_pump(uintptr_t base, Log log);
 void u3x_gt_frame(uintptr_t base, Log log);
 void u3x_gt_net_time(uintptr_t base);
 void u3x_gt_master_channel(uintptr_t base);
+// voice chat (v7.228 #81, own block before this group)
+void u3x_vc_tick();
+int u3x_vc_due(uint32_t index);
+void u3x_vc_write(uint32_t index, const uint8_t *entry, GtStream *out);
+void u3x_vc_read(uintptr_t base, uint32_t index, const uint8_t *entry, GtStream *in, Log log);
 }
 
 namespace g11 {
@@ -40864,7 +41100,7 @@ U3X_FN void receive_all(uintptr_t base, uint32_t now, Log log) {
         } else if (type == 0) {   // data: the game reads it
             eb[100]++;
             if (entry) {
-                u3x_gt_base_read(base, entry + 0x40, &in);
+                if (u3x_gt_base_read(base, entry + 0x40, &in)) u3x_vc_read(base, index, entry, &in, log);   // v7.228 #81
                 u3x_ev_scan(base, index, rd<int32_t>(entry, 0x34), entry + 0x40, 2, eb[113], log);
             }
         } else {
@@ -40877,6 +41113,7 @@ U3X_FN void receive_all(uintptr_t base, uint32_t now, Log log) {
 U3X_FN void send_all(uintptr_t base, uint32_t now, Log log) {
     uint32_t *eb = ext_eb();
     Timer *timer = timers();
+    u3x_vc_tick();   // v7.228 #81: the microphone's new frames
     for (uint32_t index = 0; index < ENTRIES; index++) {
         uint8_t *entry = entry_at(base, index);
         const int32_t handle = rd<int32_t>(entry, 0x34);
@@ -40905,14 +41142,14 @@ U3X_FN void send_all(uintptr_t base, uint32_t now, Log log) {
         uint32_t next = f_add(t->data, F_DATA_GAP);
         if (f_not_above(next, now)) next = f_add(now, F_DATA_GAP);
         t->data = next;
-        if (!f_not_above(t->keep, now) && !u3x_gt_has_data(base, sub)) continue;
+        if (!f_not_above(t->keep, now) && !u3x_gt_has_data(base, sub) && !u3x_vc_due(index)) continue;
         t->keep = f_add(now, F_KEEP_ALIVE);
         clear_packet();
         GtStream out;
         open_stream(&out, packet, RECEIVE_SIZE);
         u3x_gt_write(&out, 0, 8);
         u3x_gt_base_write(base, sub, &out);
-        u3x_gt_write(&out, 0, 1);   // no voice data
+        u3x_vc_write(index, entry, &out);   // "has voice" 0, then the PC voice block (v7.228 #81)
         const int32_t sent = send_stream(&out, ip, port);
         if (sent > 0) field<uint32_t>(entry, 0xf4) += static_cast<uint32_t>(sent);
     }

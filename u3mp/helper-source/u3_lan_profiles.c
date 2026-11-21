@@ -2455,8 +2455,9 @@ EXT static void lan_delete_profile(uintptr_t base,ProfileState *s,uint32_t actio
 EXT static void motd_ok119(uintptr_t base,ProfileState *s){u3x_motd_ok(base,s);}   /* v7.213 C++ (G32) */
 EXT static void mp_quit119(uintptr_t base,ProfileState *s){u3x_mp_quit(base,s);}   /* v7.213 C++ (G32) */
 __attribute__((section(".text.ext"),noinline)) static int rpm_catch(uintptr_t base,ProfileState *s,uint32_t id);
+__attribute__((visibility("hidden"))) void u3x_vc_action(uintptr_t base,const int32_t *ev);__attribute__((visibility("hidden"))) void u3x_vc_frame(uintptr_t base);   /* v7.228 #81 voice chat (C++) */
 EXT static void catch_all(uintptr_t base,int32_t *event,ProfileState *s){
- u3x_menu_action(base,event,s);}   /* v7.142 C++ */
+ u3x_vc_action(base,event);u3x_menu_action(base,event,s);}   /* v7.142 C++; v7.228 #81: voice rows (Mute / Unmute) */
 /* PS3 0x28dbf8 case 0xcd127c29 (Splitscreen): with no second user available (splitscreen manager
  * 0x125ef1c +0x24 clear) and splitscreen not active (f_383ff8), it shows dialog 0x7c31f4d0 with
  * title 0xc6467f2d. PS4 has no splitscreen manager or second-user selection ("Select Second User"
@@ -7868,7 +7869,7 @@ int u3_profile_event(uintptr_t base,int32_t *event,int kind,ProfileState *s,uint
  if(kind==42){if(base)lan_choice(base,event,s);return 1;}        /* v4.93 LAN choice callback 0x66e510 = PS3 f_27fdf0 */
  if(kind==8){uint32_t m=*(uint32_t*)((uint8_t*)s+0x3d78);int ok=prepare_lobby_menu(event,((m&0x1000000)?1:0)|((m&0x4000000)?2:0));if(ok&&base)register_lobby_click(base);return ok;}
  if(kind==3){if(event[0]==6)startup_tick(base,s);if(base&&!*(uint8_t*)(base+0x17d5c60))stage_tick(base,s);if(base&&mp_lan_or_online(base))loadout_tick(base,s);return 1;}   /* sw02: kit models online too */
- if(kind==16){if(base){net_shutdown_tick(base,s);lnb_tick(base,s);lnb_refresh(base);stage_guard(base,s);force_end_tick(base,s);sd_tick(base,s);nd_tick(base);oasis_tick(base,s);solo_patch_tick(base,s);ss_watch_tick(base,s);adv_tick(base,s);ol_tick(base,s);SMN_TICK(base,s);lb_tick119(base,s);fr_tick(base,s);emb_tick119(base,s);emb_wall119(base);mm_start_tick(base,s);j01_tick(base,s);j09_tick(base);j12_tick(base);h24_tick(base);l01_tick(base,s);m03_tick(base,s);onm_tick(base,s);m04_tick(base);s16_tick(base);f4_tick(base);w01_tick(base);h22_tick(base);h04_tick(base);h08_tick(base);n10_tick(base);n22_tick(base);pl_hidden_guard(base,s);}return 1;}   /* per-frame tick (0x10ff75c): v4.93 LAN discovery (its camera-list dump to state+0x2700 was removed) */
+ if(kind==16){if(base){net_shutdown_tick(base,s);lnb_tick(base,s);lnb_refresh(base);stage_guard(base,s);force_end_tick(base,s);sd_tick(base,s);nd_tick(base);oasis_tick(base,s);solo_patch_tick(base,s);ss_watch_tick(base,s);adv_tick(base,s);ol_tick(base,s);SMN_TICK(base,s);lb_tick119(base,s);fr_tick(base,s);emb_tick119(base,s);emb_wall119(base);mm_start_tick(base,s);j01_tick(base,s);j09_tick(base);j12_tick(base);h24_tick(base);l01_tick(base,s);m03_tick(base,s);onm_tick(base,s);m04_tick(base);s16_tick(base);f4_tick(base);w01_tick(base);h22_tick(base);h04_tick(base);h08_tick(base);n10_tick(base);n22_tick(base);pl_hidden_guard(base,s);u3x_vc_frame(base);}return 1;}   /* per-frame tick (0x10ff75c): v4.93 LAN discovery (its camera-list dump to state+0x2700 was removed) */
  if(kind==17){if(base){RS(s)[12]++;net_local_players_tick(base,(uint8_t*)event,s,17);}return 1;}   /* 0x722e7f, PS3 f_31ad5c */
  if(kind==18){if(base){RS2(s)[2]++;net_local_players_tick(base,(uint8_t*)event,s,18);}return 1;}   /* 0x72628e, PS3 f_31b458 */
  /* v5.11 kind 43: PS4 0x72b570 (NetGameManager level/actor want list = PS3 f_310afc) dropped PS3's

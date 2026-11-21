@@ -105,6 +105,7 @@ static void plat_net_pick(void){if(X.room[0]||!X.net[0])return;X.room[0]=1;}   /
 static int plat_sock_ready(void){return X.room[0]==1;}
 static int plat_sys_bind(void){return plat_ps4.fn[PF_PTHREAD_CREATE]&&plat_ps4.fn[PF_MAP_FLEX]&&plat_ps4.fn[PF_RESOLVER_CREATE]&&plat_ps4.fn[PF_USLEEP];}
 static int plat_thread_ready(void){return plat_ps4.fn[PF_PTHREAD_CREATE]!=0;}
+__attribute__((visibility("hidden"),noinline)) void *u3h_voice_api(void){return 0;}   /* v7.228 #81: voice chat is PC only */
 
 /* ---- raw sockets on the X.net[NETF_*] slots (sceNet: int descriptors, negative SCE errors) ---- */
 typedef struct { uint8_t len,family; uint16_t port; uint32_t addr; uint8_t zero[8]; } PlatSaIn;
