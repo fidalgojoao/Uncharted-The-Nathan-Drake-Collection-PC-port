@@ -11,6 +11,10 @@ Rectangle {
     signal buttonClicked()
     // being typed in: the page holds its updates meanwhile (NodeView), so this box is not rebuilt after each letter
     readonly property bool editing: input.activeFocus
+    // controller / keyboard focus (navigator.cpp): A / Enter puts the cursor in the box (B / Escape or a move: out)
+    property string navId: ""
+    readonly property bool navTarget: true
+    function navActivate() { input.forceActiveFocus() }
     implicitWidth: 240
     implicitHeight: 36
     radius: Theme.radiusField
@@ -40,10 +44,12 @@ Rectangle {
         visible: !!field.buttonText
         kind: "primary"
         text: field.buttonText
+        navId: field.navId + ":button"
         anchors.right: parent.right
         anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height - 10
         onClicked: { field.buttonClicked(); input.focus = false }
     }
+    FocusRing {}
 }

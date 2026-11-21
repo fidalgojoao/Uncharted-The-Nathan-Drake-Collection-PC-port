@@ -5,6 +5,9 @@ Item {
     id: toggle
     property bool checked: false
     signal toggled(bool value)
+    property string navId: ""   // controller / keyboard focus (navigator.cpp): A / Enter flips it
+    readonly property bool navTarget: true
+    function navActivate() { toggle.toggled(!toggle.checked) }
     implicitWidth: 52
     implicitHeight: 28
 
@@ -27,4 +30,5 @@ Item {
         cursorShape: Qt.PointingHandCursor
         onClicked: toggle.toggled(!toggle.checked)
     }
+    FocusRing { round: toggle.height / 2 }
 }

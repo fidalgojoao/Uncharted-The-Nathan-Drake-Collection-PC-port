@@ -8,6 +8,16 @@ Rectangle {
     property string value: ""
     property string label: ""
     signal picked(string value)
+    // controller / keyboard focus (navigator.cpp): A / Enter opens the list, which then takes up / down, A and B
+    property string navId: ""
+    readonly property bool navTarget: true
+    property int navIndex: -1   // the list's choice under the controller / keyboard
+    readonly property int navCount: options.length
+    readonly property int navChosen: options.findIndex(o => String(o[0]) === String(value))
+    function navActivate() { menu.open() }
+    function navPick(index) { const v = String(options[index][0]); menu.close(); box.picked(v) }
+    function navClose() { menu.close() }
+    function navShow(index) { list.positionViewAtIndex(index, ListView.Contain) }
     implicitWidth: Math.max(180, widest.implicitWidth + 56)
     implicitHeight: 36
     radius: Theme.radiusField
@@ -42,10 +52,14 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
         onClicked: menu.open()
     }
+    FocusRing {}
 
     Popup {
         id: menu
         y: box.height + 4
+        focus: true   // the keys go to the open list
+        onOpened: navigator.listOpened(box)
+        onClosed: navigator.listClosed(box)
         width: box.width
         height: Math.min(320, list.contentHeight + 12)
         padding: 6
@@ -54,18 +68,22 @@ Rectangle {
             id: list
             anchors.fill: parent
             clip: true
+            focus: true
+            Keys.onPressed: (event) => event.accepted = navigator.key(event.key, event.modifiers)
             model: box.options
             delegate: Rectangle {
                 width: list.width
                 height: 30
                 radius: 8
                 readonly property bool selected: String(modelData[0]) === String(box.value)
-                color: itemMouse.containsMouse ? Theme.gold : (selected ? Theme.fieldHi : "transparent")
+                // under the mouse, or the controller / keyboard's choice while one is in use
+                readonly property bool lit: itemMouse.containsMouse || (navigator.shown && index === box.navIndex)
+                color: lit ? Theme.gold : (selected ? Theme.fieldHi : "transparent")
                 Text {
                     x: 10
                     anchors.verticalCenter: parent.verticalCenter
                     text: (parent.selected ? "✓  " : "     ") + modelData[1]
-                    color: itemMouse.containsMouse ? Theme.ink : Theme.text
+                    color: parent.lit ? Theme.ink : Theme.text
                     font.pixelSize: Theme.fontSmall
                 }
                 MouseArea {

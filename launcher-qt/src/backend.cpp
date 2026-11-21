@@ -4,10 +4,14 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QUrl>
+#include <QWindow>
+
+#include <cstdlib>
 
 namespace {
 
@@ -39,6 +43,9 @@ Backend::Backend(const QString &direct, QObject *parent) : QObject(parent), m_di
     });
     m_tick.setInterval(50);   // the core's timers: the game's output, the imports, the update, the online section
     connect(&m_tick, &QTimer::timeout, this, [this] { deliver(drain(m_coreTick, nullptr)); });
+    m_navTimer.setInterval(30);   // the controllers for the window's navigation
+    connect(&m_navTimer, &QTimer::timeout, this, &Backend::navPoll);
+    m_navClock.start();
     start();
 }
 
@@ -235,6 +242,90 @@ void Backend::loadNative(const QString &root)
         return;
     m_unPage = reinterpret_cast<PageFn>(m_dll.resolve("un_page"));
     m_unPageAct = reinterpret_cast<PageActFn>(m_dll.resolve("un_page_act"));
+    m_padInit = reinterpret_cast<PadInitFn>(m_dll.resolve("un_pad_init"));
+    m_padNav = reinterpret_cast<PadNavFn>(m_dll.resolve("un_pad_nav"));
+    if (m_padInit && m_padNav)
+        m_navTimer.start();
+}
+
+namespace {
+// what the controller's buttons do in the window (bits as un_pad_nav sets them: SDL3 button order, then the triggers)
+constexpr unsigned PadA = 1u << 0, PadB = 1u << 1, PadX = 1u << 2, PadStart = 1u << 6, PadLB = 1u << 9,
+                   PadRB = 1u << 10, PadUp = 1u << 11, PadDown = 1u << 12, PadLeft = 1u << 13, PadRight = 1u << 14,
+                   PadLT = 1u << 21, PadRT = 1u << 22;
+// the left stick pushed past the dead zone, as four more "buttons"
+constexpr unsigned StickUp = 1u << 24, StickDown = 1u << 25, StickLeft = 1u << 26, StickRight = 1u << 27;
+constexpr int StickDeadZone = 16000;
+constexpr qint64 RepeatDelay = 400, RepeatEvery = 110;   // ms: a held direction moves again after this, then this often
+} // namespace
+
+// A controller drives the window like the arrow keys, Enter and Escape: each new press becomes a padNav action for
+// Main.qml, a held direction repeats. Only while this window is the active one, so a game in front keeps its pad.
+void Backend::navPoll()
+{
+    const QWindow *window = QGuiApplication::focusWindow();
+    const bool active = m_ready && !m_closed && window && window->isVisible() && window->isActive()
+                        && QGuiApplication::applicationState() == Qt::ApplicationActive;
+    if (!active) {
+        m_navMute = true;   // a button still held when the window comes back does nothing
+        m_navHeld = 0;
+        return;
+    }
+    if (!m_padReady) {   // SDL3 loads on the first poll with the window shown (never for a --play start)
+        const std::wstring r = QDir::toNativeSeparators(m_root).toStdWString();
+        if (!m_padInit(r.c_str())) {
+            m_navTimer.stop();   // no SDL3.dll: no controller navigation
+            return;
+        }
+        m_padReady = true;
+    }
+    unsigned held = 0;
+    int lx = 0, ly = 0;
+    if (m_padNav(&held, &lx, &ly) <= 0) {
+        m_navMute = true;
+        m_navHeld = 0;
+        return;
+    }
+    if (std::abs(lx) > StickDeadZone || std::abs(ly) > StickDeadZone) {   // the larger axis only: no diagonal jumps
+        if (std::abs(lx) >= std::abs(ly))
+            held |= lx < 0 ? StickLeft : StickRight;
+        else
+            held |= ly < 0 ? StickUp : StickDown;
+    }
+    const unsigned before = m_navHeld;
+    m_navHeld = held;
+    // a Controls slot waiting for a button (or a key) takes the input; afterwards nothing counts until all is let go
+    if (m_padPoll.isActive() || nativeCapturing() || m_chrome.value("capturing").toBool()) {
+        m_navMute = true;
+        return;
+    }
+    if (m_navMute) {
+        m_navMute = held != 0;
+        return;
+    }
+    const unsigned pressed = held & ~before;
+    const qint64 now = m_navClock.elapsed();
+    for (const auto &[bits, action] : {std::pair{PadUp | StickUp, "up"}, std::pair{PadDown | StickDown, "down"},
+                                        std::pair{PadLeft | StickLeft, "left"}, std::pair{PadRight | StickRight, "right"}}) {
+        if ((held & bits) && !(before & bits)) {
+            m_navRepeat = bits;
+            m_navRepeatAt = now + RepeatDelay;
+            emit padNav(QLatin1String(action));
+        } else if ((held & bits) && m_navRepeat == bits && now >= m_navRepeatAt) {
+            m_navRepeatAt = now + RepeatEvery;
+            emit padNav(QLatin1String(action));
+        }
+    }
+    if (!(held & m_navRepeat))
+        m_navRepeat = 0;
+    for (const auto &[bit, action] : {std::pair{PadA, "accept"}, std::pair{PadB, "back"}, std::pair{PadX, "secondary"},
+                                       std::pair{PadLB, "tabPrev"}, std::pair{PadRB, "tabNext"},
+                                       std::pair{PadLT, "gamePrev"}, std::pair{PadRT, "gameNext"},
+                                       std::pair{PadStart, "play"}}) {
+        if (pressed & bit) {
+            emit padNav(QLatin1String(action));
+        }
+    }
 }
 
 namespace {

@@ -71,9 +71,12 @@ UN_API int un_pid_alive(unsigned long pid);
 
 /* Controllers through SDL3 (gamepads.cpp). un_pad_init: loads SDL3 once (root: the launcher's folder); 1 when
  * controllers can be read. un_pad_state out: the number of controllers, the first one's style (playstation, xbox or
- * empty) and the buttons held (space-separated), one per line. */
+ * empty) and the buttons held (space-separated), one per line. un_pad_nav (the window's menu navigation): the held
+ * buttons of all pads as bits by SDL button index (21 / 22: left / right trigger) and the left stick; returns the
+ * pad count, -1 without SDL. */
 UN_API int un_pad_init(const wchar_t *root);
 UN_API int un_pad_state(char *out, int cap);
+UN_API int un_pad_nav(unsigned *buttons, int *lx, int *ly);
 
 /* The game starter's settings from its environment (starter.cpp). what: hardware_threads, job_sleep (arg: executable;
  * 1/0), job_workers, u3_exposure, instance_suffix, u3mp_image (arg: executable; a message line, then JSON). */

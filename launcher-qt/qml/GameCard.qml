@@ -6,6 +6,10 @@ Item {
     property var game: ({})
     property Item backdrop: null
     readonly property bool selected: !!game.selected
+    // controller / keyboard focus (navigator.cpp): A / Enter selects the game
+    readonly property bool navTarget: true
+    readonly property string navId: "game:" + (game.key || "")
+    function navActivate() { backend.selectGame(card.game.key) }
     scale: mouse.pressed ? 0.98 : 1
     Behavior on scale { NumberAnimation { duration: 90 } }
 
@@ -52,4 +56,5 @@ Item {
         onClicked: backend.selectGame(card.game.key)
         onDoubleClicked: backend.playGame(card.game.key)
     }
+    FocusRing { round: 18 }
 }

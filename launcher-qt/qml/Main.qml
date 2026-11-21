@@ -34,6 +34,7 @@ ApplicationWindow {
         saved.sync()
     }
     Component.onCompleted: {
+        navigator.setup(layout, messageDialog)   // controller and keyboard navigation (navigator.cpp)
         if (saved.width >= minimumWidth && saved.height >= minimumHeight) {
             width = saved.width
             height = saved.height
@@ -82,8 +83,12 @@ ApplicationWindow {
     Rectangle { anchors.fill: parent; color: "#9a0b0b0d" }
 
     ColumnLayout {
+        id: layout
         anchors.fill: parent
         spacing: 0
+        // the keyboard drives the window like a controller (navigator.cpp): arrows, Tab, Enter / Space, Escape
+        focus: true
+        Keys.onPressed: (event) => event.accepted = navigator.key(event.key, event.modifiers)
 
         // header art carrying the title and one card per game
         Hero {

@@ -16,6 +16,28 @@ no Python part.
 - `--play u1 | u2 | u3` starts that game at once; the window stays hidden unless the core asks something, and the
   program ends with the game.
 
+## Controller
+
+The window works with a game controller alone (Steam Deck, a TV PC). `src/backend.cpp` reads the controllers every
+30 ms through `un_pad_nav` (`launcher/native/gamepads.cpp`, the same SDL3 the game uses) and only while the launcher is
+the active window, so a running game keeps its controller. A yellow outline shows the focused control while a
+controller or the keyboard is in use; moving the mouse hides it.
+
+| Controller | Keyboard | Does |
+| --- | --- | --- |
+| D-pad, left stick | arrow keys | move the focus (held: repeats); the page scrolls with it |
+| A | Enter, Space | click, switch, pick, open a list |
+| B | Escape | close the message box (Cancel / No) or the list; leave a text box; else back to the tabs |
+| X | Delete | clear a Controls slot (a right-click) |
+| LB / RB | | previous / next tab |
+| LT / RT | | previous / next game |
+| Start | | PLAY (not STOP) |
+| | Tab, Shift+Tab | next / previous control |
+
+The first press only shows where the focus is. The QML controls only declare themselves (`navTarget`, `navId`,
+`navActivate()`; the bands `navZone` and page columns `navColumn`); `src/navigator.cpp` walks them, moves the focus,
+scrolls the page and runs the actions, and `qml/FocusRing.qml` draws the outline.
+
 ## Editing the look
 
 - `qml/Theme.qml`: every colour, radius, size and font.
@@ -24,7 +46,7 @@ no Python part.
 - `qml/SectionCard.qml`, `qml/SettingRow.qml`, `qml/NodeView.qml`: a section card, one setting row, and which
   control draws which element.
 - The controls: `PillButton`, `ToggleSwitch`, `ChoiceBar`, `DropdownBox`, `ChipButton`, `InputField`, `LogView`,
-  `ProgressLine`, `PresetCard`, `PadIcon`, `MessageDialog`.
+  `ProgressLine`, `PresetCard`, `PadIcon`, `MessageDialog`; `FocusRing` (the controller / keyboard focus outline).
 
 Open `CMakeLists.txt` in Qt Creator with the Qt 6 kit. The QML files also open in Qt Design Studio. A page's
 sections and rows are written in `launcher/native/pages.cpp`.

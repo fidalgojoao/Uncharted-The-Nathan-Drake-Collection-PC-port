@@ -2,6 +2,7 @@
 // keeps the window's model (game cards, tabs, status, the shown tab's page) and sends the clicks.
 #pragma once
 
+#include <QElapsedTimer>
 #include <QLibrary>
 #include <QObject>
 #include <QTimer>
@@ -50,8 +51,23 @@ signals:
     void messageRequested(int dialog, const QString &kind, const QString &title, const QString &message,
                           const QString &detail);
     void finished();
+    // a controller press for the window's navigation (Navigator::act): up, down, left, right (repeating while
+    // held), accept, back, secondary, tabPrev, tabNext, gamePrev, gameNext, play
+    void padNav(const QString &action);
 
 private:
+    void navPoll();   // reads the controllers for navigation (only while this window is the active one)
+    using PadInitFn = int (*)(const wchar_t *);
+    using PadNavFn = int (*)(unsigned *, int *, int *);
+    PadInitFn m_padInit = nullptr;
+    PadNavFn m_padNav = nullptr;
+    bool m_padReady = false;     // SDL loaded (first poll while the window is active)
+    QTimer m_navTimer;
+    unsigned m_navHeld = 0;      // buttons (and stick directions, bits 24..27) held at the last poll
+    bool m_navMute = true;       // ignore presses until everything is let go (after a capture or the window was inactive)
+    unsigned m_navRepeat = 0;    // the direction held (its bits) that repeats
+    qint64 m_navRepeatAt = 0;    // when it repeats next (ms since m_navClock started)
+    QElapsedTimer m_navClock;
     void start();
     void send(const QVariantMap &message);
     void handle(const QVariantMap &message);

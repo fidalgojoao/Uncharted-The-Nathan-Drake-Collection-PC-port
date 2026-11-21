@@ -5,6 +5,10 @@ Rectangle {
     id: card
     property var node: ({})
     readonly property var texts: node.texts || []
+    // controller / keyboard focus (navigator.cpp): A / Enter clicks it
+    readonly property bool navTarget: !!node.click
+    readonly property string navId: node.id || ""
+    function navActivate() { backend.act(card.node.id, "click") }
     implicitWidth: 340
     implicitHeight: column.implicitHeight + 32
     radius: Theme.radiusCard
@@ -40,4 +44,5 @@ Rectangle {
         onClicked: backend.act(card.node.id, "click")
         onDoubleClicked: if (card.node.dclick) backend.act(card.node.id, "dclick")
     }
+    FocusRing {}
 }

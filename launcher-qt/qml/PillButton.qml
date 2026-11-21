@@ -7,6 +7,9 @@ Rectangle {
     property string kind: "secondary"
     property bool big: false
     signal clicked()
+    property string navId: ""   // controller / keyboard focus (navigator.cpp): A / Enter clicks it
+    readonly property bool navTarget: true
+    function navActivate() { button.clicked() }
     implicitWidth: label.implicitWidth + (big ? 44 : 32)
     implicitHeight: big ? 50 : (kind === "primary" ? 40 : 34)
     radius: height / 2
@@ -34,4 +37,5 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
         onClicked: button.clicked()
     }
+    FocusRing {}
 }

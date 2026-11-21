@@ -4,6 +4,7 @@ import QtQuick.Layouts
 // The bottom bar: status, UPDATE (a newer release) and PLAY / STOP.
 // A floating rounded bar, centred under the page.
 Rectangle {
+    readonly property int navZone: 4   // controller / keyboard navigation's band (Main.qml navMove)
     color: Theme.panel
     radius: height / 2
     border.color: Theme.cardLine
@@ -55,6 +56,7 @@ Rectangle {
             text: backend.chrome.update || ""
             kind: "outline"
             big: true
+            navId: "update"
             onClicked: backend.installUpdate()
         }
         Rectangle {
@@ -62,6 +64,9 @@ Rectangle {
             readonly property string label: backend.chrome.play || "PLAY"
             readonly property bool blocked: label === "UPDATING..."
             readonly property bool running: label === "STOP"
+            readonly property bool navTarget: !blocked
+            readonly property string navId: "play"
+            function navActivate() { backend.play() }
             Layout.preferredWidth: 220
             Layout.preferredHeight: 56
             radius: height / 2
@@ -82,6 +87,7 @@ Rectangle {
                 cursorShape: play.blocked ? Qt.ArrowCursor : Qt.PointingHandCursor
                 onClicked: backend.play()
             }
+            FocusRing {}
         }
     }
 }

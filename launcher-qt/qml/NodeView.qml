@@ -174,6 +174,11 @@ Item {
                 cursorShape: n.click ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: backend.act(n.id, "click")
             }
+            // controller / keyboard focus (navigator.cpp) for a clickable text: A / Enter clicks it
+            readonly property bool navTarget: !!n.click
+            readonly property string navId: n.id || ""
+            function navActivate() { backend.act(n.id, "click") }
+            FocusRing {}
         }
     }
     // a Controls slot (a key / mouse binding or a controller button): click to rebind, right-click to clear
@@ -220,6 +225,12 @@ Item {
                 cursorShape: n.click ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: (mouse) => backend.act(n.id, mouse.button === Qt.RightButton ? "rclick" : "click")
             }
+            // controller / keyboard focus (navigator.cpp): A / Enter rebinds (a click), X / Delete clears (right-click)
+            readonly property bool navTarget: !!n.click || !!n.rclick
+            readonly property string navId: n.id || ""
+            function navActivate() { if (n.click) backend.act(n.id, "click") }
+            function navSecondary() { if (n.rclick) backend.act(n.id, "rclick") }
+            FocusRing {}
         }
     }
     Component {
@@ -227,6 +238,7 @@ Item {
         PillButton {
             text: root.node.text
             kind: root.node.kind
+            navId: root.node.id || ""
             onClicked: backend.act(root.node.id, "button")
         }
     }
@@ -234,6 +246,7 @@ Item {
         id: toggleC
         ToggleSwitch {
             checked: root.node.v
+            navId: root.node.id || ""
             onToggled: (value) => backend.act(root.node.id, "toggle", value)
         }
     }
@@ -243,6 +256,7 @@ Item {
             options: root.node.opts
             value: root.node.v
             active: root.node.en
+            navId: root.node.id || ""
             onPicked: (value) => backend.act(root.node.id, "choice", value)
         }
     }
@@ -252,6 +266,7 @@ Item {
             options: root.node.opts
             value: root.node.v
             label: root.node.label
+            navId: root.node.id || ""
             onPicked: (value) => backend.act(root.node.id, "dropdown", value)
         }
     }
@@ -260,6 +275,7 @@ Item {
         ChipButton {
             text: root.node.text
             checked: root.node.v
+            navId: root.node.id || ""
             onToggled: (value) => backend.act(root.node.id, "chip", value)
         }
     }
@@ -268,6 +284,7 @@ Item {
         InputField {
             text: root.node.v
             secret: root.node.secret
+            navId: root.node.id || ""
             onEdited: (value) => backend.act(root.node.id, "entry", value)
             onSubmitted: backend.act(root.node.id, "enter")
             buttonText: root.node.button ? root.node.button.text : ""
@@ -304,6 +321,11 @@ Item {
                         height: 28
                         radius: 8
                         readonly property bool sel: (root.node.sel || []).indexOf(index) >= 0
+                        // controller / keyboard focus (navigator.cpp): A / Enter picks the line
+                        readonly property bool navTarget: true
+                        readonly property string navId: (root.node.id || "") + "#" + index
+                        function navActivate() { backend.act(root.node.id, "list", [index]) }
+                        FocusRing { gap: 0 }
                         color: sel ? Theme.gold : (itemMouse.containsMouse ? Theme.fieldHi : "transparent")
                         Text {
                             anchors.verticalCenter: parent.verticalCenter

@@ -168,4 +168,32 @@ UN_API int un_pad_state(char *out, int cap) {
     return give(std::to_string(pads.size()) + "\n" + style + "\n" + held, out, cap);
 }
 
+// The launcher window's menu navigation: `buttons` gets every button held on any pad as bit (1 << SDL button index),
+// plus bit 21 / 22 for the left / right trigger pulled past half; `lx` / `ly` get the left stick's furthest push on
+// any pad (-32768..32767, y down). Returns the number of pads, or -1 when SDL3 is not loaded (un_pad_init).
+UN_API int un_pad_nav(unsigned *buttons, int *lx, int *ly) {
+    unsigned held = 0;
+    int x = 0, y = 0;
+    if (!sdl.ready) {
+        if (buttons) *buttons = 0;
+        if (lx) *lx = 0;
+        if (ly) *ly = 0;
+        return -1;
+    }
+    std::vector<void *> pads = refresh();
+    for (void *pad : pads) {
+        for (int i = 0; i < (int)(sizeof BUTTONS / sizeof *BUTTONS); ++i)
+            if (sdl.button(pad, i)) held |= 1u << i;
+        if (sdl.axis(pad, 4) > 16000) held |= 1u << 21;
+        if (sdl.axis(pad, 5) > 16000) held |= 1u << 22;
+        const int ax = sdl.axis(pad, 0), ay = sdl.axis(pad, 1);
+        if (std::abs(ax) > std::abs(x)) x = ax;
+        if (std::abs(ay) > std::abs(y)) y = ay;
+    }
+    if (buttons) *buttons = held;
+    if (lx) *lx = x;
+    if (ly) *ly = y;
+    return (int)pads.size();
+}
+
 }  // extern "C"

@@ -14,6 +14,8 @@ qt_add_executable(UnchartedLauncher WIN32
     src/main.cpp
     src/backend.cpp
     src/backend.h
+    src/navigator.cpp
+    src/navigator.h
     app.rc
 )
 
@@ -41,6 +43,7 @@ set(LAUNCHER_QML
     qml/CollapsibleGroup.qml
     qml/GlassPanel.qml
     qml/PadIcon.qml
+    qml/FocusRing.qml
 )
 # Every QML file sits at the module's root at run time (next to its qmldir), so each sees the module's types and
 # the Theme singleton.

@@ -11,6 +11,7 @@
 #include <QStringList>
 
 #include "backend.h"
+#include "navigator.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,8 +33,10 @@ int main(int argc, char *argv[])
             direct.clear();
     }
     Backend backend(direct);
+    Navigator navigator(&backend);   // controller and keyboard navigation (navigator.cpp)
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("backend", &backend);
+    engine.rootContext()->setContextProperty("navigator", &navigator);
     QObject::connect(&backend, &Backend::finished, &app, &QCoreApplication::quit);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, [] { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);

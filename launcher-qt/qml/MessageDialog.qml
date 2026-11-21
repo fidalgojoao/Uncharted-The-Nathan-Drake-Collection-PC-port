@@ -29,9 +29,18 @@ Popup {
         if (queue.length) { const q = queue.shift(); ask(q[0], q[1], q[2], q[3], q[4]) }
     }
     readonly property bool question: kind !== "info" && kind !== "warning" && kind !== "error"
+    // B / Escape: Cancel, No, or OK for a plain message
+    function cancel() { reply(question ? (kind === "yesnocancel" ? null : false) : true) }
+
+    // controller / keyboard focus (navigator.cpp): the main button while open; the page's focus comes back afterwards
+    focus: true
+    onOpened: navigator.dialogOpened(okButton)
+    onClosed: navigator.dialogClosed()
 
     contentItem: ColumnLayout {
         spacing: 14
+        focus: true
+        Keys.onPressed: (event) => event.accepted = navigator.key(event.key, event.modifiers)
         RowLayout {
             spacing: 12
             Rectangle {
@@ -70,15 +79,19 @@ Popup {
                 visible: dialog.question
                 text: dialog.kind === "yesno" || dialog.kind === "yesnocancel" ? "No"
                       : (dialog.kind === "retrycancel" ? "Cancel" : "Cancel")
+                navId: "dialog:no"
                 onClicked: dialog.reply(false)
             }
             PillButton {
                 visible: dialog.kind === "yesnocancel"
                 text: "Cancel"
+                navId: "dialog:cancel"
                 onClicked: dialog.reply(null)
             }
             PillButton {
+                id: okButton
                 kind: "primary"
+                navId: "dialog:ok"
                 text: dialog.question ? (dialog.kind === "okcancel" ? "OK"
                                          : (dialog.kind === "retrycancel" ? "Retry" : "Yes")) : "OK"
                 onClicked: dialog.reply(true)

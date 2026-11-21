@@ -34,6 +34,11 @@ Rectangle {
         id: header
         width: parent.width
         height: 50
+        // controller / keyboard focus (navigator.cpp): A / Enter folds or opens the group
+        readonly property bool navTarget: true
+        readonly property string navId: "group:" + (group.node.title || "")
+        function navActivate() { group.toggle() }
+        FocusRing { gap: -2; round: 12 }   // inside: the group clips its edges
         Text {
             anchors.left: parent.left
             anchors.leftMargin: 18

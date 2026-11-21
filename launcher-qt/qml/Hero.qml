@@ -7,6 +7,7 @@ Item {
     property alias source: art.source
     property alias art: art
     property var games: []
+    readonly property int navZone: 1   // controller / keyboard navigation's band (Main.qml navMove)
     clip: true
 
     // the picture the game cards' glass samples; not drawn itself (its clipped holder has no height)

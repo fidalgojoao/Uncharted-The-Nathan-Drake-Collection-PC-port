@@ -7,6 +7,7 @@ Rectangle {
     property string value: ""
     property bool active: true
     signal picked(string value)
+    property string navId: ""   // controller / keyboard focus (navigator.cpp): each choice, A / Enter picks it
     implicitWidth: row.implicitWidth + 8
     implicitHeight: 36
     radius: height / 2
@@ -21,6 +22,9 @@ Rectangle {
             model: bar.options
             Rectangle {
                 readonly property bool selected: String(modelData[0]) === String(bar.value)
+                readonly property bool navTarget: bar.active
+                readonly property string navId: bar.navId + "=" + String(modelData[0])
+                function navActivate() { bar.picked(String(modelData[0])) }
                 width: optionText.implicitWidth + 26
                 height: 28
                 radius: height / 2
@@ -43,6 +47,7 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: bar.picked(String(modelData[0]))
                 }
+                FocusRing { gap: 1 }
             }
         }
     }

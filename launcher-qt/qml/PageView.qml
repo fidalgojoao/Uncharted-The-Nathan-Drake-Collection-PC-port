@@ -10,6 +10,7 @@ Flickable {
     property var items: []
     property string tab: ""
     property var positions: ({})   // each tab keeps its scroll position
+    readonly property int navZone: 3   // controller / keyboard navigation's band (Main.qml navMove)
     readonly property int columns: width >= 900 ? 2 : 1
     readonly property real gap: 16
     readonly property real innerWidth: width - 2 * Theme.gutter - 6
@@ -148,6 +149,7 @@ Flickable {
         spacing: view.gap
         Column {   // a page's intro (the multiplayer banner, a note): a full-width card of its own
             id: wideBlock
+            readonly property bool navColumn: true   // up / down stay in a column first (Main.qml navMove)
             width: content.width
             spacing: view.gap
             visible: view.wide.length > 0
@@ -165,6 +167,7 @@ Flickable {
             Repeater {
                 model: view.split
                 Column {
+                    readonly property bool navColumn: true
                     width: view.columnWidth
                     spacing: view.gap
                     Repeater {
@@ -176,6 +179,7 @@ Flickable {
         }
         Column {   // full-width sections under the columns (the Controls bindings)
             id: belowBlock
+            readonly property bool navColumn: true
             width: content.width
             spacing: view.gap
             visible: view.below.length > 0
