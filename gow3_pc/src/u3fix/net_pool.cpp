@@ -6,8 +6,11 @@
 // restored multiplayer, players joining and leaving and round after round fill it: "Allocation failed: 576 bytes ...
 // Wrapped Malloc [F:336 T:343040]", then a write through the null result (0x6ab7fb / 0x6ae308), and the game closes
 // (four logs of 2026-11-12: a co-op host after two rounds, a host after players left, and a host that kept failing
-// 279 times after a late joiner left). The pool's budget is raised to 16 MiB, the size of pool 0x14, before the game
-// starts; a type-5 pool takes memory from the C library heap as it needs it, so only what is used is used.
+// 279 times after a late joiner left). The pool's budget is raised to 2 MiB before the game starts.
+// 21 Nov 2026: not 16 MiB. The pool is part of the game's fixed CPU memory budget ("Context(kAllocAppCpu) Size Does Not
+// Add Up!"): taken out of the CPU heap at start, so 16 MiB left the heap about 16 MB short and a start-up allocation of
+// 8 MiB (FgData) failed, the game did not start (0.10.119). 2 MiB is six times the old size and leaves the heap about
+// 6 MB of room at that point.
 #include "u3fix.h"
 #include "u3fix_hook.h"
 
@@ -25,7 +28,7 @@ struct PoolEntry {   // the game's pool table entry
 static_assert(sizeof(PoolEntry) == 32);
 
 constexpr uint64_t kOldSize = 0x53c00;    // 343,040 bytes
-constexpr uint64_t kNewSize = 0x1000000;  // 16 MiB, as pool 0x14
+constexpr uint64_t kNewSize = 0x200000;   // 2 MiB (16 MiB did not fit the game's CPU memory budget)
 
 }  // namespace
 
