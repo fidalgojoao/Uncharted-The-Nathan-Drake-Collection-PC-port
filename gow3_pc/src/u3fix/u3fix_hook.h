@@ -39,6 +39,8 @@ bool install_job_trace(unsigned char *image, uint64_t size);
 void counter_story(const void *counter, char *out, size_t size);
 // the jobs waiting in each of the 8 priority queues, as text (job_queue_full_log.cpp)
 void job_queue_counts(char *out, size_t size);
+// an NPC copy on a co-op guest starts its base animation at a finite phase (npc_phase.cpp)
+bool install_npc_phase_guard(unsigned char *image, uint64_t size);
 bool install_improved_tonemap_curve(unsigned char *image, uint64_t size);
 // the auto exposure averages at least one frame: luminance filter size 0 as PS3 (exposure_filter.cpp)
 bool exposure_filter_at_least_one(unsigned char *image, uint64_t size);
