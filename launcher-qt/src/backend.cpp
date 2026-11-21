@@ -70,6 +70,15 @@ void Backend::start()
         return;
     }
     QDir(root).mkpath("analysis/uncharted-user");
+    // The launcher is portable (GitHub #66): Qt's compiled-QML cache goes into the launcher's folder, not into
+    // %LOCALAPPDATA%\Uncharted Launcher\Uncharted Launcher, and the cache earlier versions left there is removed (Qt
+    // alone wrote that folder). The window's QML loads after this, so Qt picks the new place up.
+    qputenv("QML_DISK_CACHE_PATH", QDir::toNativeSeparators(QDir(root).filePath("analysis/uncharted-user/qmlcache")).toUtf8());
+    const QString local = qEnvironmentVariable("LOCALAPPDATA");
+    if (!local.isEmpty()) {
+        QDir(QDir(local).filePath("Uncharted Launcher/Uncharted Launcher")).removeRecursively();
+        QDir(local).rmdir("Uncharted Launcher");   // only once nothing else is left in it
+    }
     QJsonObject args;
     args.insert("direct", m_direct.isEmpty() ? QJsonValue() : QJsonValue(m_direct));
     const QByteArray a = QJsonDocument(args).toJson(QJsonDocument::Compact);

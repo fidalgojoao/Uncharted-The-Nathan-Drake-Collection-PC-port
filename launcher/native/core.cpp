@@ -676,7 +676,7 @@ std::string python_exe() {
 
 std::string u3_data() {
     const std::string chosen = text(g.config, "u3mp_data");
-    return as_path(!chosen.empty() ? chosen : sys("u3mp_default_data"));
+    return as_path(!chosen.empty() ? chosen : sys("u3mp_default_data", g.root));
 }
 Value read_json(const std::string &path) {
     Value v;

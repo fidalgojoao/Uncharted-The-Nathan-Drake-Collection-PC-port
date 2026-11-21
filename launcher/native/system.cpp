@@ -561,7 +561,7 @@ UN_API int un_wine(void) { return under_wine() ? 1 : 0; }
 // Dispatcher for small system lookups. `what` is one of unix_path, windows_path, shared_config, slow_drive,
 // is_game_dir, update_dir, app_version, voices (one id per line), launcher_version (arg = install root),
 // recipe_version (arg = u3mp dir), u3mp_release (arg = u3mp dir; build.json text or ""), desktop, sfo,
-// starter_version, find_update, u3mp_default_data. An empty answer means "nothing".
+// starter_version, find_update, u3mp_default_data (arg = launcher folder). An empty answer means "nothing".
 UN_API int un_system(const char *what, const wchar_t *arg, char *out, int cap) {
     std::string w = what ? what : "", r;
     bool found = true;
@@ -590,10 +590,13 @@ UN_API int un_system(const char *what, const wchar_t *arg, char *out, int cap) {
     } else if (w == "starter_version") r = starter_version(a, found);
     else if (w == "find_update") r = starter_update(a);
     else if (w == "u3mp_default_data") {
-        std::wstring base = env(L"LOCALAPPDATA");
-        if (base.empty()) base = env(L"APPDATA");
-        if (base.empty()) base = env(L"USERPROFILE");
-        r = utf8(join(join(base, L"Uncharted Launcher"), L"U3 Multiplayer"));
+        // arg = the launcher's folder. The launcher is portable (GitHub #66): unless the player picks another place
+        // in the launcher, the multiplayer files go into its own folder. Versions before 0.10.123 used
+        // %LOCALAPPDATA%\Uncharted Launcher\U3 Multiplayer; an import already there keeps being used.
+        std::wstring old = env(L"LOCALAPPDATA");
+        if (!old.empty()) old = join(join(old, L"Uncharted Launcher"), L"U3 Multiplayer");
+        const DWORD at = old.empty() ? INVALID_FILE_ATTRIBUTES : GetFileAttributesW(join(old, L"state.json").c_str());
+        r = utf8(at != INVALID_FILE_ATTRIBUTES ? old : join(a, L"U3 Multiplayer"));
     }
     else return 1;
     if (!found) return 2;
