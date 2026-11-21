@@ -111,6 +111,27 @@ void RefreshInFront(SDL_Window* window) {
 #endif
 }
 
+// gow3 21 Nov 2026: the whole window black at once, so nothing else shows before the first game
+// frame (Windows; SDL clears only on its first paint, and nothing paints between that and the
+// first frame). Window thread, before the swapchain exists.
+void PaintBlack(SDL_Window* window) {
+#ifdef _WIN32
+    const HWND hwnd = static_cast<HWND>(SDL_GetPointerProperty(
+        SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr));
+    if (!hwnd) {
+        return;
+    }
+    RECT client{};
+    GetClientRect(hwnd, &client);
+    if (HDC dc = GetDC(hwnd)) {
+        FillRect(dc, &client, static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
+        ReleaseDC(hwnd, dc);
+    }
+#else
+    (void)window;
+#endif
+}
+
 void SendToBack(SDL_Window* window) {
 #ifdef _WIN32
     if (void* hwnd = SDL_GetPointerProperty(SDL_GetWindowProperties(window),
@@ -157,19 +178,34 @@ WindowSDL::WindowSDL(s32 width_, s32 height_, const char* title) : width{width_}
             windowed_height = windowed_width * 9 / 16;
         }
     }
+    // gow3: GOW3_FULLSCREEN=1 (older launchers) still asks for fullscreen.
+    if (const char* fullscreen = std::getenv("GOW3_FULLSCREEN"); fullscreen && fullscreen[0] == '1' &&
+        Gow3Settings::Get().display_mode == Gow3Graphics::Windowed) {
+        Gow3Settings::Get().display_mode = Gow3Graphics::Borderless;
+    }
+    // gow3 21 Nov 2026 (reported: borderless and fullscreen started with a white window outline on
+    // black for a few seconds): SDL showed the window at once, windowed with its title bar, and
+    // only then made it fullscreen. The old frame's never-painted pixels stayed inside the now
+    // screen-sized window (SDL clears a window to black only on its first paint) until the first
+    // game frame. The window is now created hidden, in its final shape: for borderless and
+    // fullscreen a borderless window covering the screen, shown once that is so and painted black.
+    SDL_Rect screen{};
+    const bool starts_full = !WindowPlacement().on && Gow3Settings::Get().display_mode != Gow3Graphics::Windowed &&
+                             SDL_GetDisplayBounds(SDL_GetPrimaryDisplay(), &screen) && screen.w > 0 && screen.h > 0;
     SDL_PropertiesID props = SDL_CreateProperties();
     SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER,
-                          WindowPlacement().on ? WindowPlacement().x : SDL_WINDOWPOS_CENTERED);
+                          starts_full ? screen.x : WindowPlacement().on ? WindowPlacement().x : SDL_WINDOWPOS_CENTERED);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER,
-                          WindowPlacement().on ? WindowPlacement().y : SDL_WINDOWPOS_CENTERED);
-    if (WindowPlacement().borderless) {
+                          starts_full ? screen.y : WindowPlacement().on ? WindowPlacement().y : SDL_WINDOWPOS_CENTERED);
+    if (WindowPlacement().borderless || starts_full) {
         SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
     }
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, windowed_width);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, windowed_height);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, starts_full ? screen.w : windowed_width);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, starts_full ? screen.h : windowed_height);
     SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
     SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true);
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
     base_title = title;
     window = SDL_CreateWindowWithProperties(props);
     SDL_DestroyProperties(props);
@@ -201,12 +237,9 @@ WindowSDL::WindowSDL(s32 width_, s32 height_, const char* title) : width{width_}
     } else {
         UNREACHABLE_MSG("Unsupported SDL video driver {}", driver ? driver : "(none)");
     }
-    // gow3: GOW3_FULLSCREEN=1 (older launchers) still asks for fullscreen.
-    if (const char* fullscreen = std::getenv("GOW3_FULLSCREEN"); fullscreen && fullscreen[0] == '1' &&
-        Gow3Settings::Get().display_mode == Gow3Graphics::Windowed) {
-        Gow3Settings::Get().display_mode = Gow3Graphics::Borderless;
-    }
+    SDL_ShowWindow(window);
     ApplyDisplayMode(Gow3Settings::Get().display_mode);
+    PaintBlack(window); // until the first game frame
     // gow3: the game has no mouse; the in-game menu draws its own cursor (Gow3Overlay::SetOpen).
     SDL_HideCursor();
     int w = 0, h = 0;
@@ -233,6 +266,7 @@ void WindowSDL::ApplyDisplayMode(int mode) {
             SDL_SetWindowSize(window, p.w, p.h);
             SDL_SetWindowPosition(window, p.x, p.y);
         } else if (was_fullscreen) { // back at the windowed size, centered
+            SDL_SetWindowBordered(window, true); // created borderless when started full screen
             SDL_SetWindowSize(window, windowed_width, windowed_height);
             SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
         }
