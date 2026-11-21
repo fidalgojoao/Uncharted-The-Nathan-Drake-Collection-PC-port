@@ -354,6 +354,8 @@ __attribute__((visibility("hidden"))) void u3x_custom_game(uintptr_t base,void *
 /* v7.141: the call sequences, part 2 (u3x_fixes.cpp) */
 __attribute__((visibility("hidden"))) void u3x_party_created(uintptr_t base,const int32_t *ev);
 __attribute__((visibility("hidden"))) void u3x_invite_click(uintptr_t base,void *s,const int32_t *ev);
+__attribute__((visibility("hidden"))) void u3x_invite_tab_widget(uint8_t *tabs,uint32_t n);   /* v7.234 #91 */
+__attribute__((visibility("hidden"))) void u3x_friends_row_click(uintptr_t base,void *s,const int32_t *ev);   /* v7.234 #91 */
 __attribute__((visibility("hidden"))) void u3x_send_join(uintptr_t base,const uint8_t *id,uint64_t party,uintptr_t callback);
 __attribute__((visibility("hidden"))) void u3x_join_party(uintptr_t base,void *s,uintptr_t callback);
 __attribute__((visibility("hidden"))) void u3x_invite_accept(uintptr_t base,void *s,uintptr_t callback);
@@ -3625,8 +3627,7 @@ EXT static void fr_qa_push(uintptr_t base,FrQa *q){
  X.ea[77]+=(uint32_t)u3x_quick_action_drop_profiles(q);   /* v7.134 C++ */
  if(!q->n)return;   /* f_26e0a0(menu, qa, 1) returns on an empty list */
  ((void(*)(void*,void*,int))(base+0x6528d0u))((void*)(base+0x17bd080u),q,1);}
-/* LIST_PSN_FRIENDS row click 0x7e4e92d5 */
-EXT static void fr_click(uintptr_t base,int32_t *ev){u3x_friend_click(base,ev);}   /* r2 G18 */
+/* LIST_PSN_FRIENDS row click 0x7e4e92d5: u3x_friends_row_click (v7.234 #91; a friend, or an invite on the Invites tab) */
 /* LIST_PLAYERSMET row click 0x369314b2: the players-met id for Add Friend goes to nf_pmtarget */
 EXT static void fr_pm_click(uintptr_t base,int32_t *ev){u3x_met_click(base,ev,nf_pmtarget);}   /* r2 G18 */
 /* ShowWaitPopup(menu, text, callback) */
@@ -3675,6 +3676,7 @@ EXT static void fr_fb_tab(ProfileState *s){
  uint8_t *t=sym_table(s,0xf1514340u);if(!t)return;uint8_t *r=*(uint8_t**)(t+8);
  for(uint32_t i=0;i<*(uint32_t*)t;i++){uint8_t *x=r+(size_t)i*0x20;if(*(uint32_t*)x!=0xc8d836e4u||*(uint32_t*)(x+4)!=0)continue;
   uint32_t n=*(uint32_t*)(x+8);uint8_t *tb=*(uint8_t**)(x+0x10);if(!tb)continue;
+  u3x_invite_tab_widget(tb,n);   /* v7.234 #91: the Invites tab shows the Friends list control */
   for(uint32_t k=0;k<n;k++)if(*(uint32_t*)(tb+k*0xc)==0xb1bd6793u){
    for(uint32_t j=k;j+1<n;j++)copy(tb+j*0xc,tb+(j+1)*0xc,0xc);
    *(uint32_t*)(x+8)=n-1;if(*(uint32_t*)(x+0x18)>=n-1)*(uint32_t*)(x+0x18)=0;X.ea[87]++;break;}}}
@@ -3682,7 +3684,7 @@ EXT static void fr_fb_tab(ProfileState *s){
  * 0x671580, 3 = the report popup's page handler (f_280e38) */
 EXT static int fr_kind(uintptr_t base,ProfileState *s,uint64_t *ev){
  uint32_t sub=(uint32_t)ev[3];ev[3]=0;
- if(sub==1){fr_click(base,(int32_t*)ev[0]);return 1;}
+ if(sub==1){u3x_friends_row_click(base,s,(int32_t*)ev[0]);return 1;}   /* v7.234 #91: invite rows on the Invites tab */
  if(sub==2){fr_pm_click(base,(int32_t*)ev[0]);return 1;}
  if(sub==3)return 1;   /* pl01: the report popup is gone */
  if(sub>=4&&sub<=9)return fi_kind(base,s,sub,(int32_t*)ev[0]);   /* agent A a020 */
@@ -6222,7 +6224,7 @@ EXT static void so_game_tick(uintptr_t base){(void)base;
  RcMem *m=rc_m;if(!m)return;
  for(int i=0;i<4;i++){SoIv *q=&m->iv[i];if(q->kind!=1||__atomic_load_n(&q->st,__ATOMIC_ACQUIRE)!=3u)continue;
   so_iv_line(m,q->to,q->blob,q->res>=0?0:q->rn==-1?2:q->rn<1?3:4,q->r0);   /* v7.61 so02 */
-  if(q->res<0)so_inv_fallback(m,(const uint8_t*)q->to,q->blob);else m->so_c[SC_INV_SRV]++;
+  if(q->res<0)so_inv_fallback(m,(const uint8_t*)q->to,q->blob);else{m->so_c[SC_INV_SRV]++;mq_send(base,(const uint8_t*)q->to,0x11du,0,0);}   /* v7.234 #91: the poke after the store, as PS3 */
   __atomic_store_n(&q->st,0u,__ATOMIC_RELEASE);}}
 /* v7.61 so02: "invite list: R rows (S from the invite-server), kept K; dropped: own id a, key b (got .., want ..), a day old c;
  * kept but not a friend d; first dropped: <id> (<why>)" */

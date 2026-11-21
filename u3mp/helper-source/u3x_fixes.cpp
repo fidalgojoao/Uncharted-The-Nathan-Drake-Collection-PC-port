@@ -4789,6 +4789,7 @@ uint32_t u3x_page_tab_text(uintptr_t base, void *s);
 int u3x_friend_list(uintptr_t base, int32_t *ev, void *s);
 int u3x_friend_header(uintptr_t base, int32_t *ev, void *s);
 void u3x_ofetch_want(const char *name);   // v7.228
+int u3x_invite_tab_rows(uintptr_t base, int32_t *ev, void *s);   // v7.234 #91 (G20)
 }
 
 namespace g19p1 {
@@ -4812,7 +4813,7 @@ constexpr uint32_t SLOT_ROW_ICON = 0xf5a294f3, SLOT_AVATAR = 0xb81e2263, SLOT_NE
                    SLOT_GAME_TYPE = 0x57135906, SLOT_STATE = 0x8e39ed40;
 
 // text ids
-constexpr uint32_t TAB_FRIENDS = 0x6e83df53;
+constexpr uint32_t TAB_FRIENDS = 0x6e83df53, TAB_INVITES = 0x885ef7e9;
 constexpr uint32_t TXT_ONLINE = 0x51663192, TXT_OFFLINE = 0x6ea711d6, TXT_CAMPAIGN = 0xf461ef26, TXT_TITLE = 0xfd2de693,
                    TXT_OTHER_GAME = 0x953825d0, TXT_PARTY_SIZE = 0xba8db526, TXT_MATCH_ENDS = 0x93ac6446,
                    TXT_PARTY_IS_LOCKED = 0x40d3b7a2, TXT_PARTY_IS_OPEN = 0x052ac89a, TXT_LOBBY = 0x84041d79,
@@ -5110,6 +5111,8 @@ U3X_FN int u3x_friend_list(uintptr_t base, int32_t *ev, void *s) {
         u3h_so_note(note_head, nullptr, op, note_tail);
     }
 
+    // v7.234 #91: the Invites tab shows its rows in this control (see u3x_invite_tab_widget)
+    if (u3x_page_tab_text(base, s) == TAB_INVITES) return u3x_invite_tab_rows(base, ev, s);
     if (u3x_page_tab_text(base, s) != TAB_FRIENDS) {
         if (op == 6) ev[1] = -1;
         return 1;
@@ -5439,8 +5442,13 @@ void u3h_wait_popup(uintptr_t base, uint32_t text, uintptr_t callback);
 uint64_t u3x_network_usec();
 int u3x_quick_action_add(QuickActions *q, uint32_t text, uint32_t action);
 
+void u3x_friend_click(uintptr_t base, const int32_t *ev);
+
 // this part
 int u3x_invite_list(uintptr_t base, int32_t *ev, void *s);
+int u3x_invite_tab_rows(uintptr_t base, int32_t *ev, void *s);
+void u3x_invite_tab_widget(uint8_t *tabs, uint32_t n);
+void u3x_friends_row_click(uintptr_t base, void *s, const int32_t *ev);
 void u3x_invite_click(uintptr_t base, void *s, const int32_t *ev);
 void u3x_invite_accept(uintptr_t base, void *s, uintptr_t callback);
 void u3x_send_join(uintptr_t base, const uint8_t *id, uint64_t party, uintptr_t callback);
@@ -5466,6 +5474,7 @@ constexpr uintptr_t GAME_POPUP_CLOSE = 0x652200;
 // ---- ids (spec 3.8)
 constexpr uint32_t LIST_TAG = 0x4c414eb2;
 constexpr uint32_t TAB_INVITES = 0x885ef7e9;
+constexpr uint32_t WIDGET_INVITES = 0x6ca335e2, WIDGET_FRIENDS = 0x7e4e92d5;   // the two lists of the Friends page
 constexpr uint32_t ROW_ICON_SLOT = 0xf5a294f3;
 constexpr uint32_t TEXT_NO_INVITES = 0x52237405;
 constexpr uint32_t TEXT_JOINING = 0xe4e03363;
@@ -5614,19 +5623,41 @@ U3X_FN static void row_answer(uintptr_t base, int32_t *ev, void *s, int32_t oper
 
 extern "C" {
 
-// 4.1: the list source of the Invites tab. 1 = request answered, 0 = not this list.
+// 4.1: the list source of the Invites tab's own control. 1 = request answered, 0 = not this list.
+// v7.234 #91: the game sizes each list of the Friends page once, when the page opens (on the Friends tab); this list
+// had no rows then, got no height and was never drawn after a tab change. Its control now always stays empty, and the
+// Invites tab shows its rows in the Friends list control (u3x_invite_tab_widget, u3x_invite_tab_rows).
 U3X_FN int u3x_invite_list(uintptr_t base, int32_t *ev, void *s) {
     using namespace g20a;
+    (void)s;
     const uint8_t *widget = rd<const uint8_t *>(ev, 0x98);
     if (!widget || rd<uint32_t>(widget, 0x1c) != LIST_TAG) return 0;
     if (u3h_gate_closed(base, ev)) return 1;
+    if (ev[0] == 6) ev[1] = -1;
+    return 1;
+}
 
+// the Invites tab of the Friends page focuses the Friends list control (the tab row's control id), which the game
+// sized when the page opened
+U3X_FN [[clang::minsize]] void u3x_invite_tab_widget(uint8_t *tabs, uint32_t n) {
+    using namespace g20a;
+    for (uint32_t k = 0; k < n && k < 8; k++) {
+        uint32_t *tab = reinterpret_cast<uint32_t *>(tabs + k * 0xc);   // text, (unused here), control id
+        if (tab[0] == TAB_INVITES && tab[2] == WIDGET_INVITES) tab[2] = WIDGET_FRIENDS;
+    }
+}
+
+// a row of the Friends list control was clicked: on the Invites tab it is an invite
+U3X_FN [[clang::minsize]] void u3x_friends_row_click(uintptr_t base, void *s, const int32_t *ev) {
+    if (u3h_fr_tab(base, s) == g20a::TAB_INVITES) u3x_invite_click(base, s, ev);
+    else u3x_friend_click(base, ev);
+}
+
+// the rows of the Invites tab, asked by the Friends list control while that tab is selected (u3x_friend_list)
+U3X_FN int u3x_invite_tab_rows(uintptr_t base, int32_t *ev, void *s) {
+    using namespace g20a;
     const int32_t operation = ev[0];
     if (operation == 6) log_tab(base, s);
-    if (u3h_fr_tab(base, s) != TAB_INVITES) {
-        if (operation == 6) ev[1] = -1;
-        return 1;
-    }
 
     u3h_fi_mark_seen(base, s);
     const int32_t n = static_cast<int32_t>(at<uint32_t>(base + INVITES));
@@ -6019,7 +6050,9 @@ extern "C" U3X_FN void u3x_fi_mark_seen(uintptr_t base, void *s) {
     ext_ea()[103]++;
 }
 
-// leave our invite for the selected player and tell that player
+// leave our invite for the selected player; v7.234 #91: the "you were invited" message (0x11d) goes out once the
+// invite-server has stored the invite (C so_game_tick), as PS3 sends it after the invite-send, so the player's list
+// request cannot reach the server before the invite does
 extern "C" U3X_FN void u3x_fi_send(uintptr_t base) {
     using namespace g20b;
     Invite invite;
@@ -6031,7 +6064,6 @@ extern "C" U3X_FN void u3x_fi_send(uintptr_t base) {
     const uint8_t *target = &at<uint8_t>(base + SELECTED_ID);
     const int32_t result = u3h_inv_send(base, target, reinterpret_cast<const uint8_t *>(&invite));
     ext_ea()[result < 0 ? 106 : 105]++;
-    u3x_queue_send(base, target, MESSAGE_INVITED, nullptr, 0);
 }
 
 // ask the service to delete listed invite i
