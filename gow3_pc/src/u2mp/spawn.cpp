@@ -541,7 +541,8 @@ U2MP_GUEST uint64_t spawner_update_probe(uint64_t a, uint64_t b, uint64_t c, uin
 constexpr uint64_t kTypeUpdates[] = {0x27e7e0, 0x280da0, 0x2836e0, 0x284af0, 0x2863a0, 0x28c860,
                                      0x28e840, 0x290250, 0x2922e0, 0x2941d0, 0x295f00, 0x296b20};
 
-// The script native get-spawner-locator asks its table twice: log the id and what came back.
+// The script native get-spawner-locator asks for the spawner id's name twice (0xce33a0 is the game's id -> name lookup,
+// which answers a text: "(no debug memory)" on retail, or the name sid_names.cpp found): log the id and that text.
 constexpr uint64_t kSpawnerLookup = 0xce33a0;
 constexpr uint64_t kSpawnerLookupCall1 = 0xa08d42;
 constexpr uint64_t kSpawnerLookupCall2 = 0xa08d59;
@@ -554,8 +555,8 @@ U2MP_GUEST const unsigned char *spawner_lookup_probe(uint32_t id, uint32_t flags
     if (logged.fetch_add(1) < 96) {
         const unsigned char *loaded =
             walk_packages([id](const unsigned char *package) { return find_in_package(package, id); });
-        log("spawn: script asked for spawner %08x -> %p (%s, %s)", id, static_cast<const void *>(result),
-            result ? spawner_name(result) : "no locator", loaded ? "loaded package" : "not in any package");
+        log("spawn: script asked for spawner %08x (%s, %s)", id,
+            result ? reinterpret_cast<const char *>(result) : "no name", loaded ? "loaded package" : "not in any package");
     }
     return result;
 }
