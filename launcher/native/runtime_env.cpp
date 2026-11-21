@@ -166,12 +166,25 @@ std::string ini_value(const std::string &path, const std::string &key, bool &fou
 
 // Cheats page of the launcher. Each entry is a built-in switch of the game that the runtime holds on for the whole
 // session through GOW3_POKE. The offsets refer to the update 1.02 image.
+// "debug" is the games' own debug-mode switch (a byte of the engine's settings object, set at start-up and cleared
+// again by the retail set-up; Uncharted 2 0x1059640 + 0x488c, Uncharted 3 0x17b6368 + 0x4bfc). With it on, the
+// game's menu code opens its Dev Menu and Quick Menu, its debug text toggles, and the player can enter the DebugFly
+// state, as in the PS3 versions with RPCS3's "Debug Menu" patch.
 const std::map<std::string, std::vector<std::pair<std::string, std::string>>> &cheats() {
     static const std::map<std::string, std::vector<std::pair<std::string, std::string>>> t = {
         {"eboot.bin", {{"invincible", "aa5ff8"}, {"ammo", "ab9c01"}}},
-        {"big2-ps4_Shipping.elf", {{"invincible", "104f877"}, {"ammo", "104f84a"}, {"noreload", "104f84b"}}},
+        {"big2-ps4_Shipping.elf", {{"invincible", "104f877"}, {"ammo", "104f84a"}, {"noreload", "104f84b"},
+                                   {"debug", "105decc"}}},
         {"big3-ps4_Shipping.elf", {{"invincible", "*16e2f80+a7"}, {"ammo", "17faa91"}, {"grenades", "17faa92"},
-                                   {"noreload", "17faa93"}, {"onehit", "17fab94"}}}};
+                                   {"noreload", "17faa93"}, {"onehit", "17fab94"}, {"debug", "17baf64"}}}};
+    return t;
+}
+// Cheats -> Debug mode -> Game speed: the game's master clock multiplier (Dev Menu, Clock, "Master Clock
+// Multiplier"), a float that only that menu writes and the frame update multiplies the game's frame time by. The
+// choices are the menu's own presets; the runtime holds the chosen value like the cheats (a 32-bit poke).
+const std::map<std::string, std::string> &game_speed_offsets() {
+    static const std::map<std::string, std::string> t = {{"big2-ps4_Shipping.elf", "104ec38"},
+                                                         {"big3-ps4_Shipping.elf", "17b4ab4"}};
     return t;
 }
 // UNCHARTED_UNLOCK_REWARDS=1: the flags behind the debug-menu entries "Give all Store Items" and "Give All Movies",
@@ -308,8 +321,8 @@ Env build(const Inputs &in, std::vector<std::string> &prints, std::string &captu
     Env env = in.original;
     const std::string &exe = in.executable, KEY = upper(in.game_key);
     const bool u1 = exe == "eboot.bin", u2 = exe == "big2-ps4_Shipping.elf", u3 = exe == "big3-ps4_Shipping.elf";
-    // Cheats, reward unlocks and extra-quality flags all become GOW3_POKE entries. Their addresses only exist for
-    // update 1.02, so older game versions get none of them.
+    // Cheats, reward unlocks, extra-quality flags and the game speed all become GOW3_POKE entries. Their addresses only
+    // exist for update 1.02, so older game versions get none of them.
     std::vector<std::string> wanted;
     {
         std::string list = orig(in, "UNCHARTED_CHEATS"), t;
@@ -330,7 +343,15 @@ Env build(const Inputs &in, std::vector<std::string> &prints, std::string &captu
         if (orig(in, std::string("UNCHARTED_") + upper(name), "0") != "1" || q == quality_pokes().end()) continue;
         for (auto &kv : q->second) if (kv.first == name) { quality.push_back(name); break; }
     }
-    if ((!wanted.empty() || rewards || !quality.empty()) && !env.has("GOW3_POKE")) {
+    // Game speed: one of the Clock menu's presets other than normal speed, for a game that has the multiplier
+    std::string speed = orig(in, "UNCHARTED_GAME_SPEED", "1");
+    float factor = 1.0f;
+    if (speed == "0.2") factor = 0.2f;
+    else if (speed == "0.5") factor = 0.5f;
+    else if (speed == "1.75") factor = 1.75f;
+    auto s = game_speed_offsets().find(exe);
+    if (factor == 1.0f || s == game_speed_offsets().end()) speed.clear();
+    if ((!wanted.empty() || rewards || !quality.empty() || !speed.empty()) && !env.has("GOW3_POKE")) {
         if (game_version(in.game) >= "01.02") {
             std::vector<std::string> pokes, named;
             auto c = cheats().find(exe);
@@ -354,13 +375,21 @@ Env build(const Inputs &in, std::vector<std::string> &prints, std::string &captu
                 for (size_t i = 0; i < quality.size(); ++i) line += (i ? ", " : "") + quality[i];
                 prints.push_back(line);
             }
+            if (!speed.empty()) {   // eight hex digits: the runtime writes the float's 32 bits
+                uint32_t bits = 0;
+                std::memcpy(&bits, &factor, sizeof bits);
+                char entry[32];
+                std::snprintf(entry, sizeof entry, "%s=%08x", s->second.c_str(), bits);
+                pokes.push_back(entry);
+                prints.push_back("Game speed: " + speed + "x");
+            }
             if (!pokes.empty()) {
                 std::string v;
                 for (size_t i = 0; i < pokes.size(); ++i) v += (i ? "," : "") + pokes[i];
                 env.set("GOW3_POKE", v);
             }
         } else {
-            prints.push_back("Cheats and unlocked rewards skipped: they require update 1.02");
+            prints.push_back("Cheats, unlocked rewards and game speed skipped: they require update 1.02");
         }
     }
     // Advanced -> Texture filtering. With GOW3_ANISOTROPY set, sampler.cpp lifts the anisotropy of mipmapped colour

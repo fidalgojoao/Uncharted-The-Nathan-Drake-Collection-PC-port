@@ -110,9 +110,11 @@ Value play_env(const Value &config, const std::wstring &user_dir) {
     set("UNCHARTED_UNLOCK_REWARDS", truthy_or(get("unlock_rewards"), false) ? "1" : "0");
     // enabled cheat switches as a comma list (names from system.cpp's CHEATS table)
     std::string cheats;
-    for (const char *name : {"invincible", "ammo", "noreload", "grenades", "onehit"})
+    for (const char *name : {"invincible", "ammo", "noreload", "grenades", "onehit", "debug"})
         if (truthy_or(config.get(std::string("cheat_") + name), false)) cheats += (cheats.empty() ? "" : ",") + std::string(name);
     set("UNCHARTED_CHEATS", cheats);
+    // Cheats -> Debug mode -> Game speed: the game's master clock multiplier (runtime_env.cpp); "1" leaves it alone
+    set("UNCHARTED_GAME_SPEED", str_of(get("game_speed"), "1"));
     // Per-game values go out for all three titles, because a game can switch to another one from the Collection
     // menu without the launcher. GOW3_VBLANK_HZ is cleared: the starter sets it for whichever game it launches,
     // from that game's settings file, when the frame rate is above 60.

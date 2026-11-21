@@ -130,17 +130,26 @@ Value tables() {
         l.items.push_back(p);
     }
     t.set("LANGUAGES", l);
-    const char *cheats[][3] = {{"invincible", "Invincible", "Nate cannot be hurt. Works in all three games."},
-                               {"ammo", "Infinite ammo", "Unlimited ammunition. Works in all three games."},
-                               {"noreload", "No reload", "The current magazine stays full. Uncharted 2 and 3 only."},
-                               {"grenades", "Infinite grenades", "Unlimited grenades. Uncharted 3 only."},
-                               {"onehit", "One-hit kills", "A single hit is enough to drop an enemy. Uncharted 3 only."}};
+    // name, title, hint, section ("" = Developer switches, "debug" = Debug mode)
+    const char *cheats[][4] = {
+        {"invincible", "Invincible", "Nate cannot be hurt. Works in all three games.", ""},
+        {"ammo", "Infinite ammo", "Unlimited ammunition. Works in all three games.", ""},
+        {"noreload", "No reload", "The current magazine stays full. Uncharted 2 and 3 only.", ""},
+        {"grenades", "Infinite grenades", "Unlimited grenades. Uncharted 3 only.", ""},
+        {"onehit", "One-hit kills", "A single hit is enough to drop an enemy. Uncharted 3 only.", ""},
+        {"debug", "Debug mode",
+         "Turns on the game's own debug mode, as in the PS3 versions. L3 + Options: Dev Menu. L3 + touchpad: Quick "
+         "Menu, where Give Player Weapon hands you any weapon (the retail games keep no weapon names: Uncharted 3 "
+         "lists them as codes, Uncharted 2 without names). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted "
+         "2 reads it from a second "
+         "controller). Uncharted 2 and 3 only; single player.",
+         "debug"}};
     Value c;
     c.kind = Value::Array;
     for (auto &r : cheats) {
         Value p;
         p.kind = Value::Array;
-        p.items = {Value::text(r[0]), Value::text(r[1]), Value::text(r[2])};
+        p.items = {Value::text(r[0]), Value::text(r[1]), Value::text(r[2]), Value::text(r[3])};
         c.items.push_back(p);
     }
     t.set("CHEATS", c);

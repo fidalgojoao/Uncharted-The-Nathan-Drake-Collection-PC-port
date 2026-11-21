@@ -181,7 +181,7 @@ bool config_flag(const Value &config, const std::string &key) {
 
 // ------------------------------------------------------------------------------------------------ cheats
 
-// (name, title, hint) of the games' developer switches (system.cpp's table, as the game starter applies them)
+// (name, title, hint, section) of the games' developer switches (system.cpp's table, as the game starter applies them)
 std::vector<std::vector<std::string>> cheat_list() {
     std::vector<std::vector<std::string>> list;
     std::string text(1 << 16, '\0');
@@ -190,36 +190,58 @@ std::vector<std::vector<std::string>> cheat_list() {
     if (!json::parse(text.c_str(), tables)) return list;
     if (const Value *c = tables.get("CHEATS"))
         for (auto &item : c->items)
-            if (item.items.size() == 3)
-                list.push_back({item.items[0].s, item.items[1].s, item.items[2].s});
+            if (item.items.size() == 4)
+                list.push_back({item.items[0].s, item.items[1].s, item.items[2].s, item.items[3].s});
     return list;
 }
 
+// Debug mode -> Game speed: the game's own clock presets (its Dev Menu, Clock: Super Slo-Mo, Slo-Mo, Normal Speed,
+// Fast-Mo); runtime_env.cpp holds the chosen master clock multiplier
+const std::vector<std::pair<std::string, std::string>> GAME_SPEEDS = {
+    {"1", "Normal"}, {"0.2", "0.2x"}, {"0.5", "0.5x"}, {"1.75", "1.75x"}};
+
 Value unlocks_section(const State &state);   // defined with ADVANCED's toggles
+std::string config_str(const State &state, const std::string &key, const std::string &fallback);
+std::string text_of(const Value &v);
 
 Value page_cheats(const State &state) {
     const Value &config = state.config;
-    Value items = array();
+    Value items = array(), debug = array();
     items.items.push_back(label("native:cheats:intro",
                                 "Switches the developers built into the games. They take effect when a game launches and "
                                 "require update 1.02.",
                                 MUTED, CARD, 9));
-    bool first = true;
     for (auto &cheat : cheat_list()) {
-        if (!first) items.items.push_back(separator());
-        first = false;
+        Value &to = cheat[3] == "debug" ? debug : items;
+        if (to.items.size() > (&to == &items ? 1u : 0u)) to.items.push_back(separator());
         const std::string key = "cheat_" + cheat[0];
-        items.items.push_back(row("native:cheats:row:" + key, cheat[1], cheat[2],
-                                  toggle("native:cheats:" + key, config_flag(config, key))));
+        to.items.push_back(row("native:cheats:row:" + key, cheat[1], cheat[2],
+                               toggle("native:cheats:" + key, config_flag(config, key))));
     }
+    if (!debug.items.empty()) debug.items.push_back(separator());
+    debug.items.push_back(row("native:cheats:row:game_speed", "Game speed",
+                              "Slows the game down or speeds it up, with the presets of the game's own Clock menu. "
+                              "Works without debug mode. Uncharted 2 and 3 only; keep Normal for online play.",
+                              choice("native:cheats:game_speed", Value::text(config_str(state, "game_speed", "1")),
+                                     GAME_SPEEDS, "")));
     Value page = array();
     page.items.push_back(section("native:cheats", "Developer switches", std::move(items)));
+    page.items.push_back(section("native:cheats:debug", "Debug mode", std::move(debug)));
     page.items.push_back(unlocks_section(state));   // the right column
     return page;
 }
 
-// A toggle "native:cheats:cheat_<name>" sets that key.
+// A toggle "native:cheats:cheat_<name>" sets that key; the choice "native:cheats:game_speed" sets game_speed.
 bool act_cheats(const std::string &id, const std::string &kind, const Value &value, Changes &changes) {
+    if (kind == "choice" && id == "native:cheats:game_speed") {
+        const std::string v = text_of(value);
+        for (auto &o : GAME_SPEEDS)
+            if (o.first == v) {
+                changes.config.set("game_speed", Value::text(v));
+                return true;
+            }
+        return false;
+    }
     const std::string prefix = "native:cheats:cheat_";
     if (kind != "toggle" || id.compare(0, prefix.size(), prefix) != 0) return false;
     const std::string key = id.substr(std::strlen("native:cheats:"));
