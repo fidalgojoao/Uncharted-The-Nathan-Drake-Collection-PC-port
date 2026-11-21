@@ -1367,8 +1367,7 @@ static int i01_party(uintptr_t base,int32_t *event,ProfileState *s,const char *s
 static int i01_user_party(void);   /* agent I i004 */
 static void i05_stats(uintptr_t base,ProfileState *s);   /* agent I i005 */
 static void j01_tick(uintptr_t base,ProfileState *s);   /* agent J j001 */
-static int ox_want(const char *nm,uint32_t owner);static int ox_have(const char *nm,uint32_t owner);static void ox_release(void);
-static const uint8_t *ox_record(void);static void rpt_queue(const char *who,const char *why);   /* v7.78 rf13 */
+static void rpt_queue(const char *who,const char *why);   /* v7.78 rf13 */
 static void party_kick_promote(uintptr_t base,int promote);static void rpt_popup(uintptr_t base,ProfileState *s);static void rpt_pick(uintptr_t base,ProfileState *s,uint32_t k);
 static void j09_tick(uintptr_t base);   /* agent J j009 */
 static void j12_tick(uintptr_t base);   /* agent J j012 */
@@ -1448,6 +1447,8 @@ __attribute__((visibility("hidden"))) int u3x_npc_spawn_event(uintptr_t base,con
 __attribute__((visibility("hidden"))) int32_t u3x_ng_follow_sel(uintptr_t base,void (*log)(uintptr_t,const char*),void *s,int32_t host_sel,uint32_t name,uint32_t hash);   /* v7.227 C++ net game by name */
 __attribute__((visibility("hidden"))) void u3x_ng_put_hash(uint8_t *md,uint32_t name);   /* v7.228 #82 C++ */
 __attribute__((visibility("hidden"))) uint32_t u3x_ng_host_hash(const uint8_t *md);
+__attribute__((visibility("hidden"))) void u3x_ofetch_tick(uintptr_t base);   /* v7.228 #84 C++ */
+__attribute__((visibility("hidden"))) int u3x_ofetch_card(uint8_t *view,const char *name,uint32_t *shown);
 __attribute__((section(".text.ext"),noinline)) static void n10_tick(uintptr_t base);   /* fixer L n010 (end of the fixer L region) */
 __attribute__((section(".text.ext"),noinline)) static void n22_tick(uintptr_t base);   /* fixer L n022 (end of the file) */
 __attribute__((section(".text.ext"),noinline)) static void pl_hidden_guard(uintptr_t base,ProfileState *s);   /* v7.103 (end of the file) */
@@ -5445,17 +5446,10 @@ EXT static void hmac_sha1(const uint8_t *key,uint32_t kl,const uint8_t *p,uint32
 EXT static int pf_unseal(uint8_t *rec){return u3x_unseal_record(rec,bf_tab,(const uint8_t*)pf_hkey,(uint32_t)(sizeof(pf_hkey)-1));}
 /* ===== end op04 unseal ===== */
 /* ===== v7.78 rf13: other players' profiles (ox) and Report Player (rpt), RPCN thread side ===== */
-static volatile uint32_t ox_state EXT_BSS;static uint32_t ox_owner EXT_BSS;static char ox_name[20] EXT_BSS;
-/* ox_state: 0 idle, 0x10 asked, 0x11 running, 1 got it, 2 no profile (404), 3 failed. v7.228: only the Statistics card asks */
+static volatile uint32_t ox_state EXT_BSS;static char ox_name[20] EXT_BSS;
+/* ox_state: 0 idle, 0x10 asked, 0x11 running, 1 got it, 2 no profile (404), 3 failed. v7.228: asked and taken only by the
+ * Statistics card's fetch (u3x_ofetch_tick, C++), which is the game-thread side of the slot. */
 EXT static void ox_fetch1(RcMem *m,uint32_t ip){u3x_ox_fetch(m,ip);}   /* r2 S05 C++ (private) */
-EXT static int ox_same(const char *a,const char *b){for(int i=0;i<16;i++){if(a[i]!=b[i])return 0;if(!a[i])return 1;}return 1;}
-EXT static int ox_want(const char *nm,uint32_t owner){uint32_t st=__atomic_load_n(&ox_state,__ATOMIC_ACQUIRE);
- if(st==0x10u||st==0x11u||!nm||!nm[0])return 0;int i=0;for(;i<16&&nm[i];i++)ox_name[i]=nm[i];ox_name[i]=0;ox_owner=owner;
- __atomic_store_n(&ox_state,0x10u,__ATOMIC_RELEASE);return 1;}
-EXT static int ox_have(const char *nm,uint32_t owner){uint32_t st=__atomic_load_n(&ox_state,__ATOMIC_ACQUIRE);
- if(st<1u||st>3u||ox_owner!=owner||!ox_same(ox_name,nm))return 0;return (int)st;}
-EXT static void ox_release(void){__atomic_store_n(&ox_state,0u,__ATOMIC_RELEASE);}
-EXT static const uint8_t *ox_record(void){return rc_m?rc_m->ox_rec:0;}
 EXT static void ox_tick(RcMem *m){
  if(__atomic_load_n(&ox_state,__ATOMIC_ACQUIRE)!=0x10u)return;
  if(rc_srv_ok()!=1||!X.room[9]){ox_state=3u;return;}
@@ -8473,9 +8467,10 @@ EXT static int i02_bar(uintptr_t base,uint64_t *r){return u3x_i02_bar(base,r,(ui
 #pragma clang section text=".text.ext" rodata=".rodata.ext"
 static volatile uint32_t j01_d[6] EXT_BSS __attribute__((used));
 static uint8_t j01_fill EXT_BSS,j01_seen EXT_BSS;
-static uint8_t j01_ox EXT_BSS;   /* v7.78 rf13 */
+static uint32_t j01_ox EXT_BSS;   /* v7.78 rf13; v7.228: u3x_ofetch_card's mark */
 EXT static void j01_filled(int own){j01_fill=own?1:2;j01_seen=0;j01_d[3]=j01_fill;j01_ox=0;}
 EXT static void j01_tick(uintptr_t base,ProfileState *s){
+ u3x_ofetch_tick(base);   /* v7.228 #84: other players' records fetched ahead (C++) */
  if(!j01_fill)return;
  if(X.eb[1]&0x100000u){j01_fill=0;return;}   /* U3MP_STATS_KEEP=0 */
  uint8_t *v=*(uint8_t**)(base+0x17c3568u);
@@ -8483,16 +8478,12 @@ EXT static void j01_tick(uintptr_t base,ProfileState *s){
  uint32_t pg=active_page(base);j01_d[4]=pg;
  if(pg!=0x83f24f04u){if(j01_seen)j01_fill=0;return;}   /* left the card: disarm */
  j01_seen=1;
- if(j01_fill==2&&onp_online()){const char *sel=(const char*)(base+0x17c3871u);   /* v7.78 rf13: their record from the server */
-  if(!j01_ox){if(ox_want(sel,1))j01_ox=1;}
-  else if(j01_ox==1){int r=ox_have(sel,1);
-   if(r==1&&rc_m){copy(rc_m->ox_keep,ox_record(),MP_RECORD_BYTES);onp_be2le(v+0x248,rc_m->ox_keep);*(uint32_t*)(v+0x7ae8)=3;j01_fill=3;ox_release();}
-   else if(r>1){ox_release();j01_ox=2;}}}
+ if(j01_fill>1&&u3x_ofetch_card(v,(const char*)(base+0x17c3871u),&j01_ox))j01_fill=3;   /* v7.78 rf13: their record from the server; v7.228 C++ */
  uint32_t st=*(uint32_t*)(v+0x7ae8);
  if(st==3){j01_d[2]++;return;}
  j01_d[0]++;j01_d[1]=st;
  uint8_t *pr=player_profile(base);
- if(j01_fill==1&&pr)copy(v+0x248,lg_rec(base,s,pr),0x2828);else if(j01_fill==3&&rc_m)onp_be2le(v+0x248,rc_m->ox_keep);else i05_defaults(base,s,v);
+ if(j01_fill==1&&pr)copy(v+0x248,lg_rec(base,s,pr),0x2828);else i05_defaults(base,s,v);
  *(uint32_t*)(v+0x7ae8)=3;}
 /* v7.228 #82: the rank downloads of party and match room members (v7.78 rf13 / v7.79 rf14, ox_party_tick) are gone: their
  * badges come from the member data as on PS3 (u3x_member_rank); a rank word with the co-op star bit had read as "none". */
@@ -11201,7 +11192,9 @@ U3H void *u3h_rc(void *m_,int field){RcMem *m=(RcMem*)m_;
   case 24:return (void*)&m->n18_state;case 25:return m->srv_host;case 26:return m->srv_port;
   case 27:return m->hello_rx;case 28:return &nl_hr;   /* r2 G15: the last hello reply and hello value */
   case 30:return &sm_keyok;case 31:return sm_keyb;case 32:return &rp_st;case 33:return &rp_try;case 34:return &nl_tk_ok;case 35:return &nl_rep_ip;case 36:return &nl_rep_port;
-  case 37:return m->ox_rec;case 38:return (void*)&ox_state;case 39:return ox_name;   /* r2 S05: the other player's record, its state, its name */ }
+  case 37:return m->ox_rec;case 38:return (void*)&ox_state;case 39:return ox_name;   /* r2 S05: the other player's record, its state, its name */
+  case 40:return m->ox_keep;   /* v7.228 #84: the Statistics card's copy */
+ }
  return 0;}
 _Static_assert(sizeof(plat_sock)==8&&sizeof(((RcMem*)0)->srv_host[0])==64&&sizeof(((RcMem*)0)->pf_rx)==0x3000&&sizeof(((RcMem*)0)->ban_rx)==0x100,"RcMem fields as u3x_fixes.cpp reads them");
 U3H uint64_t u3h_net_connect(uint32_t ip,uint32_t port){return nl_connect(ip,port);}

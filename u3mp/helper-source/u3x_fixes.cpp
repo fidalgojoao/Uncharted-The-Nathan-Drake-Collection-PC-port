@@ -4788,6 +4788,7 @@ int32_t u3x_friend_state_icon(uintptr_t base, uint8_t *e);
 uint32_t u3x_page_tab_text(uintptr_t base, void *s);
 int u3x_friend_list(uintptr_t base, int32_t *ev, void *s);
 int u3x_friend_header(uintptr_t base, int32_t *ev, void *s);
+void u3x_ofetch_want(const char *name);   // v7.228
 }
 
 namespace g19p1 {
@@ -5129,6 +5130,8 @@ U3X_FN int u3x_friend_list(uintptr_t base, int32_t *ev, void *s) {
         u3h_fr_refresh(base);
     } else if (op == 10) {
         selection = ev[1];
+        // v7.228 #84: the focused friend's record is fetched ahead for the Statistics card
+        if (const uint8_t *e = row_entry(base, ev)) u3x_ofetch_want(reinterpret_cast<const char *>(e + 1));
     } else if (op == 2 || op == 4) {
         uint8_t *e = row_entry(base, ev);
         if (!e) return 1;
@@ -43914,4 +43917,97 @@ extern "C" U3X_FN [[clang::minsize]] uint32_t u3x_ng_host_hash(const uint8_t *md
     if ((md[0x32] & HASH_NEW) && (v & 0xf000u) == HASH_MARK) return v & 0xfffu;
     if ((md[0x32] & HASH_OLD) && (w & STAMPED)) return (w >> 16) & 0xfffu;
     return ~0u;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// v7.228 #84 "Player stats taking 1 second to load": other players' records for the Statistics card, fetched ahead.
+// The card (PAGE 0x83f24f04) asked the online thread for the record only once it was up, and showed zeros until the
+// download was done (the online thread picks a request up within 250 ms, then the HTTP round trip): one or two seconds.
+// PS3 1.19 also downloads it for the card (f_364f38). Now the record is asked for as soon as a player is picked (the
+// Friends list focus, or the selected player's id changing: friend, players met and party rows), kept with its owner's
+// name in the online block (ox_keep), and the card takes it at once. The card still asks again when it opens, so it is
+// refreshed in the background and shown anew when the newer copy arrives. One request at a time: the slot is the C
+// part's ox_state / ox_name (the online thread's ox_tick serves it), and this is its only user since the rank downloads
+// went (v7.228 #82).
+namespace ofetch {
+constexpr int F_RECORD = 37, F_STATE = 38, F_NAME = 39, F_KEEP = 40;   // u3h_rc fields
+constexpr uint32_t RECORD_SIZE = 0x2828, NAME = 16;
+constexpr uint32_t GOT = 1, ASKED = 0x10, RUNNING = 0x11;
+constexpr uintptr_t SELECTED_ID = 0x17c3871, OWN_NAME = 0x17d6010, P_RECORD = 0x248, P_LOAD_STATE = 0x7ae8;
+U3X_BSS char want[NAME + 4];      // the record to ask for next ("" none)
+U3X_BSS char asked[NAME + 4];     // the record our request is for
+U3X_BSS char kept[NAME + 4];      // whose record ox_keep holds ("" none)
+U3X_BSS char last_sel[NAME + 4];  // the selected player's id as last seen
+U3X_BSS uint32_t asking;          // 1 while our request is out
+U3X_BSS uint32_t gen;             // + 2 for each record taken into ox_keep (even; a card that has asked holds 1)
+
+// two ids are the same (the first 16 characters, as the C part's ox_same)
+U3X_FN [[clang::minsize]] bool same(const char *a, const char *b) {
+    for (uint32_t i = 0; i < NAME; i++) {
+        if (a[i] != b[i]) return false;
+        if (!a[i]) return true;
+    }
+    return true;
+}
+U3X_FN [[clang::minsize]] void put_name(char *to, const char *from) {
+    uint32_t i = 0;
+    for (; i < NAME && from[i]; i++) to[i] = from[i];
+    to[i] = 0;
+}
+// asks for a player's record next (the latest ask wins); `again`: also when it is the one kept (a refresh)
+U3X_FN [[clang::minsize]] void ask(const char *name, bool again) {
+    if (!name[0] || (!again && same(kept, name)) || (asking && same(asked, name))) return;
+    put_name(want, name);
+}
+}  // namespace ofetch
+
+// the Friends list focus moved to a friend
+extern "C" U3X_FN [[clang::minsize]] void u3x_ofetch_want(const char *name) { ofetch::ask(name, false); }
+
+// every frame: a newly selected player is asked for; our answer goes to ox_keep; the next ask takes the free slot
+extern "C" U3X_FN [[clang::minsize]] void u3x_ofetch_tick(uintptr_t base) {
+    using namespace ofetch;
+    void *m = u3h_rc_mem();
+    if (!m) return;
+    const char *sel = reinterpret_cast<const char *>(base + SELECTED_ID);
+    if (!same(sel, last_sel)) {
+        put_name(last_sel, sel);
+        if (!same(sel, reinterpret_cast<const char *>(base + OWN_NAME))) ask(sel, false);
+    }
+    uint32_t *state = static_cast<uint32_t *>(u3h_rc(m, F_STATE));
+    const uint32_t st = __atomic_load_n(state, __ATOMIC_ACQUIRE);
+    if (st == ASKED || st == RUNNING) return;   // the online thread has the slot
+    if (asking && st == GOT) {                   // the answer (else 2 none on the server, 3 failed: nothing kept)
+        uint8_t *keep = static_cast<uint8_t *>(u3h_rc(m, F_KEEP));
+        const uint8_t *record = static_cast<const uint8_t *>(u3h_rc(m, F_RECORD));
+        for (uint32_t i = 0; i < RECORD_SIZE; i++) keep[i] = record[i];
+        put_name(kept, asked);
+        gen += 2;
+    }
+    asking = 0;
+    if (!want[0] || !u3h_online_profile()) return;
+    put_name(static_cast<char *>(u3h_rc(m, F_NAME)), want);
+    put_name(asked, want);
+    want[0] = 0;
+    asking = 1;
+    __atomic_store_n(state, ASKED, __ATOMIC_RELEASE);
+}
+
+// The Statistics card of another player (`view` the viewed profile, `name` its id), every frame while it is up: asks for
+// the record once (`*shown` 0), then takes it from ox_keep when that is the player's and newer than the copy the card
+// shows, or when the game reset the card's record. `*shown`: 0 nothing asked, 1 asked, else the copy shown. 1 = filled.
+extern "C" U3X_FN [[clang::minsize]] int u3x_ofetch_card(uint8_t *view, const char *name, uint32_t *shown) {
+    using namespace ofetch;
+    if (!*shown) {
+        ask(name, true);
+        *shown = 1;
+    }
+    void *m = u3h_rc_mem();
+    if (!m || !kept[0] || !same(kept, name)) return 0;
+    uint32_t &load_state = *reinterpret_cast<uint32_t *>(view + P_LOAD_STATE);
+    if (*shown == gen && load_state == 3) return 0;
+    u3h_onp_be2le(view + P_RECORD, static_cast<const uint8_t *>(u3h_rc(m, F_KEEP)));
+    load_state = 3;
+    *shown = gen;
+    return 1;
 }
