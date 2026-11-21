@@ -51,6 +51,12 @@ bool install_improved_tonemap_curve(unsigned char *image, uint64_t size);
 bool exposure_filter_at_least_one(unsigned char *image, uint64_t size);
 // names and point popups above players use the HUD's 1280x720 canvas, as on PS3 (hudnet_text_canvas.cpp, issue 64)
 bool install_hudnet_text_canvas(unsigned char *image, uint64_t size);
+// in splitscreen the second local player's pad feeds the game's pad port 1 (split_pad.cpp, issue 31)
+bool install_split_pad(unsigned char *image, uint64_t size);
+// one frame of the game's pad update (image 0x10ddd90, given as update): twice, second player first, while the game
+// has a second local player, else once
+using SplitPadUpdate = uint32_t(__attribute__((sysv_abi)) *)(unsigned char *ports);
+uint32_t split_pad_frame(unsigned char *image, unsigned char *ports, SplitPadUpdate update);
 // a word on its own line in u3-switches.txt in the --user folder (tonemap_curve.cpp)
 bool user_switch(const char *word);
 // the PS3 improved tonemap curve: rewrites the tonemap constants when the render settings ask for it (tonemap_curve.cpp)

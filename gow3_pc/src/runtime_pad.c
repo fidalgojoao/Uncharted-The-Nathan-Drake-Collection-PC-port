@@ -14,11 +14,13 @@
  * GOW3_PROMPTS and the maps override them at start) and apply live. Button icons in the games'
  * text follow the device used last (keys and mouse buttons as bound, or the controller's
  * buttons: the game's own for PlayStation controllers, Xbox-style for others;
- * gpu/shim/gow3_prompts.cpp), or the fixed choice. */
+ * gpu/shim/gow3_prompts.cpp), or the fixed choice.
+ * Handle RUNTIME_PAD2_HANDLE is the second local player's pad (Uncharted 3 splitscreen, runtime_split.h). */
 #define _GNU_SOURCE
 #include "runtime.h"
 #include "gpu/gow3gpu.h"
 #include "runtime_gamesettings.h"
+#include "runtime_split.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -550,7 +552,8 @@ static int mouse_look_debug(void) {
 int runtime_pad_aim_held(void) { return __atomic_load_n(&pad_aim_held,__ATOMIC_RELAXED); }
 /* gow3 1 Nov 2026: GOW3_MOUSE_TRACE pad lines (runtime_mouselook.c). */
 void runtime_mouselook_trace_pad(int direct,float stick_x,float stick_y);
-static int sample_mouse(PadData *d) {
+/* stick_only: the mouse is the second player's (runtime_split.h): only its stick, never player 1's camera. */
+static int sample_mouse(PadData *d, int stick_only) {
     if (!mouse_enabled()) return 0;
     /* 20 Oct 2026: the aim sensitivity while aiming, the up/down speed and the left/right invert
      * (the mouse look handlers apply the same). */
@@ -593,7 +596,7 @@ static int sample_mouse(PadData *d) {
      * runtime_mouselook.c; the follow hooks neither take nor count then), so direct while aiming
      * means an aim hook took the mouse at every pad read. Without one (Uncharted 1, the hook off, the
      * game putting the direction back while it zooms in) the mouse is the stick, as before. */
-    const int direct=history==15u;
+    const int direct=history==15u && !stick_only;
     gow3gpu_mouse_look_pause(!direct);
     if (mouse_look_debug()) {
         static uint64_t debug_last; static unsigned reads, direct_reads;
@@ -620,21 +623,21 @@ static int sample_mouse(PadData *d) {
     d->right_y=(uint8_t)(sy<-1.0f ? 0 : sy>1.0f ? 255 : (int)(128.0f+sy*127.0f));
     return used;
 }
-static void sample_host(PadData *d) {
+/* g: the controller read (NULL none); keys: the keyboard and mouse may count (when on); player2: the second player's pad
+ * (runtime_split.h), which leaves player 1's button icons, taps and camera alone. */
+static void sample_host(PadData *d, SDL_Gamepad *g, int keys, int player2) {
     memset(d,0,sizeof(*d));
     d->left_x=d->left_y=d->right_x=d->right_y=128;
     d->orientation[3]=1.0f;
     d->connected=1; d->connected_count=connected_count ? connected_count : 1;
     d->timestamp=now_us();
-    SDL_Gamepad *g=current_gamepad();
-    prompt_activity.keyboard=prompt_activity.gamepad=0;
+    if (!player2) prompt_activity.keyboard=prompt_activity.gamepad=0;
     if (gow3gpu_overlay_captures_input()) return; /* settings menu open: neutral input */
     const bool *k=SDL_WasInit(SDL_INIT_VIDEO) ? SDL_GetKeyboardState(NULL) : NULL;
     sync_controls();
-    runtime_gamesettings_tick();
-    publish_pad_prompts(g);
+    if (!player2) { runtime_gamesettings_tick(); publish_pad_prompts(g); }
     int keyboard_used=0, gamepad_used=0;
-    const unsigned long long taps=__atomic_exchange_n(&pad_taps,0ull,__ATOMIC_RELAXED);
+    const unsigned long long taps=player2 ? 0ull : __atomic_exchange_n(&pad_taps,0ull,__ATOMIC_RELAXED);
     /* The controller counts whichever window is in front (window.cpp: background events). */
     if (g) {
         /* Buttons and triggers through the map: L2/R2 take the strongest of their sources (a
@@ -685,7 +688,7 @@ static void sample_host(PadData *d) {
     /* The keyboard works with or without a gamepad: its buttons add to the pad's, and a stick
      * follows the keys only while one of them is held. GOW3_KEYBOARD=0 turns it off (typing in
      * another window that lost the focus to the game would otherwise press buttons). */
-    if (k && keyboard_enabled()) {
+    if (k && keys && keyboard_enabled()) {
         for (size_t i=0;i<key_map.count;++i) if (k[key_map.entries[i].source]) { d->buttons|=key_map.entries[i].ps; keyboard_used=1; }
         bool held[STICK_KEYS]={0};
         for (size_t i=0;i<stick_keys.count;++i) if (k[stick_keys.entries[i].source]) { held[stick_keys.entries[i].direction]=true; keyboard_used=1; }
@@ -694,10 +697,11 @@ static void sample_host(PadData *d) {
         key_axis(&d->right_x,held[RS_LEFT],held[RS_RIGHT]);
         key_axis(&d->right_y,held[RS_UP],held[RS_DOWN]);
     }
-    if (sample_mouse(d)) keyboard_used=1;
+    if (keys && sample_mouse(d,player2)) keyboard_used=1;
     if (d->buttons & BTN_L2) d->l2=255;
-    __atomic_store_n(&pad_aim_held,(d->buttons & BTN_L2) || d->l2>30,__ATOMIC_RELAXED);
     if (d->buttons & BTN_R2) d->r2=255;
+    if (player2) return;
+    __atomic_store_n(&pad_aim_held,(d->buttons & BTN_L2) || d->l2>30,__ATOMIC_RELAXED);
     prompt_activity.keyboard=keyboard_used;
     prompt_activity.gamepad=gamepad_used;
     prompt_activity.connected=g!=NULL;
@@ -845,8 +849,15 @@ static void freeze_picture_on_options(uint32_t buttons) {
 /* After the menu or the text dialog closes, buttons still held (the Cross that accepted a
  * name) stay hidden until released: the game would take them as a new press. */
 static int hold_after_capture;
+/* Player 2's device (runtime_split.h); *g2 its controller when it is one. */
+static int player2_source(SDL_Gamepad *g1, SDL_Gamepad **g2) {
+    *g2=runtime_split_gamepad2(g1,pad_index());
+    return runtime_split_p2_source(*g2!=NULL,keyboard_enabled() || mouse_enabled(),g1!=NULL,pad_index());
+}
 static void sample(PadData *d) {
-    sample_host(d);
+    SDL_Gamepad *g=current_gamepad(), *g2=NULL;
+    const int keys_taken=runtime_split_p2_active() && runtime_split_keys_taken(1,player2_source(g,&g2));
+    sample_host(d,g,!keys_taken,0);
     if (gow3gpu_overlay_captures_input()) { hold_after_capture=1; click.side=-1; return; }
     record_sample(d); /* the click sources as they are: a replay plays them again */
     read_inject();
@@ -877,6 +888,17 @@ static void sample(PadData *d) {
     freeze_picture_on_options(d->buttons);
 }
 
+/* The second player's pad (handle RUNTIME_PAD2_HANDLE): its own device, nothing scripted, no touchpad clicks. */
+static int sample_player2(PadData *d) {
+    SDL_Gamepad *g2=NULL;
+    const int source=player2_source(current_gamepad(),&g2);
+    sample_host(d,source==SPLIT_P2_GAMEPAD ? g2 : NULL,source==SPLIT_P2_KEYS,1);
+    d->buttons&=~(uint32_t)(CLICK_LEFT|CLICK_RIGHT);
+    d->connected=source!=SPLIT_P2_NONE;
+    return d->connected;
+}
+static int handle_ok(int32_t handle) { return opened && (handle==PAD_HANDLE || handle==RUNTIME_PAD2_HANDLE); }
+
 static ABI int32_t pad_init(void) { pthread_mutex_lock(&lock); initialized=1; pthread_mutex_unlock(&lock); return 0; }
 static ABI int32_t pad_open(int32_t user, int32_t type, int32_t index, const void *param) {
     (void)param;
@@ -896,10 +918,11 @@ static ABI int32_t pad_close(int32_t handle) {
     opened=0; return 0;
 }
 static ABI int32_t pad_read_state(int32_t handle, PadData *data) {
-    if (handle!=PAD_HANDLE || !opened) return ERR_INVALID_HANDLE;
+    if (!handle_ok(handle)) return ERR_INVALID_HANDLE;
     if (!data) return ERR_INVALID_ARG;
     pthread_mutex_lock(&lock);
-    sample(data); ++reads;
+    if (handle==RUNTIME_PAD2_HANDLE) { sample_player2(data); runtime_split_p2_read(); }
+    else { sample(data); ++reads; }
     pthread_mutex_unlock(&lock);
     return 0;
 }
@@ -915,9 +938,14 @@ static int buffered_report(PadData *out,const PadData *sampled) {
     return 1;
 }
 static ABI int32_t pad_read(int32_t handle, PadData *data, int32_t count) {
-    if (handle!=PAD_HANDLE || !opened) return ERR_INVALID_HANDLE;
+    if (!handle_ok(handle)) return ERR_INVALID_HANDLE;
     if (!data || count<1 || count>64) return ERR_INVALID_ARG;
     pthread_mutex_lock(&lock);
+    if (handle==RUNTIME_PAD2_HANDLE) { /* read once per frame by the game's pad port 1 (u3fix split_pad.cpp) */
+        sample_player2(data); runtime_split_p2_read();
+        pthread_mutex_unlock(&lock);
+        return 1;
+    }
     PadData sampled;
     sample(&sampled); ++reads;
     int result=buffered_report(data,&sampled);
@@ -925,23 +953,27 @@ static ABI int32_t pad_read(int32_t handle, PadData *data, int32_t count) {
     return result;
 }
 static ABI int32_t pad_info(int32_t handle, ControllerInfo *info) {
-    if (handle!=PAD_HANDLE || !opened) return ERR_INVALID_HANDLE;
+    if (!handle_ok(handle)) return ERR_INVALID_HANDLE;
     if (!info) return ERR_INVALID_ARG;
     memset(info,0,sizeof(*info));
     info->pixel_density=44.86f; info->resolution_x=1920; info->resolution_y=943;
     info->dead_zone_left=info->dead_zone_right=2;
     info->connection_type=0; info->connected=1; info->device_class=0;
     pthread_mutex_lock(&lock);
-    current_gamepad();
+    SDL_Gamepad *g2=NULL;
+    /* the second player's pad is connected while it has a device (the helper's Splitscreen row asks) */
+    if (handle==RUNTIME_PAD2_HANDLE) info->connected=player2_source(current_gamepad(),&g2)!=SPLIT_P2_NONE;
+    else current_gamepad();
     info->connected_count=connected_count ? connected_count : 1;
     pthread_mutex_unlock(&lock);
     return 0;
 }
 static ABI int32_t pad_vibration(int32_t handle, const uint8_t *param) {
-    if (handle!=PAD_HANDLE || !opened) return ERR_INVALID_HANDLE;
+    if (!handle_ok(handle)) return ERR_INVALID_HANDLE;
     if (!param) return ERR_INVALID_ARG;
     pthread_mutex_lock(&lock);
     SDL_Gamepad *g=current_gamepad();
+    if (handle==RUNTIME_PAD2_HANDLE) player2_source(g,&g);
     /* gow3 24 Oct 2026 (GitHub #166): Controls -> Controller vibration off stops every rumble
      * (a zero rumble also ends one that was running when the option was turned off). */
     const int on=gow3gpu_controls_vibration();
@@ -949,7 +981,7 @@ static ABI int32_t pad_vibration(int32_t handle, const uint8_t *param) {
     pthread_mutex_unlock(&lock);
     return 0;
 }
-static ABI int32_t pad_ok_handle(int32_t handle) { return handle==PAD_HANDLE && opened ? 0 : ERR_INVALID_HANDLE; }
+static ABI int32_t pad_ok_handle(int32_t handle) { return handle_ok(handle) ? 0 : ERR_INVALID_HANDLE; }
 static ABI int32_t pad_ok_handle_flag(int32_t handle, uint8_t flag) { (void)flag; return pad_ok_handle(handle); }
 
 /* The light bar colour the game sets (DualShock 4 / DualSense through SDL); kept for a gamepad
