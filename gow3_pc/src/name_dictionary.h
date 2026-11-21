@@ -1,4 +1,4 @@
-// name_dictionary: text names for the 32-bit name ids of Uncharted 2 and 3, read from the player's own game files.
+// name_dictionary: text names for the 32-bit name ids of Uncharted 1, 2 and 3, read from the player's own game files.
 //
 // The retail games keep only the ids (a CRC-32 of the name: polynomial 0x04c11db7, most significant bit first, start
 // value 0, no final xor). Their data files still spell many names out (string lists, and the exported symbols of the

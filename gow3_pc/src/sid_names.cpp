@@ -1,13 +1,16 @@
-// Uncharted 2 and 3 1.02: names for name ids where the retail games answer "(no debug memory)".
+// Uncharted 1, 2 and 3 1.02: names for name ids where the retail games have none.
 //
 // Names in the game data are 32-bit ids; the function that turns an id back into text (Uncharted 3 image 0xf38f40,
-// Uncharted 2 0xce33a0) has no name table in the retail games and answers "(no debug memory)". The debug menus show
-// that answer as item names (the Give Player Weapon list, issue 70), and the script messages printed by
-// script_errors_log.cpp say which kind of thing was not found, but not which one. The function now runs as before;
-// only when its answer is that text does it give the name read from the player's own game files instead
-// (name_dictionary.cpp: the data files in u3data and u2data build/main/dc1/ps4 under /app0, the game's own folder
-// first, read once on a runtime thread when the game starts), or "#" and the id in hex when those files do not spell
-// the name out (from a small ring of buffers per thread). Found by their bytes.
+// Uncharted 2 0xce33a0, Uncharted 1 0x5d0100) has no name table in the retail games. Asked for text, it answers
+// "(no debug memory)"; Uncharted 1 answers "(SID file not found)" instead, as the name file it looks for
+// (build/main/sid1/sidbase.bin) is not shipped, or "(SID file read error)". The debug menus show that answer as item
+// names (U2 and U3's Give Player Weapon list, issue 70; U1's lists of render settings and state objects; U1's weapon
+// list names its weapons from their text), and the script messages printed by script_errors_log.cpp say which kind
+// of thing was not found, but not which one. The function now runs as before; only when its answer is one of those
+// texts does it give the name read from the player's own game files instead (name_dictionary.cpp: the data files in
+// build/main/dc1/ps4 of u3data and u2data, the game's own first, or of u1data for U1, under /app0, read once on a
+// runtime thread when the game starts), else "#" and the id in hex (from a small ring of buffers per thread). Asked
+// quietly (second argument set), it answers 0 as before, as game code may test that 0. Found by their bytes.
 #include "sid_names.h"
 
 #include "name_dictionary.h"
@@ -24,7 +27,8 @@ extern "C" int runtime_file_translate(const char *guest, char *out, size_t size)
 
 namespace {
 
-const char *own_data = "u3data";   // the running game's data folder, read first: its names win a shared id
+const char *own_data = "u3data";     // the running game's data folder, read first: its names win a shared id
+const char *other_data = "u2data";   // the other game's folder (U2 and U3 share many names), or nullptr
 
 const name_ids::Dictionary &names() {
     static name_ids::Dictionary d;
@@ -33,16 +37,23 @@ const name_ids::Dictionary &names() {
         char root[1024];
         if (runtime_file_translate("/app0", root, sizeof root) != 0) return;
         size_t files = 0;
-        for (const char *data : {own_data, std::strcmp(own_data, "u3data") ? "u3data" : "u2data"})
-            files += d.add_folder(std::string(root) + "/" + data + "/build/main/dc1/ps4");
+        for (const char *data : {own_data, other_data})
+            if (data) files += d.add_folder(std::string(root) + "/" + data + "/build/main/dc1/ps4");
         std::printf("Runtime: %zu names read from %zu game data files for ids without debug memory\n", d.size(), files);
         std::fflush(stdout);
     });
     return d;
 }
 
+bool no_name(const char *answer) {   // a quiet answer (0) stays as it is: game code may test it
+    if (!answer) return false;
+    for (const char *text : {"(no debug memory)", "(SID file not found)", "(SID file read error)"})
+        if (std::strcmp(answer, text) == 0) return true;
+    return false;
+}
+
 __attribute__((sysv_abi)) const char *name_or_id(uint32_t id, const char *name) {
-    if (!name || std::strcmp(name, "(no debug memory)") != 0) return name;
+    if (!no_name(name)) return name;
     if (const char *known = names().find(id)) return known;
     thread_local char ring[8][16];
     thread_local unsigned next = 0;
@@ -57,6 +68,9 @@ constexpr unsigned char kSite3[] = {0x55, 0x48, 0x89, 0xe5, 0x41, 0x57, 0x41, 0x
 // the same with mov r15,[canary address]
 constexpr unsigned char kSite2[] = {0x55, 0x48, 0x89, 0xe5, 0x41, 0x57, 0x41, 0x56, 0x53, 0x48, 0x83, 0xec,
                                     0x18, 0x41, 0x89, 0xf6, 0x89, 0xfb, 0x4c, 0x8b, 0x3d, 0x47, 0x78, 0x36};
+// Uncharted 1: the same, another canary address
+constexpr unsigned char kSite1[] = {0x55, 0x48, 0x89, 0xe5, 0x41, 0x57, 0x41, 0x56, 0x53, 0x48, 0x83, 0xec,
+                                    0x18, 0x41, 0x89, 0xf6, 0x89, 0xfb, 0x4c, 0x8b, 0x3d, 0x37, 0xaa, 0x37};
 constexpr unsigned kPrologue = 6;   // push rbp; mov rbp,rsp; push r15
 
 bool install(unsigned char *image, uint64_t size, const unsigned char *site, size_t site_length, const char *game) {
@@ -100,7 +114,13 @@ extern "C" int sid_names_install(unsigned char *image, uint64_t size) {
     bool done = install(image, size, kSite3, sizeof kSite3, "Uncharted 3");
     if (!done) {
         own_data = "u2data";
+        other_data = "u3data";
         done = install(image, size, kSite2, sizeof kSite2, "Uncharted 2");
+    }
+    if (!done) {
+        own_data = "u1data";
+        other_data = nullptr;
+        done = install(image, size, kSite1, sizeof kSite1, "Uncharted 1");
     }
     if (!done) return 0;
     // the names are read on a thread of the runtime while the game starts; a game thread that asks earlier waits

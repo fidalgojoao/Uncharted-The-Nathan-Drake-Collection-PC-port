@@ -141,9 +141,10 @@ Value tables() {
          "Turns on the game's own debug mode, as in the PS3 versions. Hold L3, then press Options for the Dev Menu "
          "(Xbox: left stick click + Start; keyboard: Left Shift + Esc) or the touchpad for the Quick Menu (Xbox: "
          "left stick click + Back; keyboard: Left Shift + Tab); the same again closes it. The Quick Menu's Give "
-         "Player Weapon hands you any weapon, by the names your game's data files hold (Uncharted 2 and 3; a few "
-         "show as #codes). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted 1 and 2 read it from a second "
-         "controller). Works in all three games; single player.",
+         "Player Weapon hands you any weapon, by name (Uncharted 1's list names them itself; in Uncharted 2 and 3, "
+         "and in Uncharted 1's other menus, names come from your game's data files, a few show as #codes). L3 + "
+         "Triangle: debug text. L2 + R2: debug fly (Uncharted 1 and 2 read it from a second controller). Works in "
+         "all three games; single player.",
          "debug"}};
     Value c;
     c.kind = Value::Array;

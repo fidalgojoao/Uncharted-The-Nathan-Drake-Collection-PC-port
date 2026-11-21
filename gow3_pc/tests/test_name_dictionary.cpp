@@ -1,5 +1,6 @@
 // name ids back to names (src/name_dictionary.cpp), on made-up data: the hash, the pieces a run of name characters
-// gives, the first name winning a shared id, and the folder reader (only *.bin and *.dci, directly in the folder).
+// gives, Uncharted 1's marked texts, the first name winning a shared id, and the folder reader (only *.bin and *.dci,
+// directly in the folder).
 #include "name_dictionary.h"
 
 #include <cassert>
@@ -37,6 +38,15 @@ int main() {
     for (const char *name : {"lantern", "key-art", "*grue*", "grue*", "oil", "export *brass-key-art*"})
         assert(!d.find(reference(name)) || !has(d, name));
     assert(!d.find(0));
+
+    // Uncharted 1's files: four marker bytes before each text; the marker is not part of it, the whole text is a name
+    name_ids::Dictionary u1;
+    const char marked[] = "\x3e\xdb\x7b\x63*rusty-sword*\0\x3e\xdb\x7b\x63grue-bait\0\x3e\xdb\x7b\x63\0zz\x3e\xdb\x7b\x63";
+    u1.add_text(marked, sizeof marked - 1);
+    for (const char *name : {"*rusty-sword*", "rusty-sword", "rusty", "grue-bait", "grue", "zz"}) assert(has(u1, name));
+    for (const char *name : {"c*rusty-sword*", "cgrue-bait", "cgrue", "c", "*rusty-sword", "rusty-sword*"})
+        assert(!has(u1, name));
+    assert(!has(d, "*grue*"));   // no marker: a starred run is still only its pieces
 
     const size_t before = d.size();
     d.add_text("zork-lantern", 12);   // already known: nothing new

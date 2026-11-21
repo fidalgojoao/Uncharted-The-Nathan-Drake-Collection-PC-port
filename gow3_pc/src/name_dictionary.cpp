@@ -7,10 +7,15 @@
 // or '/' itself). Each candidate
 // is kept under its hash; an id that two different candidates share keeps the first one read. The id 0 is "no name"
 // in the games and is never given one.
+//
+// Uncharted 1's data files put four marker bytes (kTextMark) in front of every text, and there a symbol's id is the
+// hash of its whole text, stars included (*name*). So after the marker the run starts behind it, and the whole run is
+// a candidate too. Uncharted 2 and 3's files have no such marker.
 #include "name_dictionary.h"
 
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <vector>
 
 #ifdef _WIN32
@@ -40,6 +45,13 @@ bool name_char(char c) {
 }
 
 constexpr size_t kLongest = 96;   // longer pieces are not names
+
+constexpr char kTextMark[] = {'\x3e', '\xdb', '\x7b', '\x63'};   // before each text in Uncharted 1's data files
+
+bool text_mark(const char *data, size_t size, size_t at) {
+    return data[at] == kTextMark[0] && size - at >= sizeof kTextMark &&
+           std::memcmp(data + at, kTextMark, sizeof kTextMark) == 0;
+}
 
 bool read_file(const std::string &path, std::string &out) {
 #ifdef _WIN32
@@ -85,10 +97,14 @@ void Dictionary::add(const char *name, size_t length) {
 
 void Dictionary::add_text(const char *data, size_t size) {
     size_t i = 0;
+    bool marked = false;   // the run starts right behind kTextMark
     while (i < size) {
-        if (!name_char(data[i])) { ++i; continue; }
+        if (text_mark(data, size, i)) { i += sizeof kTextMark; marked = true; continue; }
+        if (!name_char(data[i])) { ++i; marked = false; continue; }
         size_t end = i;
         while (end < size && name_char(data[end])) ++end;
+        if (marked && end - i <= kLongest) add(data + i, end - i);
+        marked = false;
         for (size_t s = i; s < end; ++s) {
             if (s != i && data[s - 1] != '*' && data[s - 1] != '/') continue;
             if (data[s] == '*' || data[s] == '/') continue;
