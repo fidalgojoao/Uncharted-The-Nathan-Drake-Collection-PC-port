@@ -1446,6 +1446,7 @@ __attribute__((visibility("hidden"))) int u3x_ring_draw(uintptr_t base,const uin
 __attribute__((visibility("hidden"))) int u3x_ring_reg(uintptr_t base,const uint64_t *r);
 __attribute__((visibility("hidden"))) void u3x_ring_tick(uintptr_t base,void (*log)(uintptr_t,const char*));
 __attribute__((visibility("hidden"))) int u3x_npc_spawn_event(uintptr_t base,const uint64_t *r);   /* v7.225 C++ NPC spawn events */
+__attribute__((visibility("hidden"))) int32_t u3x_ng_follow_sel(uintptr_t base,void (*log)(uintptr_t,const char*),void *s,int32_t host_sel,uint32_t name,uint32_t hash);   /* v7.227 C++ net game by name */
 __attribute__((section(".text.ext"),noinline)) static void n10_tick(uintptr_t base);   /* fixer L n010 (end of the fixer L region) */
 __attribute__((section(".text.ext"),noinline)) static void n22_tick(uintptr_t base);   /* fixer L n022 (end of the file) */
 __attribute__((section(".text.ext"),noinline)) static void pl_hidden_guard(uintptr_t base,ProfileState *s);   /* v7.103 (end of the file) */
@@ -4756,7 +4757,9 @@ JPX static void ng_hex(char *b,int *n,uint32_t v,int dig){static const char hx[]
 JPX static int fl_decide(LanBe *be,uintptr_t base,ProfileState *s,uint8_t *m,uint64_t room){
  if(room==ng_bad_room)return 0;
  if(m[0x40+0x32]&8){int16_t sel=*(int16_t*)(m+0x40+0x30);uint32_t hh=(*(uint32_t*)(m+0x40+0x3c)>>16)&0xfffu;int ok;uint32_t nm=ng_name_at(s,sel,&ok);
-  if(!ok||ng_h12(nm)!=hh){
+  int32_t li=u3x_ng_follow_sel(base,ol01_print,s,sel,(fj_hi.ok&&fj_hi.room==room)?fj_hi.name:0,hh);   /* v7.227: by name, our order */
+  if(li>=0)*(int16_t*)(base+0x17d167cu)=(int16_t)li;
+  if(li<0){
    static const char t_a[]="custom game: host's net game (hash ",t_b[]=") differs from ours at index ",t_c[]=" (",t_d[]=" hash ",t_e[]="): not loading (update the import)";
    char b[200];int n=0;ol01_cat(b,&n,t_a);ng_hex(b,&n,hh,3);ol01_cat(b,&n,t_b);ol01_dec(b,&n,(uint32_t)(uint16_t)sel);
    for(const char *q=t_c;*q;)b[n++]=*q++;ng_hex(b,&n,nm,8);for(const char *q=t_d;*q;)b[n++]=*q++;ng_hex(b,&n,ok?ng_h12(nm):0,3);for(const char *q=t_e;*q&&n<198;)b[n++]=*q++;b[n]=0;
@@ -4867,10 +4870,10 @@ JPX static void fj_dir_tick(uintptr_t base,ProfileState *s){
  if(!(fj_hi.flags&2)){fj_dir_t=0;so_note(t_n,0,-1,0);return;}
  if(*(uint32_t*)(base+0x1b68810u)!=0u||!s)return;   /* only from the idle lobby */
  fj_dir_t=0;
- if(fj_hi.name&&fj_ng_name(base,fj_hi.sel)!=fj_hi.name){   /* the net game guard of fl_decide, from the info */
-  static const char t_a[]="custom game: host's net game ",t_b[]=" differs from ours at index ",t_c[]=" (ours ",t_e[]="): not loading (update the import)";
-  char b[160];int n=0;ol01_cat(b,&n,t_a);ng_hex(b,&n,fj_hi.name,8);ol01_cat(b,&n,t_b);ol01_dec(b,&n,(uint32_t)(uint16_t)fj_hi.sel);ol01_cat(b,&n,t_c);ng_hex(b,&n,fj_ng_name(base,fj_hi.sel),8);ol01_cat(b,&n,t_e);b[n]=0;
-  so_note(b,0,-1,0);ng_bad_room=fj_hi.room;show_dialog(base,s,0x4d972420u,0xc6467f2du,0xa8cda6e0u,0,0,0xe1e040aau);ps[0x1334]=1;return;}
+ {int32_t li=u3x_ng_follow_sel(base,ol01_print,s,fj_hi.sel,fj_hi.name,~0u);   /* the net game guard of fl_decide, from the info; v7.227: by name, our order */
+  if(li<0){static const char t_a[]="custom game: host's net game not in ours (update the import)";
+   so_note(t_a,0,-1,0);ng_bad_room=fj_hi.room;show_dialog(base,s,0x4d972420u,0xc6467f2du,0xa8cda6e0u,0,0,0xe1e040aau);ps[0x1334]=1;return;}
+  fj_hi.sel=(int16_t)li;}
  {uint32_t *mode=(uint32_t*)(base+0x17d603cu);if(*mode!=2){lnb_guest_saved=*mode;lnb_guest_mode=1;*mode=2;}}   /* x019 */
  *(int16_t*)(base+0x17d167cu)=fj_hi.sel;   /* x013: the host's net game */
  lnb_followed=fj_hi.room;lnb_at_start=0;lnb_guest_wait=0;lnb_resync_done=0;fl_jip=1;mm_bg=0;
@@ -4975,7 +4978,8 @@ uint8_t *ps=LNB_SESS_PARTY(base);
   uint8_t *ms=LNB_SESS_MATCH(base);ms[0x1338]=1;*(int16_t*)(base+0x17cb060u+0x661c)=*(int16_t*)(base+0x17d167cu);
   *(uint32_t*)(base+0x1b68810u)=0x11;*(uint32_t*)(base+0x1b68814u)=*(uint32_t*)(base+0x17b4a90u+0x114);X.room[28]++;return;}
  for(int i=0;i<10;i++){uint8_t *m=lnb_member(ps,i);if(!m[0x25]||*(uint32_t*)(m+0x2c)!=host||*(uint32_t*)(m+0x3c)!=0x40)continue;
-  if((m[0x40+0x32]&1)&&*(int16_t*)(base+0x17d167cu)!=*(int16_t*)(m+0x40+0x30)){*(int16_t*)(base+0x17d167cu)=*(int16_t*)(m+0x40+0x30);X.room[29]++;}   /* x013 */
+  if(m[0x40+0x32]&1){int32_t li=u3x_ng_follow_sel(base,0,s,*(int16_t*)(m+0x40+0x30),0,(m[0x40+0x32]&8)?(*(uint32_t*)(m+0x40+0x3c)>>16)&0xfffu:~0u);   /* x013; v7.227: by name */
+   if(li<0)li=*(int16_t*)(m+0x40+0x30);if(*(int16_t*)(base+0x17d167cu)!=(int16_t)li){*(int16_t*)(base+0x17d167cu)=(int16_t)li;X.room[29]++;}}
   /* x019: the party list's colours (op 20) and the map card need custom-game mode 2, which only the host's menu sets */
   {uint32_t *mode=(uint32_t*)(base+0x17d603cu);if(m[0x40+0x32]&1){if(*mode!=2){lnb_guest_saved=*mode;lnb_guest_mode=1;*mode=2;}}else if(lnb_guest_mode){*mode=lnb_guest_saved;lnb_guest_mode=0;}}
   uint64_t room=*(uint64_t*)(m+0x40+0x34);X.room[25]=(uint32_t)room;

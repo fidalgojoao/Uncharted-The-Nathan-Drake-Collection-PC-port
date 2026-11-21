@@ -43825,3 +43825,45 @@ extern "C" U3X_FN [[clang::minsize]] void u3x_npc_spawn_report(uintptr_t base, L
     log(base, l.z());
 }
 // ===== end NPC spawn events =====
+
+// ---------------------------------------------------------------------------------------------------------------------
+// v7.227 net game follow by name (joining a friend's match in progress failed: "host's net game ... differs from ours at
+// index 268"). The import orders each player's net game table from the server data of the day, so two players' tables
+// can hold the same net games in another order, and the host's index then names another net game here. The follower now
+// looks the host's net game up in its own table: by the full name id when the friend's join info carries it, else by the
+// 12-bit hash the host stamps into its member data (+0x3c bits 16..27, stamped when +0x32 bit 3 is set), accepted only
+// when exactly one entry here has it. The host's own index wins when it already names that net game (same order).
+// Returns the index to use here: the host's index for a host that stamps nothing, our index of its net game, or -1 when
+// this table has no such net game (the import really differs: the join is refused as before).
+namespace ng_follow {
+constexpr uint32_t NET_GAMES = 0x3b9a067du;   // script symbol of the net game table: {s32 count, pad, entries}
+constexpr uintptr_t ENTRY = 0xd0;             // entry size; +0 the net game's name id
+U3X_RO const char t_moved[] = "U3MP online: custom game: host's net game found here by name";
+
+// entry i is the host's net game: its name id, or (no name) its 12-bit hash
+U3X_FN [[clang::minsize]] bool same(const uint8_t *e, int32_t i, uint32_t name, uint32_t hash) {
+    const uint32_t v = *reinterpret_cast<const uint32_t *>(e + static_cast<uintptr_t>(i) * ENTRY);
+    return name ? v == name : ((v ^ (v >> 12) ^ (v >> 24)) & 0xfffu) == hash;
+}
+}  // namespace ng_follow
+
+// host_sel: the host's index; name: its net game's name id (0 = not known); hash: the 12-bit hash from its member data
+// (above 0xfff: not stamped); log: when set, a found index other than the host's is logged
+extern "C" U3X_FN [[clang::minsize]] int32_t u3x_ng_follow_sel(uintptr_t base, Log log, void *s, int32_t host_sel,
+                                                               uint32_t name, uint32_t hash) {
+    using namespace ng_follow;
+    if (!name && hash > 0xfffu) return host_sel;   // nothing to compare with: a PS3 host or an older helper
+    const uint8_t *t = u3x_sym_table(s, NET_GAMES);
+    const int32_t n = t ? *reinterpret_cast<const int32_t *>(t) : 0;
+    const uint8_t *e = t ? *reinterpret_cast<uint8_t *const *>(t + 8) : nullptr;
+    if (!e || n <= 0) return -1;
+    if (host_sel >= 0 && host_sel < n && same(e, host_sel, name, hash)) return host_sel;   // the same order
+    int32_t found = -1;
+    for (int32_t i = 0; i < n; i++) {
+        if (!same(e, i, name, hash)) continue;
+        if (found >= 0) return -1;   // two candidates: no safe pick
+        found = i;
+    }
+    if (found >= 0 && log) log(base, t_moved);
+    return found;
+}
