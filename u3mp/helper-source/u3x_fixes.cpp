@@ -3642,7 +3642,6 @@ U3H_IMPORT void u3h_set_text(int32_t *ev, const char *t);
 U3H_IMPORT void u3h_clan_tag_poll(uintptr_t base, void *s);
 U3H_IMPORT char *u3h_fmt_append(char *o, char *e, const char *t);
 U3H_IMPORT uint8_t *u3h_player_profile(uintptr_t base);
-U3H_IMPORT int32_t u3h_ox_rank_of(const char *nm);
 U3H_IMPORT uint8_t *u3h_ec_find_np(uintptr_t base, const uint8_t *m, int32_t idx);
 U3H_IMPORT uint32_t u3h_pad_pressed(uintptr_t base, int32_t screen);
 U3H_IMPORT uint8_t *u3h_active_page_object(uintptr_t base);
@@ -28257,7 +28256,6 @@ uint8_t *u3h_ec_find_np(uintptr_t base, const uint8_t *m, int32_t idx);
 void u3h_set_text(int32_t *ev, const char *t);
 char *u3h_fmt_append(char *o, char *e, const char *t);
 uint8_t *u3h_player_profile(uintptr_t base);
-int32_t u3h_ox_rank_of(const char *nm);
 void u3h_rank_icon(uintptr_t base, void *s, int32_t *ev);
 int32_t u3h_gt_conn_state(uintptr_t base, int32_t id);
 void u3h_clan_tag_poll(uintptr_t base, void *s);
@@ -28283,6 +28281,8 @@ uint32_t u3x_i01_colour(uintptr_t base, int32_t idx);
 int u3x_i01_strcmp(const uint8_t *a, const uint8_t *b);
 void u3x_i01_row_colour(uintptr_t base, void *s, int32_t *event, uint8_t *m, int guest, uint32_t row);
 int u3x_i01_party(uintptr_t base, int32_t *event, void *s, const char *selfname);
+// v7.228
+int u3x_member_rank(const uint8_t *slot, uint32_t *rank, int ps3_paw);
 }
 
 namespace g34a {
@@ -28301,8 +28301,7 @@ constexpr uintptr_t SES_ROOM = 0x18, SES_SLOTS = 0x680, SES_OWN_ID = 0x12e4, SES
 constexpr uint32_t SLOT_COUNT = 10;
 constexpr uintptr_t SLOT_SIZE = 0x120;
 // a member slot
-constexpr uintptr_t SLOT_IN_USE = 0x25, SLOT_ID = 0x2c, SLOT_CONN = 0x34, SLOT_DATA_LEN = 0x3c, SLOT_FLAGS = 0x72,
-                    SLOT_RANK = 0x7c;
+constexpr uintptr_t SLOT_IN_USE = 0x25, SLOT_ID = 0x2c, SLOT_CONN = 0x34;
 // a member's lobby data
 constexpr uintptr_t MD_TEAM = 9, MD_GUEST_ID = 0x19;
 // a net player record
@@ -28375,16 +28374,8 @@ U3X_FN void rank_badge(uintptr_t base, void *s, int32_t *event, uint8_t *m, int 
         uint8_t *profile = u3h_player_profile(base);
         if (!rank_of_profile || !profile) return;
         rank = game_call<uint32_t>(rank_of_profile, profile);
-    } else {
-        const int32_t fetched = u3h_ox_rank_of(reinterpret_cast<const char *>(m));
-        if (fetched >= 0) {
-            rank = static_cast<uint32_t>(fetched);
-        } else {
-            // the rank word of the member data, when it carries one
-            const uint32_t word = rd<uint32_t>(m, SLOT_RANK);
-            if (rd<uint32_t>(m, SLOT_DATA_LEN) != 0x40 || !(word & 0x20000000u)) return;
-            rank = (rd<uint8_t>(m, SLOT_FLAGS) & 8) ? (word & 0xffffu) : (word & ~0x20000000u);
-        }
+    } else if (!u3x_member_rank(m, &rank, 1)) {   // v7.228 #82: from the member's data block, as PS3 1.19 does
+        return;
     }
     // the image answer of kind 0x29 with the rank word
     event[2] = 0x29;
@@ -31216,7 +31207,7 @@ uint32_t *u3h_onm(void);
 int u3h_onb_mode(void);
 const char *u3h_text(uintptr_t base, void *s, uint32_t id);
 uint8_t *u3h_player_profile(uintptr_t base);
-int32_t u3h_ox_rank_of(const char *name);
+int u3x_member_rank(const uint8_t *slot, uint32_t *rank, int ps3_paw);   // v7.228
 void u3h_rank_icon(uintptr_t base, void *s, int32_t *ev);
 uint32_t u3h_team_colour(uintptr_t base, int32_t team);
 void u3h_hud_alias_names(uintptr_t base, void *s);
@@ -31408,9 +31399,9 @@ extern "C" U3X_FN int u3x_onm_players(uintptr_t base, int32_t *ev, void *s, cons
     int32_t rank;
     if (row == 0) {
         if (!own_rank(base, s, &rank)) return 1;
-    } else {
-        rank = u3h_ox_rank_of(name);
-        if (rank < 0) rank = 1;
+    } else {   // v7.228 #82: from the member's data block (it was a download, and a co-op star read as no rank)
+        uint32_t word;
+        rank = u3x_member_rank(reinterpret_cast<const uint8_t *>(name), &word, 0) ? static_cast<int32_t>(word) : 1;
     }
     u3x_icon_answer(ev, KIND_RANK, rank, 0, 0, -1);
     u3h_rank_icon(base, s, ev);
@@ -43831,7 +43822,7 @@ extern "C" U3X_FN [[clang::minsize]] void u3x_npc_spawn_report(uintptr_t base, L
 // index 268"). The import orders each player's net game table from the server data of the day, so two players' tables
 // can hold the same net games in another order, and the host's index then names another net game here. The follower now
 // looks the host's net game up in its own table: by the full name id when the friend's join info carries it, else by the
-// 12-bit hash the host stamps into its member data (+0x3c bits 16..27, stamped when +0x32 bit 3 is set), accepted only
+// 12-bit hash the host stamps into its member data (u3x_ng_host_hash), accepted only
 // when exactly one entry here has it. The host's own index wins when it already names that net game (same order).
 // Returns the index to use here: the host's index for a host that stamps nothing, our index of its net game, or -1 when
 // this table has no such net game (the import really differs: the join is refused as before).
@@ -43840,10 +43831,12 @@ constexpr uint32_t NET_GAMES = 0x3b9a067du;   // script symbol of the net game t
 constexpr uintptr_t ENTRY = 0xd0;             // entry size; +0 the net game's name id
 U3X_RO const char t_moved[] = "U3MP online: custom game: host's net game found here by name";
 
+[[gnu::always_inline]] inline uint32_t hash12(uint32_t v) { return (v ^ (v >> 12) ^ (v >> 24)) & 0xfffu; }
+
 // entry i is the host's net game: its name id, or (no name) its 12-bit hash
 U3X_FN [[clang::minsize]] bool same(const uint8_t *e, int32_t i, uint32_t name, uint32_t hash) {
     const uint32_t v = *reinterpret_cast<const uint32_t *>(e + static_cast<uintptr_t>(i) * ENTRY);
-    return name ? v == name : ((v ^ (v >> 12) ^ (v >> 24)) & 0xfffu) == hash;
+    return name ? v == name : hash12(v) == hash;
 }
 }  // namespace ng_follow
 
@@ -43866,4 +43859,59 @@ extern "C" U3X_FN [[clang::minsize]] int32_t u3x_ng_follow_sel(uintptr_t base, L
     }
     if (found >= 0 && log) log(base, t_moved);
     return found;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// v7.228 #82 "Player status showing incorrectly": a party row's rank badge, and where the net game hash goes.
+// A member's 0x40-byte data block, as the game builds it (PS4 0x74c980, the same bytes as PS3 1.19): +0xd paw bit
+// (PS3 1.19; on PS4 the high byte of the previous net game index), +0xe level, +0x10 legacy nibble (bits 0..2 legacy level,
+// bit 3 all five co-op stars), +0x19 the second local player's id (0 = none; never set on PS4, so +0x1a..+0x3c is free).
+// The helper puts its own fields at +0x30..+0x3f, among them +0x3c, its rank word (bit 29 = stamped), with the paw it knows.
+// v7.104..v7.227 also put a 12-bit hash of the host's net game into bits 16..27 of that word (+0x32 bit 3), over the
+// legacy level, so the party list showed a legacy player's badge without it (a plain "53" for legacy 5, level 53). The
+// hash now has its own bytes (+0x2e, +0x32 bit 6) and the word stays whole; an older follower sees no bit 3 and skips its
+// net game check, as it does for a PS3 host.
+namespace md_rank {
+constexpr uintptr_t SLOT_DATA_LENGTH = 0x3c, SLOT_DATA = 0x40;
+constexpr uint32_t STAMPED = 0x20000000u;
+constexpr uint8_t HASH_OLD = 8, HASH_NEW = 0x40;   // +0x32 bits: the hash in the rank word (old) / at +0x2e (new)
+constexpr uint32_t HASH_MARK = 0xa000u;            // top four bits of the u16 at +0x2e
+}  // namespace md_rank
+
+// The rank word of a member slot's data block (PS3 1.19 party list, row badge): the helper's own word when the block
+// carries one (its level is the level byte), with the legacy level from +0x10 when an older helper had put the net game
+// hash there; else the game's bytes: level | legacy << 16 | paw << 30 | stars << 31, the paw only with `ps3_paw` (party
+// rooms, where every helper stamps its word, so an unstamped block is a PS3's; a match room's blocks are not stamped
+// online, and a PS4 block's +0xd is no paw). 0 when the slot has no full block.
+extern "C" U3X_FN [[clang::minsize]] int u3x_member_rank(const uint8_t *slot, uint32_t *rank, int ps3_paw) {
+    using namespace md_rank;
+    if (rd<uint32_t>(slot, SLOT_DATA_LENGTH) != 0x40) return 0;
+    const uint8_t *d = slot + SLOT_DATA;
+    const uint32_t level = d[0xe], legacy = d[0x10];
+    uint32_t w = rd<uint32_t>(d, 0x3c);
+    if ((w & STAMPED) && (w & 0xffffu) == level) {
+        if (d[0x32] & HASH_OLD) w = (w & 0xc000ffffu) | (legacy & 7u) << 16;
+        *rank = w & ~STAMPED;
+    } else {
+        *rank = level | (legacy & 7u) << 16 | (ps3_paw ? (d[0xd] & 1u) << 30 : 0u) | (legacy & 8u) << 28;
+    }
+    return 1;
+}
+
+// the host's side: the hash of its net game's name id into its outgoing data block (only while +0x19 is free)
+extern "C" U3X_FN [[clang::minsize]] void u3x_ng_put_hash(uint8_t *md, uint32_t name) {
+    using namespace md_rank;
+    if (md[0x19]) return;
+    *reinterpret_cast<uint16_t *>(md + 0x2e) = static_cast<uint16_t>(HASH_MARK | ng_follow::hash12(name));
+    md[0x32] |= HASH_NEW;
+}
+
+// the follower's side: the 12-bit hash in a host's data block, or ~0 when it carries none (a PS3 host, an older helper);
+// the rank-word hash of a v7.104..v7.227 host is still read (it is there only with bit 3 and the stamped word)
+extern "C" U3X_FN [[clang::minsize]] uint32_t u3x_ng_host_hash(const uint8_t *md) {
+    using namespace md_rank;
+    const uint32_t v = rd<uint16_t>(md, 0x2e), w = rd<uint32_t>(md, 0x3c);
+    if ((md[0x32] & HASH_NEW) && (v & 0xf000u) == HASH_MARK) return v & 0xfffu;
+    if ((md[0x32] & HASH_OLD) && (w & STAMPED)) return (w >> 16) & 0xfffu;
+    return ~0u;
 }
