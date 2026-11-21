@@ -40728,8 +40728,15 @@ extern "C" U3X_FN int64_t u3x_lnb_s12(void *be, uint8_t *ss, const uint8_t *data
 // Frames go only to connections that sent VC_TAG and are not muted, each frame once: a ring of the last 16 frames and,
 // per connection, the sequence it was sent up to. Mute is by player name (party list and in-match player list), both
 // ways. Region B had no room left: plat_pc.inc's Windows glue moved to region A to make it (v7.228).
+// v7.233 (#81) the speaker icon: PS3 kept a talking timer in each connection entry (set to 10 when voice arrived,
+// counted down every frame; "talking" while it is 1 or more). PS4 kept that field (entry +0x1c8) and the screens that
+// read it (the scoreboard's voice column, the HUD player marker), but nothing writes it any more: every frame it now
+// holds 10 for a connection the runtime heard in the last 300 ms, else 0. The PS3 party list's picture slot 0 showed
+// the speaker for a member who talks (yourself: while your microphone sends) and the muted icon for a muted one;
+// PS4's party list lost it, so u3x_vc_party_image answers it again.
 
 extern "C" U3H_IMPORT void *u3h_voice_api(void);   // plat_pc.inc: the runtime's table (or null); plat_ps4.inc: null
+extern "C" void u3x_set_icon(uintptr_t base, int32_t *ev, uint32_t id);   // G31: the plain icon answer
 
 namespace vc {
 namespace {
@@ -40755,6 +40762,9 @@ constexpr uint32_t PEERS = 32, RING = 16, FRAME = 256, MAX_FRAMES = 8, MUTES = 1
 constexpr uintptr_t MENU = 0x17bd080, QA_COPY = 0x14f8, QA_WIDGETS = 0x14b0, SELECTED_ID = 0x17c3871, ENTRY_NAME = 7;
 constexpr uint32_t TEXT_MUTE = 0xffbbac12u, TEXT_UNMUTE = 0xfa9c4838u;
 constexpr uint32_t ACT_PARTY_VOICE = 0x6547d63cu, ACT_LIST_VOICE = 0x7273924cu;   // party list / in-match player list
+constexpr uintptr_t ENTRIES = 0x17f31b0 + 8, ENTRY_SIZE = 0x220, TALK_TIMER = 0x1c8;   // connection entries (v7.233)
+constexpr uint32_t TALK_ON = 0x41200000u, TALK_MIN = 0x3f800000u;                     // float 10 / 1
+constexpr uint32_t ICON_TALKING = 0xffa98ec5u, ICON_MUTED = 0x7a5f5bf1u;
 
 U3X_RO const char t_capable[] = "voice chat: PC voice on connection ";
 
@@ -40825,12 +40835,15 @@ U3X_FN [[clang::minsize]] void fix_texts(uintptr_t base) {
 
 extern "C" {
 
-// every frame (helper kind 16): the Mute / Unmute text; the audio closes after 10 s without voice traffic
+// every frame (helper kind 16): the Mute / Unmute text, the connections' talking timers; the audio closes after 10 s
+// without voice traffic
 U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_frame(uintptr_t base) {
     using namespace vc;
     const Api *a = table();
     if (!a) return;
     fix_texts(base);
+    for (uint32_t i = 0; i < PEERS; i++)
+        at<uint32_t>(base + ENTRIES + i * ENTRY_SIZE + TALK_TIMER) = a->talking(static_cast<int>(i)) ? TALK_ON : 0;
     if (open && ++idle > IDLE_FRAMES) {
         a->stop();
         open = 0;
@@ -40852,6 +40865,28 @@ U3X_FN [[clang::minsize, gnu::force_align_arg_pointer]] void u3x_vc_action(uintp
         if (free_slot >= 0) muted_names[free_slot] = h;
     }
     fix_texts(base);
+}
+
+// after the party list's own answer (C side i01_party, u3x_i01_party): a row's picture slot 0, as on PS3: the speaker
+// while the member talks (this PC's own rows: while the microphone sends), the muted icon for a muted member, else none
+U3X_FN [[clang::minsize]] void u3x_vc_party_image(uintptr_t base, int32_t *ev) {
+    using namespace vc;
+    const Api *a = api;
+    if (!a || ev[0] != 4 || ev[0x14] != 0) return;
+    const r2_G34::g34a::PartyList *list = r2_G34::g34a::party_list();
+    const uint32_t r = static_cast<uint32_t>(ev[1]);
+    if (r >= list->row_count || (list->rows[r] & 0xffu) >= list->member_count) return;
+    uint8_t *member = list->members[list->rows[r] & 0xffu];
+    uint32_t icon = 0;
+    if (u3x_i01_self(base, member)) {
+        if (a->talking(-1)) icon = ICON_TALKING;
+    } else if (mute_slot(name_hash(member)) >= 0) {
+        icon = ICON_MUTED;
+    } else if (const int32_t id = rd<int32_t>(member, 0x34); id != -1) {   // the member's connection
+        const uint8_t *e = u3x_entry_by_id(base, id);
+        if (e && rd<int32_t>(e, TALK_TIMER) >= static_cast<int32_t>(TALK_MIN)) icon = ICON_TALKING;
+    }
+    if (icon) u3x_set_icon(base, ev, icon);
 }
 
 // start of a send round (G11 send_all): the microphone's new frames into the ring, while a connection takes them

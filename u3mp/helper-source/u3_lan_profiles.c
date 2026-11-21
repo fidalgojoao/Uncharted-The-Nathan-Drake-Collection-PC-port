@@ -2457,7 +2457,7 @@ EXT static void lan_delete_profile(uintptr_t base,ProfileState *s,uint32_t actio
 EXT static void motd_ok119(uintptr_t base,ProfileState *s){u3x_motd_ok(base,s);}   /* v7.213 C++ (G32) */
 EXT static void mp_quit119(uintptr_t base,ProfileState *s){u3x_mp_quit(base,s);}   /* v7.213 C++ (G32) */
 __attribute__((section(".text.ext"),noinline)) static int rpm_catch(uintptr_t base,ProfileState *s,uint32_t id);
-__attribute__((visibility("hidden"))) void u3x_vc_action(uintptr_t base,const int32_t *ev);__attribute__((visibility("hidden"))) void u3x_vc_frame(uintptr_t base);   /* v7.228 #81 voice chat (C++) */
+__attribute__((visibility("hidden"))) void u3x_vc_action(uintptr_t base,const int32_t *ev);__attribute__((visibility("hidden"))) void u3x_vc_frame(uintptr_t base);__attribute__((visibility("hidden"))) void u3x_vc_party_image(uintptr_t base,int32_t *ev);   /* v7.228 #81 voice chat (C++); v7.233 the speaker picture */
 EXT static void catch_all(uintptr_t base,int32_t *event,ProfileState *s){
  u3x_vc_action(base,event);u3x_menu_action(base,event,s);}   /* v7.142 C++; v7.228 #81: voice rows (Mute / Unmute) */
 /* PS3 0x28dbf8 case 0xcd127c29 (Splitscreen): with no second user available (splitscreen manager
@@ -8372,7 +8372,7 @@ EXT static uint32_t i01_colour(uintptr_t base,int32_t idx){return u3x_i01_colour
 EXT static uint8_t *i01_np_by_code(uintptr_t base,uint32_t id){return u3x_i01_np_by_code(base,id);}   /* v7.212 C++ */
 EXT static int i01_strcmp(const uint8_t *a,const uint8_t *b){return u3x_i01_strcmp(a,b);}   /* v7.212 C++ */
 EXT static void i01_row_colour(uintptr_t base,ProfileState *s,int32_t *event,uint8_t *m,int guest,uint32_t row){u3x_i01_row_colour(base,(void*)s,event,m,guest,row);}   /* v7.212 C++ */
-EXT static int i01_party(uintptr_t base,int32_t *event,ProfileState *s,const char *selfname){return u3x_i01_party(base,event,(void*)s,selfname);}   /* v7.212 C++ */
+EXT static int i01_party(uintptr_t base,int32_t *event,ProfileState *s,const char *selfname){int r=u3x_i01_party(base,event,(void*)s,selfname);u3x_vc_party_image(base,event);return r;}   /* v7.212 C++; v7.233 #81: the speaker picture */
 EXT static void i01_click(uintptr_t base,int32_t *ev){u3x_i01_click(base,ev);}   /* v7.212 C++ */
 EXT static int i01_canfocus(uint8_t *c){return u3x_i01_canfocus(c);}   /* v7.212 C++ */
 EXT static int i01_leftctl(uint32_t pid,uint32_t id){return u3x_i01_leftctl(pid,id);}   /* v7.212 C++ */
