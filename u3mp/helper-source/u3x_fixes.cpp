@@ -483,10 +483,12 @@ namespace {
 }  // namespace
 
 // queue: 0 reliable, 1 unreliable, 2 received; peer = connection entry index; id = its player id (entry +0x34)
-extern "C" U3X_FN void u3x_ev_scan(uintptr_t b, uint32_t peer, int32_t id, const uint8_t *sub, uint32_t queue, uint32_t frame,
+extern "C" U3X_FN [[clang::minsize]] void u3x_ev_scan(uintptr_t b, uint32_t peer, int32_t id, const uint8_t *sub, uint32_t queue, uint32_t frame,
                                    Log log) {
     if (!ptr_ok(sub) || peer >= static_cast<uint32_t>(kPeers) || queue >= static_cast<uint32_t>(kQueues) || !log) return;
-    const uintptr_t off = queue == 0 ? 0x110u : queue == 1 ? 0x120u : 0x138u;
+    // v7.225: received reliable events wait at +0x130 (+0x138 is this side's own events acked out of order); events
+    // that arrive in order run inside the read and never wait there, so "received" counts only the out-of-order ones
+    const uintptr_t off = queue == 0 ? 0x110u : queue == 1 ? 0x120u : 0x130u;
     const uint8_t *n = *reinterpret_cast<const uint8_t *const *>(sub + off);
     for (int k = 0; n && ptr_ok(n) && k < 64; k++, n = *reinterpret_cast<const uint8_t *const *>(n + 0x20)) {
         const uint8_t *ev = *reinterpret_cast<const uint8_t *const *>(n);
@@ -512,7 +514,7 @@ extern "C" U3X_FN void u3x_ev_scan(uintptr_t b, uint32_t peer, int32_t id, const
         u3x_ev.lines++;
         Line l;
         l.s(t_ev).d(peer).s(t_id).d(static_cast<uint32_t>(id)).s(t_sum).d(rd<uint32_t>(sub, 0xb0)).s(t_lost).d(rd<uint32_t>(sub, 0xac));
-        l.s(t_rq).d(qlen(sub, 0x110)).s(t_uq).d(qlen(sub, 0x120)).s(t_gq).d(qlen(sub, 0x138));
+        l.s(t_rq).d(qlen(sub, 0x110)).s(t_uq).d(qlen(sub, 0x120)).s(t_gq).d(qlen(sub, 0x130));
         log(b, l.z());
     }
 }
@@ -43349,7 +43351,7 @@ U3X_RO const char t_ring[] = "U3MP ring: ring-type drawables ", t_draw[] = " sub
 }
 
 // whether the drawable has the per-particle constant buffer (parameter hash 0x32d51dff)
-U3X_FN bool has_particle_buffer(uintptr_t base, const uint8_t *drawable) {
+U3X_FN [[clang::minsize]] bool has_particle_buffer(uintptr_t base, const uint8_t *drawable) {
     const uint32_t n = rd<uint32_t>(drawable, 0x170);
     const uint8_t *entry = rd<const uint8_t *>(drawable, 0x180);
     if (n && !readable(base, entry)) return true;   // unreadable list: leave the draw alone
@@ -43386,7 +43388,7 @@ U3X_FN bool has_particle_buffer(uintptr_t base, const uint8_t *drawable) {
 }
 
 // sub 3: before a drawable's update (r[1] the drawable)
-U3X_FN void before_update(uintptr_t base, const uint64_t *r) {
+U3X_FN [[clang::minsize]] void before_update(uintptr_t base, const uint64_t *r) {
     st.drawable = nullptr;
     const uint8_t *drawable = reinterpret_cast<const uint8_t *>(r[1]);
     if (!readable(base, drawable)) return;
@@ -43398,7 +43400,7 @@ U3X_FN void before_update(uintptr_t base, const uint64_t *r) {
 }
 
 // sub 6: before a submesh draw (r[1] the submesh)
-U3X_FN void before_draw(uintptr_t base, const uint64_t *r) {
+U3X_FN [[clang::minsize]] void before_draw(uintptr_t base, const uint64_t *r) {
     st.patched = nullptr;
     const uint8_t *drawable = st.drawable;
     uint8_t *sm = reinterpret_cast<uint8_t *>(r[1]);
@@ -43449,7 +43451,7 @@ U3X_FN void before_draw(uintptr_t base, const uint64_t *r) {
 }
 
 // sub 7: after the submesh draw: its own input 4 back
-U3X_FN void after_draw() {
+U3X_FN [[clang::minsize]] void after_draw() {
     uint8_t *sm = st.patched;
     st.patched = nullptr;
     if (!sm) return;
@@ -43459,13 +43461,13 @@ U3X_FN void after_draw() {
 }  // namespace ring_tint
 
 // kind 244 sub 5: the spawner tint hook (the draw itself carries the colour, so it is only counted)
-extern "C" U3X_FN int u3x_ring_reg(uintptr_t, const uint64_t *) {
+extern "C" U3X_FN [[clang::minsize]] int u3x_ring_reg(uintptr_t, const uint64_t *) {
     ring_tint::st.registered++;
     return 0;
 }
 
 // kind 244 sub 3 / 4 (around the drawable update: r[1] the drawable), sub 6 / 7 (around a submesh draw: r[1] the submesh)
-extern "C" U3X_FN int u3x_ring_draw(uintptr_t base, const uint64_t *r) {
+extern "C" U3X_FN [[clang::minsize]] int u3x_ring_draw(uintptr_t base, const uint64_t *r) {
     using namespace ring_tint;
     if (!(n32_switches() & 8u)) return 0;
     if (r[0] == 3) before_update(base, r);
@@ -43474,9 +43476,14 @@ extern "C" U3X_FN int u3x_ring_draw(uintptr_t base, const uint64_t *r) {
     return 0;
 }
 
+extern "C" void u3x_pinfo_pull_tick(uintptr_t base, Log log);   // v7.225, below
+extern "C" void u3x_npc_spawn_report(uintptr_t base, Log log);   // v7.225, below
+
 // once per frame in a net game: a boot.log line every ~30 s when the counts changed (40 at most)
-extern "C" U3X_FN void u3x_ring_tick(uintptr_t base, Log log) {
+extern "C" U3X_FN [[clang::minsize]] void u3x_ring_tick(uintptr_t base, Log log) {
     using namespace ring_tint;
+    u3x_pinfo_pull_tick(base, log);   // v7.225: player infos asked for again (every frame, net game or not)
+    u3x_npc_spawn_report(base, log);   // v7.225: NPC spawn events on guests (boot.log counts)
     if (!at<uint8_t>(base + NET_GAME)) return;
     if (!(n32_switches() & 8u) || ++st.frame % 1800u || st.lines >= 40 || !log) return;
     if (st.drawables == st.last_drawables && st.draws == st.last_draws && st.fixes == st.last_fixes) return;
@@ -43492,3 +43499,277 @@ extern "C" U3X_FN void u3x_ring_tick(uintptr_t base, Log log) {
     log(base, l.z());
 }
 // ===== end ring tint =====
+
+// ===== v7.225: player infos asked for again (issue #57) =====
+// Every machine sends the info about its own player (character looks for both teams, loadout, rank) to the match
+// once, when it sets up the match. A machine that receives an info for a player it has no net-player record for yet
+// drops it. Guests join the match room one after another and make their records at different moments, so a guest
+// often misses the infos of the guests before or after it and shows those players in the default look; the host
+// sends last, so everyone sees the host right. The PS3 game closes that gap: each machine asks every member for its
+// info again once it has a record for it (message 0x106), and answers such a request by sending its own info again.
+// PS4 has neither half. Done here once per frame in a net game:
+//  - answer: every received message 0x106 is taken out of the game's message queue; if there was one, this
+//    machine sends its player info again (both users, as the game does);
+//  - ask: a remote record whose two looks are still empty is asked (0x106 over its connection) at once and then every
+//    2 s, 5 times at most per record and match;
+//  - 5 s into the game, this machine's info is broadcast once more (it reaches members without a direct link too).
+// boot.log: one line per match when the first 30 s are over.
+namespace pinfo_pull {
+constexpr uintptr_t NGM_ = 0x17cb060, RECORDS = 0x390, RECORD_SIZE = 0x9c0, NET_GAME_ = 0x17d5c61;
+constexpr uintptr_t MSG_COUNT = 0x1b6d3c0, MSGS = 0x1b6d3d0, MSG_TAKE = 0x7762c0, MSG_SEND = 0x6b85a0;
+constexpr uintptr_t HERO_LOOK = 0x620, LOOKS_SIZE = 0x50, CONNECTION = 0x5b4;
+constexpr uint32_t ASK = 0x106, FRAMES_BETWEEN = 120, TRIES = 5, REPORT_FRAME = 1800, BROADCAST_FRAME = 300;
+struct Ask { uint32_t id, wait; uint8_t tries; };
+struct State {
+    Ask ask[10];
+    uint32_t frame, asked, answered;
+    uint8_t in_game, reported;
+};
+U3X_BSS State st;
+U3X_RO const char t_line[] = "U3MP pinfo: looks received for ", t_of[] = " of ", t_rem[] = " remote players; asked ",
+    t_ans[] = " times, answered ";
+
+U3X_FN [[clang::minsize]] bool has_looks(const uint8_t *rec) {
+    for (uintptr_t k = 0; k < LOOKS_SIZE; k++)
+        if (rec[HERO_LOOK + k]) return true;
+    return false;
+}
+}  // namespace pinfo_pull
+
+extern "C" U3X_FN [[clang::minsize]] void u3x_pinfo_pull_tick(uintptr_t base, Log log) {
+    using namespace pinfo_pull;
+    if (!at<uint8_t>(base + NET_GAME_)) {
+        st.in_game = 0;
+        return;
+    }
+    if (!st.in_game) {   // a new net game: forget the last one's asks
+        st.in_game = 1;
+        st.frame = st.asked = st.answered = 0;
+        st.reported = 0;
+        for (Ask &a : st.ask) a.id = a.wait = a.tries = 0;
+    }
+    st.frame++;
+
+    // answer: take every request out of the queue (from the end, the take moves the later entries down)
+    uint32_t &count = at<uint32_t>(base + MSG_COUNT);
+    bool answer = false;
+    for (uint32_t i = count; i-- > 0;) {
+        const uint8_t *e = reinterpret_cast<const uint8_t *>(base + MSGS) + static_cast<uintptr_t>(i) * 0x40;
+        if (rd<uint32_t>(e, 0x28) != ASK) continue;
+        uint32_t sender = 0, length = 0x10;
+        uint8_t data[0x10];
+        game_call<void>(base + MSG_TAKE, i, &sender, static_cast<void *>(data), &length);
+        answer = true;
+    }
+    // 5 s into the game this machine's info goes out once more: a broadcast reaches every member, through the host
+    // for members without a direct link, which a request cannot reach
+    if (answer || st.frame == BROADCAST_FRAME) u3x_send_player_info(base);
+    if (answer) st.answered++;
+
+    // ask: remote records without looks
+    uint8_t *ngm = reinterpret_cast<uint8_t *>(base + NGM_);
+    const uint8_t *local0 = rd<const uint8_t *>(ngm, 0x370), *local1 = rd<const uint8_t *>(ngm, 0x378);
+    uint32_t remote = 0, with_looks = 0;
+    for (int i = 0; i < 10; i++) {
+        uint8_t *rec = ngm + RECORDS + RECORD_SIZE * static_cast<uintptr_t>(i);
+        Ask &a = st.ask[i];
+        const uint32_t id = u3x_net_player_id(rec);
+        if (!id || rec == local0 || rec == local1) {
+            a.id = 0;
+            continue;
+        }
+        if (a.id != id) {   // a new player in this slot
+            a.id = id;
+            a.wait = 0;
+            a.tries = 0;
+        }
+        remote++;
+        if (has_looks(rec)) {
+            with_looks++;
+            continue;
+        }
+        if (a.tries >= TRIES || (a.wait && --a.wait)) continue;
+        uint8_t zeros[0x10];
+        for (uint8_t &z : zeros) z = 0;
+        game_call<void>(base + MSG_SEND, rd<uint32_t>(rec, CONNECTION), ASK, static_cast<void *>(zeros), uint32_t{0x10});
+        a.tries++;
+        a.wait = FRAMES_BETWEEN;
+        st.asked++;
+    }
+
+    if (!st.reported && st.frame >= REPORT_FRAME && log) {
+        st.reported = 1;
+        Line l;
+        l.s(t_line).d(with_looks).s(t_of).d(remote).s(t_rem).d(st.asked).s(t_ans).d(st.answered);
+        log(base, l.z());
+    }
+}
+// ===== end player infos asked for again =====
+
+// ===== v7.225: NPC spawn events run on guests (issue #58) =====
+// The host spawns an NPC from a spawner and tells every guest with an NPC spawn event (type 0x30 to all, type 0x66 to
+// chosen players): the NPC's net id, the spawner's id, an optional second spawner and one spawn-info word. On PS3 a
+// guest spawns the same NPC from its own copy of the spawner, gives it the host's net id and adds it to the net game's
+// NPCs; the PS4 game's handlers for both events are empty, so guests never get any enemies (co-op arena, adventure,
+// hunter arena, shade). The builder points both handlers at an x-stub (kind 244 sub 8 / 9, r[1] = the event), and this
+// does the guest's part with the PS4 game's own functions, the ones its host spawn path and spawn native use:
+//  1. an object with that net id already there: type 0x30 counts it as an error, type 0x66 ignores it;
+//  2. the spawner (and the second one) by id; none: counted, nothing spawned;
+//  3. the process info A filled as the game's spawn native fills it, the spawn info B made from it, the second
+//     spawner's id and info added, the event's word stored;
+//  4. spawned from the spawner (at the second spawner's place when there is one);
+//  5. the host's net id given to it (taken out of the id table and put back with the new id when it is in there);
+//  6. added to the net game's NPCs;
+//  7. type 0x30 only, unless the selected net game's type is one the host's sender skips too: the spawner's mode tag
+//     (0x38b89420) sets the NPC's mode 0xd / 0xe / 0xf as the host's sender does on its own copy.
+// boot.log: a line every ~30 s while the counts change (40 at most).
+namespace npc_spawn {
+template <typename T> [[gnu::always_inline]] inline void wr(void *p, uintptr_t off, T v) {
+    __builtin_memcpy(static_cast<uint8_t *>(p) + off, &v, sizeof v);
+}
+constexpr uintptr_t IDS = 0x1b37610, FIND_ID = 0x11a30a0, ID_OUT = 0x11a38a0, ID_IN = 0x11a3660, SPAWNERS = 0x1afcf10,
+    FIND_SPAWNER = 0x10ec0c0, TYPES = 0x1b3efd8, INFO_MAKE = 0x3bfdf0, INFO_SECOND = 0x3c24b0, PLACE = 0x10e6f30,
+    SPAWN = 0x10e76b0, MANAGER_ = 0x17cb060, ADD_NPC = 0x734040, NET_GAME_TABLE = 0x11f2bf0, STRING_ID = 0x1702720;
+constexpr uint32_t MODE_TAG = 0x38b89420u, NET_GAMES = 0x3b9a067du;
+struct State {
+    uint32_t runs, spawned, there, no_spawner, failed, not_added;
+    uint32_t frame, lines, last;
+};
+U3X_BSS State st;
+U3X_RO const char t_line[] = "U3MP npc spawn: events ", t_sp[] = ", spawned ", t_there[] = ", already there ",
+    t_nosp[] = ", no spawner ", t_fail[] = ", spawn failed ", t_nadd[] = ", not added ";
+
+// the NPC mode the spawner's tag asks for (0 = leave it), as the host's sender works it out
+U3X_FN [[clang::minsize]] uint32_t tag_mode(uintptr_t base, const uint8_t *spawner) {
+    const uint8_t *table = rd<const uint8_t *>(spawner, 0x68);
+    if (!table) return 0xd;
+    const uint8_t *entries = rd<const uint8_t *>(table, 0);
+    const int32_t count = rd<int32_t>(table, 8);
+    int32_t lo = 0, n = count;
+    while (n > 0) {   // the first entry whose key is at least the tag
+        const int32_t half = n / 2;
+        if (rd<uint32_t>(entries, 16 * static_cast<uintptr_t>(lo + half)) < MODE_TAG) {
+            lo += half + 1;
+            n -= half + 1;
+        } else {
+            n = half;
+        }
+    }
+    if (lo == count || rd<uint32_t>(entries, 16 * static_cast<uintptr_t>(lo)) != MODE_TAG) return 0xd;
+    const uint8_t *value = rd<const uint8_t *>(entries, 16 * static_cast<uintptr_t>(lo) + 8);
+    if (!value) return 0xd;
+    uint32_t s;
+    const uint16_t kind = rd<uint16_t>(value, 0);
+    if (kind == 0xd) {
+        s = rd<uint32_t>(rd<const uint8_t *>(value, 8), 0);
+    } else if (kind == 5) {
+        using StringId = uint32_t (*)(uint64_t, const char *, uint64_t);
+        s = at<StringId>(base + STRING_ID)(0, rd<const char *>(rd<const uint8_t *>(value, 8), 0), 1);
+    } else {
+        return 0xd;
+    }
+    if (s == 0xb02fb173u) return 0xf;
+    if (s == 0x586d4a09u) return 0xe;
+    if (s == 0xcc38c549u) return 0xd;
+    return 0;
+}
+
+// the selected net game is of a type whose spawns get no mode (4, 8, 9, 11, 13, 16, 17, 18)
+U3X_FN [[clang::minsize]] bool mode_skipped(uintptr_t base) {
+    const uint8_t *const *t = game_call<const uint8_t *const *>(base + NET_GAME_TABLE, NET_GAMES);
+    if (!t || !*t) return false;
+    const int32_t index = static_cast<int16_t>(at<uint16_t>(base + MANAGER_ + 0x661c));
+    if (index < 0 || index >= rd<int32_t>(*t, 0)) return false;
+    const uint8_t *games = rd<const uint8_t *>(*t, 8);
+    if (!games) return false;
+    const uint32_t k = rd<uint32_t>(games, 0xd0 * static_cast<uintptr_t>(index) + 0xc) - 4u;
+    return k <= 0xe && ((0x72b1u >> k) & 1u);
+}
+}  // namespace npc_spawn
+
+// kind 244 sub 8 (event type 0x30) / sub 9 (type 0x66): r[1] = the event
+extern "C" U3X_FN [[clang::minsize]] int u3x_npc_spawn_event(uintptr_t base, const uint64_t *r) {
+    using namespace npc_spawn;
+    const uint8_t *ev = reinterpret_cast<const uint8_t *>(r[1]);
+    using npc_spawn::wr;
+    if (!ev) return 0;
+    const bool to_all = r[0] == 8;
+    st.runs++;
+    const uint32_t id = rd<uint32_t>(ev, 0x14), second_id = rd<uint32_t>(ev, 0x1c);
+    if (game_call<void *>(base + FIND_ID, base + IDS, id)) {
+        if (to_all) st.there++;
+        return 0;
+    }
+    uint8_t *spawner = game_call<uint8_t *>(base + FIND_SPAWNER, base + SPAWNERS, rd<uint32_t>(ev, 0x18));
+    uint8_t *second = second_id ? game_call<uint8_t *>(base + FIND_SPAWNER, base + SPAWNERS, second_id) : nullptr;
+    if (!spawner) {
+        st.no_spawner++;
+        return 0;
+    }
+
+    // process info A, as the spawn native fills it
+    alignas(16) uint8_t a[0x78];
+    for (uint8_t &c : a) c = 0;
+    const uint32_t type = rd<uint32_t>(spawner, 0x40);
+    wr<uint32_t>(a, 0, type);
+    wr<uint64_t>(a, 0x10, at<uint64_t>(base + IDS + 0x1c8));
+    wr<uint8_t *>(a, 0x18, spawner);
+    wr<uint8_t *>(a, 0x40, spawner);
+    const uint8_t *record = nullptr;
+    if (at<uint8_t>(base + TYPES)) {
+        const uint8_t *head = reinterpret_cast<const uint8_t *>(base + TYPES + 8 + 16 * (type % 257u));
+        for (const uint8_t *node = rd<const uint8_t *>(head, 0); node && node != head; node = rd<const uint8_t *>(node, 0))
+            if (rd<uint32_t>(node, 0x10) == type) {
+                record = node;
+                break;
+            }
+    }
+    wr<const uint8_t *>(a, 0x70, record);
+    wr<uint64_t>(a, 0x60, record ? (rd<uint64_t>(record, 0x60) + 0x7f) & ~uint64_t{0x7f} : 0);
+
+    // spawn info B, the place, the spawn
+    alignas(16) uint8_t b[0xb0];
+    alignas(16) uint8_t place[0x20];
+    game_call<void>(base + INFO_MAKE, static_cast<void *>(b), static_cast<void *>(a));
+    wr<uint32_t>(b, 0, second_id);
+    if (second) game_call<void>(base + INFO_SECOND, static_cast<void *>(b), second);
+    wr<uint32_t>(b, 0x44, rd<uint32_t>(ev, 0x20));
+    if (second) game_call<void>(base + PLACE, static_cast<void *>(place), second);
+    uint8_t *npc = game_call<uint8_t *>(base + SPAWN, spawner, static_cast<void *>(b),
+                                        second ? static_cast<void *>(place) : nullptr, uint64_t{0});
+    if (!npc) {
+        st.failed++;
+        return 0;
+    }
+    st.spawned++;
+
+    // the host's net id (out of the id table and back in when the NPC is listed there)
+    if (rd<uint32_t>(npc, 0x98) != id) {
+        const uint32_t flags = rd<uint16_t>(npc, 0x40) | (static_cast<uint32_t>(rd<uint8_t>(npc, 0x42)) << 16);
+        if (flags & 0x40u) game_call<void>(base + ID_OUT, base + IDS, npc);
+        wr<uint32_t>(npc, 0x98, id);
+        if (flags & 0x40u) game_call<void>(base + ID_IN, base + IDS, npc);
+    }
+    if (!(game_call<uint32_t>(base + ADD_NPC, base + MANAGER_, npc, rd<uint32_t>(npc, 0x7d8)) & 0xffu)) st.not_added++;
+
+    if (to_all && !mode_skipped(base)) {
+        const uint32_t mode = tag_mode(base, spawner);
+        if (mode) {
+            using SetMode = void (*)(uint8_t *, uint32_t);
+            reinterpret_cast<SetMode>(rd<uintptr_t>(rd<const uint8_t *>(npc, 0), 0x230))(npc, mode);
+        }
+    }
+    return 0;
+}
+
+extern "C" U3X_FN [[clang::minsize]] void u3x_npc_spawn_report(uintptr_t base, Log log) {
+    using namespace npc_spawn;
+    if (++st.frame % 1800u || st.lines >= 40 || !log || st.runs == st.last) return;
+    st.last = st.runs;
+    st.lines++;
+    Line l;
+    l.s(t_line).d(st.runs).s(t_sp).d(st.spawned).s(t_there).d(st.there).s(t_nosp).d(st.no_spawner).s(t_fail)
+        .d(st.failed).s(t_nadd).d(st.not_added);
+    log(base, l.z());
+}
+// ===== end NPC spawn events =====

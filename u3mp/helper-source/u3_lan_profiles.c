@@ -1445,6 +1445,7 @@ static int n32_source(uintptr_t base,int32_t *event,ProfileState *s);   /* fixer
 __attribute__((visibility("hidden"))) int u3x_ring_draw(uintptr_t base,const uint64_t *r);   /* v7.218 C++ ring tint */
 __attribute__((visibility("hidden"))) int u3x_ring_reg(uintptr_t base,const uint64_t *r);
 __attribute__((visibility("hidden"))) void u3x_ring_tick(uintptr_t base,void (*log)(uintptr_t,const char*));
+__attribute__((visibility("hidden"))) int u3x_npc_spawn_event(uintptr_t base,const uint64_t *r);   /* v7.225 C++ NPC spawn events */
 __attribute__((section(".text.ext"),noinline)) static void n10_tick(uintptr_t base);   /* fixer L n010 (end of the fixer L region) */
 __attribute__((section(".text.ext"),noinline)) static void n22_tick(uintptr_t base);   /* fixer L n022 (end of the file) */
 __attribute__((section(".text.ext"),noinline)) static void pl_hidden_guard(uintptr_t base,ProfileState *s);   /* v7.103 (end of the file) */
@@ -9989,6 +9990,7 @@ EXT static int n03_source(uintptr_t base,int32_t *event,ProfileState *s){
 EXT static int n_kind(uintptr_t base,int kind,ProfileState *s,uint64_t *r){
  (void)s;if(!r||!base||kind!=244)return 0;
  if(r[0]==3||r[0]==4||r[0]==6||r[0]==7)return u3x_ring_draw(base,r);   /* C++ ring tint: 3/4 around the drawable update, 6/7 around each submesh draw (v7.222) */
+ if(r[0]==8||r[0]==9)return u3x_npc_spawn_event(base,r);   /* v7.225 C++: NPC spawn events 0x30 / 0x66 run on guests */
  if(r[0]==5)return u3x_ring_reg(base,r);   /* v7.218 C++ ring tint: particle spawner tint 0xec3b20 */
  if(r[0]==2){n21_log(base,r);return 0;}   /* fixer L n021 (diag, U3MP_LPROBE_LOG=1 only) */
  return n03_hdr(base,r);}
