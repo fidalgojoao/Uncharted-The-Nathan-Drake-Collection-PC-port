@@ -51,6 +51,8 @@ bool install_npc_phase_guard(unsigned char *image, uint64_t size);
 bool install_improved_tonemap_curve(unsigned char *image, uint64_t size);
 // the auto exposure averages at least one frame: luminance filter size 0 as PS3 (exposure_filter.cpp)
 bool exposure_filter_at_least_one(unsigned char *image, uint64_t size);
+// names and point popups above players use the HUD's 1280x720 canvas, as on PS3 (hudnet_text_canvas.cpp, issue 64)
+bool install_hudnet_text_canvas(unsigned char *image, uint64_t size);
 // a word on its own line in u3-switches.txt in the --user folder (tonemap_curve.cpp)
 bool user_switch(const char *word);
 // the PS3 improved tonemap curve: rewrites the tonemap constants when the render settings ask for it (tonemap_curve.cpp)

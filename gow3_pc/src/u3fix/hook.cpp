@@ -99,5 +99,6 @@ extern "C" int u3fix_install(unsigned char *image, uint64_t size) {
     applied += u3fix::install_npc_phase_guard(image, size) ? 1 : 0;
     applied += u3fix::install_improved_tonemap_curve(image, size) ? 1 : 0;
     applied += u3fix::exposure_filter_at_least_one(image, size) ? 1 : 0;
+    applied += u3fix::install_hudnet_text_canvas(image, size) ? 1 : 0;
     return applied;
 }
