@@ -1062,11 +1062,19 @@ bool u2_confirm_play();
 
 // ------------------------------------------------------------------------------------------------ Uncharted 2 multiplayer
 
-// the "U2 Multiplayer" folder (laid out like "U3 Multiplayer": state.json, import.log, image, recipe, tools): the
-// chosen one, else next to Uncharted 3's. The player's own U2 files (progression, cinema) stay in the user folder.
+// the "U2 Multiplayer" folder (laid out like "U3 Multiplayer": state.json, import.log, image, recipe, tools): as for
+// Uncharted 3, the one the player picked in the launcher, else "U2 Multiplayer" in the launcher's folder (portable,
+// GitHub #66). An import made where earlier versions put it keeps being used: next to a picked U3 folder (before
+// 0.10.123 U2 followed it) or in the old AppData place. The player's own U2 files (progression, cinema) stay in the
+// user folder.
 std::string u2_dir() {
     const std::string chosen = text(g.config, "u2mp_data");
-    return as_path(!chosen.empty() ? chosen : join(parent_of(u3_data()), "U2 Multiplayer"));
+    if (!chosen.empty()) return as_path(chosen);
+    if (!text(g.config, "u3mp_data").empty()) {
+        const std::string beside = join(parent_of(u3_data()), "U2 Multiplayer");
+        if (is_file(join(beside, "state.json"))) return as_path(beside);
+    }
+    return as_path(sys("u2mp_default_data", g.root));
 }
 // the converted files the game lays over its own (recipe/work/u2data/...)
 std::string u2_files() { return join(join(u2_dir(), "recipe"), "work"); }
