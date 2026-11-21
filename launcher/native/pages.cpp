@@ -1819,6 +1819,12 @@ bool act_controls(const State &state, const std::string &id, const std::string &
 
 const char *const STOP_RED_MP = "#c4553f";
 
+// Uncharted 3's voice chat (config u3mp_voice / u3mp_voice_volume; the values are those of UNCHARTED_VOICE*)
+const std::vector<std::pair<std::string, std::string>> VOICE_MODES = {
+    {"off", "Off"}, {"open", "Open mic"}, {"ptt", "Push to talk"}};
+const std::vector<std::pair<std::string, std::string>> VOICE_VOLUMES = {
+    {"0.5", "50%"}, {"1", "100%"}, {"1.5", "150%"}, {"2", "200%"}};
+
 // a setting's text when it is set (Python: config.get(key) or ...)
 std::string config_set(const State &state, const std::string &key) {
     const Value *v = state.config.get(key);
@@ -2053,6 +2059,22 @@ Value page_u3mp(const State &state) {
     }
     storage.push_back(label(p + "line:keep_ps3", keep_text, DIM, CARD, 9));
 
+    // voice chat with the other PC players (play.cpp passes it as UNCHARTED_VOICE*, read by u3voice)
+    std::vector<Value> voice;
+    const std::string mode = config_str(state, "u3mp_voice", "open");
+    voice.push_back(row(p + "row:voice", "Voice chat",
+                        "Talk with the other PC players in the party and the match (PS3 and PS4 players can't hear "
+                        "you). Open mic sends whenever you speak; Ctrl+M mutes your microphone. Mute a player from "
+                        "the party or player list.",
+                        choice(p + "voice", Value::text(mode), VOICE_MODES, "open")));
+    voice.push_back(row(p + "row:voice_key", "Push-to-talk key",
+                        "The key you hold to talk when Voice chat is Push to talk (a key name such as T, V, Left Alt "
+                        "or CapsLock).",
+                        entry_well(p, "voice_key", config_str(state, "u3mp_voice_key", "T"))));
+    voice.push_back(row(p + "row:voice_volume", "Voice volume", "How loud the other players are.",
+                        choice(p + "voice_volume", Value::text(config_str(state, "u3mp_voice_volume", "1")),
+                               VOICE_VOLUMES, "1")));
+
     Value page = array();
     page.items.push_back(checklist(p, {{"PS3 folders", folders && !folders->items.empty()}, {"Decrypted EBOOT", !elf.empty()},
                                        {"Imported", ready}},
@@ -2061,6 +2083,7 @@ Value page_u3mp(const State &state) {
     set_up.set("note", Value::text("New here? Do these four steps in order."));
     page.items.push_back(std::move(set_up));
     page.items.push_back(section(p + "storage", "Storage", with_separators(std::move(storage))));
+    page.items.push_back(section(p + "voice", "Voice chat", with_separators(std::move(voice))));
     return page;
 }
 
@@ -2172,6 +2195,19 @@ bool act_mp(const char *page, const std::vector<std::string> &buttons, const std
     }
     if (key == "field:dns") {   // U3 step 1b / U2 step 1c, one setting: every edit is saved (the online section follows it)
         if (kind == "entry") changes.config.set("u3mp_dns", Value::text(value.kind == Value::String ? value.s : ""));
+        return kind == "entry" || kind == "enter";
+    }
+    if (prefix == "u3mp_" && kind == "choice" && (key == "voice" || key == "voice_volume")) {
+        const std::string v = text_of(value);
+        for (auto &o : key == "voice" ? VOICE_MODES : VOICE_VOLUMES)
+            if (o.first == v) {
+                changes.config.set("u3mp_" + key, Value::text(v));
+                return true;
+            }
+        return false;
+    }
+    if (prefix == "u3mp_" && key == "field:voice_key") {
+        if (kind == "entry") changes.config.set("u3mp_voice_key", Value::text(value.kind == Value::String ? strip_spaces(value.s) : ""));
         return kind == "entry" || kind == "enter";
     }
     if (kind == "toggle" && key == "keep_ps3" && prefix == "u3mp_") {

@@ -115,6 +115,10 @@ Value play_env(const Value &config, const std::wstring &user_dir) {
     set("UNCHARTED_CHEATS", cheats);
     // Cheats -> Debug mode -> Game speed: the game's master clock multiplier (runtime_env.cpp); "1" leaves it alone
     set("UNCHARTED_GAME_SPEED", str_of(get("game_speed"), "1"));
+    // Multiplayer (U3) -> Voice chat: off | open | ptt, the push-to-talk key and the volume (u3voice reads them)
+    set("UNCHARTED_VOICE", str_of(get("u3mp_voice"), "open"));
+    set("UNCHARTED_VOICE_PTT_KEY", str_of(get("u3mp_voice_key"), "T"));
+    set("UNCHARTED_VOICE_VOLUME", str_of(get("u3mp_voice_volume"), "1"));
     // Per-game values go out for all three titles, because a game can switch to another one from the Collection
     // menu without the launcher. GOW3_VBLANK_HZ is cleared: the starter sets it for whichever game it launches,
     // from that game's settings file, when the frame rate is above 60.
