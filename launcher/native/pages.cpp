@@ -196,7 +196,7 @@ std::vector<std::vector<std::string>> cheat_list() {
 }
 
 // Debug mode -> Game speed: the game's own clock presets (its Dev Menu, Clock: Super Slo-Mo, Slo-Mo, Normal Speed,
-// Fast-Mo); runtime_env.cpp holds the chosen master clock multiplier
+// Fast-Mo; Uncharted 1 has a free slider instead); runtime_env.cpp holds the chosen master clock multiplier
 const std::vector<std::pair<std::string, std::string>> GAME_SPEEDS = {
     {"1", "Normal"}, {"0.2", "0.2x"}, {"0.5", "0.5x"}, {"1.75", "1.75x"}};
 
@@ -220,8 +220,8 @@ Value page_cheats(const State &state) {
     }
     if (!debug.items.empty()) debug.items.push_back(separator());
     debug.items.push_back(row("native:cheats:row:game_speed", "Game speed",
-                              "Slows the game down or speeds it up, with the presets of the game's own Clock menu. "
-                              "Works without debug mode. Uncharted 2 and 3 only; keep Normal for online play.",
+                              "Slows the game down or speeds it up, with the presets of the games' own Clock menus. "
+                              "Works without debug mode, in all three games; keep Normal for online play.",
                               choice("native:cheats:game_speed", Value::text(config_str(state, "game_speed", "1")),
                                      GAME_SPEEDS, "")));
     Value page = array();

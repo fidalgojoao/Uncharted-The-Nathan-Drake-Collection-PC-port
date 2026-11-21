@@ -167,12 +167,12 @@ std::string ini_value(const std::string &path, const std::string &key, bool &fou
 // Cheats page of the launcher. Each entry is a built-in switch of the game that the runtime holds on for the whole
 // session through GOW3_POKE. The offsets refer to the update 1.02 image.
 // "debug" is the games' own debug-mode switch (a byte of the engine's settings object, set at start-up and cleared
-// again by the retail set-up; Uncharted 2 0x1059640 + 0x488c, Uncharted 3 0x17b6368 + 0x4bfc). With it on, the
-// game's menu code opens its Dev Menu and Quick Menu, its debug text toggles, and the player can enter the DebugFly
-// state, as in the PS3 versions with RPCS3's "Debug Menu" patch.
+// again by the retail set-up; Uncharted 1 0x958208 + 0x4844, Uncharted 2 0x1059640 + 0x488c, Uncharted 3 0x17b6368
+// + 0x4bfc). With it on, the game's menu code opens its Dev Menu and Quick Menu, its debug text toggles, and the
+// player can enter the DebugFly state, as in the PS3 versions with RPCS3's "Debug Menu" patch.
 const std::map<std::string, std::vector<std::pair<std::string, std::string>>> &cheats() {
     static const std::map<std::string, std::vector<std::pair<std::string, std::string>>> t = {
-        {"eboot.bin", {{"invincible", "aa5ff8"}, {"ammo", "ab9c01"}}},
+        {"eboot.bin", {{"invincible", "aa5ff8"}, {"ammo", "ab9c01"}, {"debug", "95ca4c"}}},
         {"big2-ps4_Shipping.elf", {{"invincible", "104f877"}, {"ammo", "104f84a"}, {"noreload", "104f84b"},
                                    {"debug", "105decc"}}},
         {"big3-ps4_Shipping.elf", {{"invincible", "*16e2f80+a7"}, {"ammo", "17faa91"}, {"grenades", "17faa92"},
@@ -181,9 +181,11 @@ const std::map<std::string, std::vector<std::pair<std::string, std::string>>> &c
 }
 // Cheats -> Debug mode -> Game speed: the game's master clock multiplier (Dev Menu, Clock, "Master Clock
 // Multiplier"), a float that only that menu writes and the frame update multiplies the game's frame time by. The
-// choices are the menu's own presets; the runtime holds the chosen value like the cheats (a 32-bit poke).
+// choices are the menu's own presets (Uncharted 1's menu has a free 0.01 - 10 slider instead, which covers them); the
+// runtime holds the chosen value like the cheats (a 32-bit poke).
 const std::map<std::string, std::string> &game_speed_offsets() {
-    static const std::map<std::string, std::string> t = {{"big2-ps4_Shipping.elf", "104ec38"},
+    static const std::map<std::string, std::string> t = {{"eboot.bin", "94c47c"},
+                                                         {"big2-ps4_Shipping.elf", "104ec38"},
                                                          {"big3-ps4_Shipping.elf", "17b4ab4"}};
     return t;
 }
