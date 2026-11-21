@@ -1446,6 +1446,8 @@ __attribute__((visibility("hidden"))) void u3x_ring_tick(uintptr_t base,void (*l
 __attribute__((visibility("hidden"))) int u3x_npc_spawn_event(uintptr_t base,const uint64_t *r);   /* v7.225 C++ NPC spawn events */
 __attribute__((visibility("hidden"))) int32_t u3x_ng_follow_sel(uintptr_t base,void (*log)(uintptr_t,const char*),void *s,int32_t host_sel,uint32_t name,uint32_t hash);   /* v7.227 C++ net game by name */
 __attribute__((visibility("hidden"))) void u3x_ng_put_hash(uint8_t *md,uint32_t name);   /* v7.228 #82 C++ */
+__attribute__((visibility("hidden"))) uint32_t u3x_ng_host_name(const uint8_t *md);   /* v7.232 #92 C++ */
+__attribute__((visibility("hidden"))) void u3x_ng_match_log(uintptr_t base,void *s);   /* v7.232 #92 C++ */
 __attribute__((visibility("hidden"))) uint32_t u3x_ng_host_hash(const uint8_t *md);
 __attribute__((visibility("hidden"))) void u3x_ofetch_tick(uintptr_t base);   /* v7.228 #84 C++ */
 __attribute__((visibility("hidden"))) int u3x_ofetch_card(uint8_t *view,const char *name,uint32_t *shown);
@@ -4761,7 +4763,7 @@ JPX static int fl_decide(LanBe *be,uintptr_t base,ProfileState *s,uint8_t *m,uin
  if(room==ng_bad_room)return 0;
  uint32_t hh=u3x_ng_host_hash(m+0x40);   /* v7.228 #82 */
  if(hh<0x1000u){int16_t sel=*(int16_t*)(m+0x40+0x30);int ok;uint32_t nm=ng_name_at(s,sel,&ok);
-  int32_t li=u3x_ng_follow_sel(base,ol01_print,s,sel,(fj_hi.ok&&fj_hi.room==room)?fj_hi.name:0,hh);   /* v7.227: by name, our order */
+  int32_t li=u3x_ng_follow_sel(base,ol01_print,s,sel,(fj_hi.ok&&fj_hi.room==room)?fj_hi.name:u3x_ng_host_name(m+0x40),hh);   /* v7.227: by name, our order; v7.232 #92: whole name */
   if(li>=0)*(int16_t*)(base+0x17d167cu)=(int16_t)li;
   if(li<0){
    static const char t_a[]="custom game: host's net game (hash ",t_b[]=") differs from ours at index ",t_c[]=" (",t_d[]=" hash ",t_e[]="): not loading (update the import)";
@@ -4978,12 +4980,12 @@ uint8_t *ps=LNB_SESS_PARTY(base);
  if(fl_jip&&!be&&lnb_followed&&*(uint32_t*)(base+0x1b68810u)==0x12&&*(uint64_t*)(LNB_SESS_MATCH(base)+0x18)){jip_enter(base);return;}   /* v7.104 jip */
  if(lnb_followed&&*(uint32_t*)(base+0x1b68810u)==0x12){if(!lnb_at_start){lnb_at_start=1;fl_md(be,ps);X.room[31]++;}
   if(be&&!*(uintptr_t*)(base+0x17cb060u+0x380))return;   /* v7.87 rf21: online slot 11 makes the players at 0x11 */
-  if(!be){static const char t_g[]="following member: in the host's room, starting (0x12 -> 0x11)";cg_log(t_g,-1);}
+  if(!be){static const char t_g[]="following member: in the host's room, starting (0x12 -> 0x11)";cg_log(t_g,-1);u3x_ng_match_log(base,s);}   /* v7.232 #92 */
   uint8_t *ms=LNB_SESS_MATCH(base);ms[0x1338]=1;*(int16_t*)(base+0x17cb060u+0x661c)=*(int16_t*)(base+0x17d167cu);
   *(uint32_t*)(base+0x1b68810u)=0x11;*(uint32_t*)(base+0x1b68814u)=*(uint32_t*)(base+0x17b4a90u+0x114);X.room[28]++;return;}
  for(int i=0;i<10;i++){uint8_t *m=lnb_member(ps,i);if(!m[0x25]||*(uint32_t*)(m+0x2c)!=host||*(uint32_t*)(m+0x3c)!=0x40)continue;
-  if(m[0x40+0x32]&1){int32_t li=u3x_ng_follow_sel(base,0,s,*(int16_t*)(m+0x40+0x30),0,u3x_ng_host_hash(m+0x40));   /* x013; v7.227: by name; v7.228: hash */
-   if(li<0)li=*(int16_t*)(m+0x40+0x30);if(*(int16_t*)(base+0x17d167cu)!=(int16_t)li){*(int16_t*)(base+0x17d167cu)=(int16_t)li;X.room[29]++;}}
+  if(m[0x40+0x32]&1){int32_t li=u3x_ng_follow_sel(base,0,s,*(int16_t*)(m+0x40+0x30),u3x_ng_host_name(m+0x40),u3x_ng_host_hash(m+0x40));   /* x013; v7.227: by name; v7.228: hash; v7.232 #92: whole name */
+   if(li>=0&&*(int16_t*)(base+0x17d167cu)!=(int16_t)li){*(int16_t*)(base+0x17d167cu)=(int16_t)li;X.room[29]++;}}   /* v7.232 #92: never the host's index for a net game we lack (fl_decide refuses it) */
   /* x019: the party list's colours (op 20) and the map card need custom-game mode 2, which only the host's menu sets */
   {uint32_t *mode=(uint32_t*)(base+0x17d603cu);if(m[0x40+0x32]&1){if(*mode!=2){lnb_guest_saved=*mode;lnb_guest_mode=1;*mode=2;}}else if(lnb_guest_mode){*mode=lnb_guest_saved;lnb_guest_mode=0;}}
   uint64_t room=*(uint64_t*)(m+0x40+0x34);X.room[25]=(uint32_t)room;

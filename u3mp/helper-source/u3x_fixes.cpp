@@ -30732,9 +30732,11 @@ extern "C" U3X_FN const char *u3x_lg01_slot0(uintptr_t base, const uint8_t *desc
 
 // 4.20: make the lobby's net game selection the match's net game. The selection and the selected net game are the
 // same word in the game, so want = was and the select call never runs there; the full rule is kept (spec 6.1).
+extern "C" void u3x_ng_match_log(uintptr_t base, void *s);   // v7.232 #92
 extern "C" U3X_FN void u3x_cg_commit_selection(uintptr_t base, void *s) {
     using namespace s03_p3;
     if (at<uint32_t>(base + NET_MENU_MODE) != 2) return;
+    u3x_ng_match_log(base, s);   // v7.232 #92: the host's line of the net game it starts
     uint8_t *table = u3x_sym_table(s, SYM_NET_GAMES);
     using Select = void (*)(void *ngm, int32_t index, const void *kept, uint32_t size);
     Select sel = rd<Select>(s, 768 + 2 * 8);
@@ -44176,10 +44178,13 @@ extern "C" U3X_FN [[clang::minsize]] int u3x_member_rank(const uint8_t *slot, ui
     return 1;
 }
 
-// the host's side: the hash of its net game's name id into its outgoing data block (only while +0x19 is free)
+// the host's side: the hash of its net game's name id into its outgoing data block (only while +0x19 is free).
+// v7.232 #92 (host on Village, its guest on Trainwreck): the whole name id goes to +0x28 as well, so a follower finds
+// the host's net game exactly and never takes the host's index, which names another net game in another table order.
 extern "C" U3X_FN [[clang::minsize]] void u3x_ng_put_hash(uint8_t *md, uint32_t name) {
     using namespace md_rank;
     if (md[0x19]) return;
+    *reinterpret_cast<uint32_t *>(md + 0x28) = name;
     *reinterpret_cast<uint16_t *>(md + 0x2e) = static_cast<uint16_t>(HASH_MARK | ng_follow::hash12(name));
     md[0x32] |= HASH_NEW;
 }
@@ -44192,6 +44197,26 @@ extern "C" U3X_FN [[clang::minsize]] uint32_t u3x_ng_host_hash(const uint8_t *md
     if ((md[0x32] & HASH_NEW) && (v & 0xf000u) == HASH_MARK) return v & 0xfffu;
     if ((md[0x32] & HASH_OLD) && (w & STAMPED)) return (w >> 16) & 0xfffu;
     return ~0u;
+}
+
+// v7.232 #92, the follower's side: the host's whole net game name id, 0 when its block carries none (a helper before
+// v7.232 writes no +0x28); the name counts only when it matches the block's own hash
+extern "C" U3X_FN [[clang::minsize]] uint32_t u3x_ng_host_name(const uint8_t *md) {
+    const uint32_t name = rd<uint32_t>(md, 0x28);
+    return name && (md[0x32] & md_rank::HASH_NEW) && ng_follow::hash12(name) == u3x_ng_host_hash(md) ? name : 0;
+}
+
+// v7.232 #92: one line with the net game a match loads, on the host (start) and on a follower (following the host into
+// it), so two players' logs show at once whether they load the same one
+U3X_RO const char t_ng_match[] = "custom game: match net game ";
+U3X_RO const char t_ng_name[] = ", name ";
+extern "C" U3X_FN [[clang::minsize]] void u3x_ng_match_log(uintptr_t base, void *s) {
+    const int32_t sel = at<int16_t>(base + 0x17d167c);
+    const uint8_t *t = u3x_sym_table(s, ng_follow::NET_GAMES);
+    const uint8_t *e = t && sel >= 0 && sel < rd<int32_t>(t, 0) ? rd<const uint8_t *>(t, 8) : nullptr;
+    Line l;
+    l.s(t_ng_match).d(static_cast<uint32_t>(sel)).s(t_ng_name).x(e ? rd<uint32_t>(e + static_cast<uintptr_t>(sel) * ng_follow::ENTRY, 0) : 0, 8);
+    u3h_so_note(l.z(), nullptr, -1, nullptr);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
