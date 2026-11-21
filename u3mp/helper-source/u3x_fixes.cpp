@@ -40905,7 +40905,12 @@ U3X_FN void send_all(uintptr_t base, uint32_t now, Log log) {
             eb[105]++;
         }
         if (!f_not_above(t->data, now)) continue;
-        t->data = f_add(now, F_DATA_GAP);
+        // v7.226 (issue 56): the next data packet is due 0.05 s after this one was DUE, not after it went out. The
+        // clock moves in whole ticks (1/300 s, 4 or 5 per frame at 60 fps), so "now + 0.05" was met after 3 or 4
+        // frames (50 / 67 ms in turn); a steady 50 ms now. More than one interval behind (a long frame): from now.
+        uint32_t next = f_add(t->data, F_DATA_GAP);
+        if (f_not_above(next, now)) next = f_add(now, F_DATA_GAP);
+        t->data = next;
         if (!f_not_above(t->keep, now) && !u3x_gt_has_data(base, sub)) continue;
         t->keep = f_add(now, F_KEEP_ALIVE);
         clear_packet();
@@ -43522,7 +43527,7 @@ constexpr uint32_t ASK = 0x106, FRAMES_BETWEEN = 120, TRIES = 5, REPORT_FRAME = 
 struct Ask { uint32_t id, wait; uint8_t tries; };
 struct State {
     Ask ask[10];
-    uint32_t frame, asked, answered;
+    uint32_t frame, asked, answered, remote_frames;
     uint8_t in_game, reported;
 };
 U3X_BSS State st;
@@ -43544,7 +43549,7 @@ extern "C" U3X_FN [[clang::minsize]] void u3x_pinfo_pull_tick(uintptr_t base, Lo
     }
     if (!st.in_game) {   // a new net game: forget the last one's asks
         st.in_game = 1;
-        st.frame = st.asked = st.answered = 0;
+        st.frame = st.asked = st.answered = st.remote_frames = 0;
         st.reported = 0;
         for (Ask &a : st.ask) a.id = a.wait = a.tries = 0;
     }
@@ -43597,7 +43602,8 @@ extern "C" U3X_FN [[clang::minsize]] void u3x_pinfo_pull_tick(uintptr_t base, Lo
         st.asked++;
     }
 
-    if (!st.reported && st.frame >= REPORT_FRAME && log) {
+    if (remote) st.remote_frames++;   // v7.226: the line 30 s after remote players exist (not after the net game began)
+    if (!st.reported && st.remote_frames >= REPORT_FRAME && log) {
         st.reported = 1;
         Line l;
         l.s(t_line).d(with_looks).s(t_of).d(remote).s(t_rem).d(st.asked).s(t_ans).d(st.answered);
@@ -43634,10 +43640,14 @@ constexpr uint32_t MODE_TAG = 0x38b89420u, NET_GAMES = 0x3b9a067du;
 struct State {
     uint32_t runs, spawned, there, no_spawner, failed, not_added;
     uint32_t frame, lines, last;
+    uint8_t *probe[2];          // v7.226: the first two NPCs made here, watched for non-finite values
+    uint32_t probe_frames[2], probe_lines;
 };
 U3X_BSS State st;
 U3X_RO const char t_line[] = "U3MP npc spawn: events ", t_sp[] = ", spawned ", t_there[] = ", already there ",
-    t_nosp[] = ", no spawner ", t_fail[] = ", spawn failed ", t_nadd[] = ", not added ";
+    t_nosp[] = ", no spawner ", t_fail[] = ", spawn failed ", t_nadd[] = ", not added ",
+    t_probe[] = "U3MP npc probe ", t_frame[] = " frame ", t_sp1[] = " ", t_own[] = " own ",
+    t_layer[] = " L ", t_bad[] = " NONFINITE";
 
 // the NPC mode the spawner's tag asks for (0 = leave it), as the host's sender works it out
 U3X_FN [[clang::minsize]] uint32_t tag_mode(uintptr_t base, const uint8_t *spawner) {
@@ -43742,6 +43752,11 @@ extern "C" U3X_FN [[clang::minsize]] int u3x_npc_spawn_event(uintptr_t base, con
         return 0;
     }
     st.spawned++;
+    for (int k = 0; k < 2; k++)   // v7.226 probe: the first two
+        if (!st.probe[k]) {
+            st.probe[k] = npc;
+            break;
+        }
 
     // the host's net id (out of the id table and back in when the NPC is listed there)
     if (rd<uint32_t>(npc, 0x98) != id) {
@@ -43764,6 +43779,43 @@ extern "C" U3X_FN [[clang::minsize]] int u3x_npc_spawn_event(uintptr_t base, con
 
 extern "C" U3X_FN [[clang::minsize]] void u3x_npc_spawn_report(uintptr_t base, Log log) {
     using namespace npc_spawn;
+    // v7.226 probe (issue 58: NPCs made on a guest turn non-finite): for the first two, at frames 1..6 and then every
+    // 30 frames (60 lines at most), the raw words of their position (+0xd0) and rotation (+0xe0), the owner byte
+    // (+0x709) and the first three active animation layers
+    // (*(+0x138): entries at +0x28, 0x20 bytes, active byte +0x14; key +0, instance +8: +0x24 +0x28 +0x2c)
+    for (int k = 0; k < 2 && log && st.probe_lines < 60; k++) {
+        const uint8_t *npc = st.probe[k];
+        if (!npc) continue;
+        const uint32_t f = ++st.probe_frames[k];
+        if (f > 6 && f % 30) continue;
+        if (!ptr_ok(npc) || f > 3600) {
+            st.probe[k] = nullptr;
+            continue;
+        }
+        st.probe_lines++;
+        Line l;
+        l.s(t_probe).d(static_cast<uint32_t>(k)).s(t_frame).d(f);
+        bool bad = false;
+        for (uintptr_t o = 0xd0; o < 0xf0; o += 4) {
+            const uint32_t w = rd<uint32_t>(npc, o);
+            bad |= (w & 0x7f800000u) == 0x7f800000u && o < 0xdc;
+            l.s(t_sp1).x(w, 8);
+        }
+        l.s(t_own).x(npc[0x709], 2);
+        const uint8_t *table = rd<const uint8_t *>(npc, 0x138);
+        const uint8_t *entries = ptr_ok(table) ? rd<const uint8_t *>(table, 0x28) : nullptr;
+        const uint32_t count = ptr_ok(table) ? rd<uint32_t>(table, 0x20) : 0;
+        for (uint32_t i = 0, shown = 0; ptr_ok(entries) && i < count && i < 16 && shown < 3; i++) {
+            const uint8_t *e = entries + 0x20 * i;
+            const uint8_t *inst = rd<const uint8_t *>(e, 8);
+            if (!e[0x14] || !ptr_ok(inst)) continue;
+            shown++;
+            l.s(t_layer).x(rd<uint32_t>(e, 0), 8).s(t_sp1).x(rd<uint32_t>(inst, 0x24), 8).s(t_sp1)
+                .x(rd<uint32_t>(inst, 0x28), 8).s(t_sp1).x(rd<uint32_t>(inst, 0x2c), 8);
+        }
+        if (bad) l.s(t_bad);
+        log(base, l.z());
+    }
     if (++st.frame % 1800u || st.lines >= 40 || !log || st.runs == st.last) return;
     st.last = st.runs;
     st.lines++;
