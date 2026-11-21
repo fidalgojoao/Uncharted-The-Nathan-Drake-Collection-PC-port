@@ -138,11 +138,12 @@ Value tables() {
         {"grenades", "Infinite grenades", "Unlimited grenades. Uncharted 3 only.", ""},
         {"onehit", "One-hit kills", "A single hit is enough to drop an enemy. Uncharted 3 only.", ""},
         {"debug", "Debug mode",
-         "Turns on the game's own debug mode, as in the PS3 versions. L3 + Options: Dev Menu. L3 + touchpad: Quick "
-         "Menu, where Give Player Weapon hands you any weapon (the retail games keep no weapon names: Uncharted 3 "
-         "lists them as codes, Uncharted 2 without names). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted "
-         "2 reads it from a second "
-         "controller). Uncharted 2 and 3 only; single player.",
+         "Turns on the game's own debug mode, as in the PS3 versions. Hold L3, then press Options for the Dev Menu "
+         "(Xbox: left stick click + Start; keyboard: Left Shift + Esc) or the touchpad for the Quick Menu (Xbox: "
+         "left stick click + Back; keyboard: Left Shift + Tab); the same again closes it. The Quick Menu's Give "
+         "Player Weapon hands you any weapon (the retail games keep no weapon names: Uncharted 3 lists them as "
+         "codes, Uncharted 2 without names). L3 + Triangle: debug text. L2 + R2: debug fly (Uncharted 2 reads it "
+         "from a second controller). Uncharted 2 and 3 only; single player.",
          "debug"}};
     Value c;
     c.kind = Value::Array;

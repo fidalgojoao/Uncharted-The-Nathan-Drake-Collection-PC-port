@@ -10,6 +10,7 @@
 #include "u2mp/u2mp.h"
 #include "u3fix/u3fix.h"
 #include "pokes.h"
+#include "debug_menus.h"
 #include "cpu_check.h"
 #include "orb_hook.h"
 #include "cheat_hook.h"
@@ -1527,6 +1528,7 @@ int main(int argc, char **argv) {
     install_u1_physics(segments, ns);
     install_u3_anim_guard(segments, ns, size);
     u3fix_install(image, size);   /* src/u3fix (C++): Uncharted 3 fixes found by their bytes */
+    debug_menus_install(image, size);   /* src/debug_menus.cpp (C++): U2/U3 debug mode menu combos */
     runtime_gamesettings_set_image(image, size);
     if (gpu_enabled && game_hooks) {
         install_orb_multiplier(segments, ns, size);
